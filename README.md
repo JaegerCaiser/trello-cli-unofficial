@@ -259,3 +259,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Made with ❤️ and Bun**
 # Test
+# Test commit for trusted publisher
