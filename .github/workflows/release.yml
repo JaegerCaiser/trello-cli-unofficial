@@ -86,8 +86,6 @@ jobs:
       - name: Publish to NPM
         if: steps.version.outputs.bump != 'none'
         run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Generate release notes
         if: steps.version.outputs.bump != 'none'
