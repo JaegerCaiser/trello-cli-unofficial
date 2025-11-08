@@ -45,6 +45,14 @@ export default antfu(
 
       // Estilo
       'curly': ['error', 'all'],
+
+      // Proibir imports relativos com '..'
+      'no-restricted-imports': ['error', {
+        patterns: [{
+          group: ['../**'],
+          message: 'Use absolute imports instead of relative imports with ".."',
+        }],
+      }],
     },
   },
   {

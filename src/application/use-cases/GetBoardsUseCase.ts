@@ -1,5 +1,5 @@
-import type { BoardEntity } from '../../domain/entities';
-import type { TrelloRepository } from '../../domain/repositories';
+import type { BoardEntity } from '@domain/entities';
+import type { TrelloRepository } from '@domain/repositories';
 
 export class GetBoardsUseCase {
   constructor(private trelloRepository: TrelloRepository) {}

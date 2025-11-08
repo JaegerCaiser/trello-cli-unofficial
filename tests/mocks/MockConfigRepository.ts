@@ -1,5 +1,5 @@
-import type { ConfigRepository } from '../../src/domain/repositories';
-import { ConfigEntity } from '../../src/domain/entities';
+import type { ConfigRepository } from '@domain/repositories';
+import { ConfigEntity } from '@domain/entities';
 
 export class MockConfigRepository implements ConfigRepository {
   private config: ConfigEntity = ConfigEntity.createDefault();

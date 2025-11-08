@@ -1,11 +1,11 @@
-import { beforeEach, describe, expect, test } from 'bun:test';
 import {
   CreateCardUseCase,
   DeleteCardUseCase,
   GetCardsUseCase,
   UpdateCardUseCase,
-} from '../../src/application/use-cases';
-import { MockTrelloRepository } from '../mocks';
+} from '@application/use-cases';
+import { MockTrelloRepository } from '@tests/mocks';
+import { beforeEach, describe, expect, test } from 'bun:test';
 
 describe('Card Management Integration', () => {
   let mockTrelloRepo: MockTrelloRepository;

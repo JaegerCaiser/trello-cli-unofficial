@@ -1,6 +1,6 @@
+import { CardEntity } from '@domain/entities';
+import { createMockCard, TestData } from '@tests/helpers';
 import { describe, expect, test } from 'bun:test';
-import { CardEntity } from '../../../../src/domain/entities';
-import { createMockCard, TestData } from '../../../helpers';
 
 describe('CardEntity', () => {
   describe('constructor', () => {

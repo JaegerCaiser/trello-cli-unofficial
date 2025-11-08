@@ -1,4 +1,10 @@
-import type { BoardEntity, CardEntity, CreateCardData, ListEntity, UpdateCardData } from '../entities';
+import type {
+  BoardEntity,
+  CardEntity,
+  CreateCardData,
+  ListEntity,
+  UpdateCardData,
+} from '@domain/entities';
 
 export interface TrelloRepository {
   getBoards: () => Promise<BoardEntity[]>;

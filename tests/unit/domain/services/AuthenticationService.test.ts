@@ -1,7 +1,7 @@
+import { ConfigEntity } from '@domain/entities';
+import { AuthenticationService } from '@domain/services';
+import { MockConfigRepository } from '@tests/mocks';
 import { beforeEach, describe, expect, test } from 'bun:test';
-import { ConfigEntity } from '../../../../src/domain/entities';
-import { AuthenticationService } from '../../../../src/domain/services';
-import { MockConfigRepository } from '../../../mocks';
 
 describe('AuthenticationService', () => {
   let mockConfigRepo: MockConfigRepository;

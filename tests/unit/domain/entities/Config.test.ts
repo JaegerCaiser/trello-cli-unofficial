@@ -1,5 +1,5 @@
+import { ConfigEntity } from '@domain/entities';
 import { describe, expect, test } from 'bun:test';
-import { ConfigEntity } from '../../../../src/domain/entities';
 
 describe('ConfigEntity', () => {
   describe('createDefault', () => {

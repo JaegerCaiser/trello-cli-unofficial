@@ -57,6 +57,7 @@ Same process as NPM_TOKEN, but name it `CODECOV_TOKEN`
 - ✅ Type checks (`bun run typecheck`)
 - ✅ Runs all tests (`bun test`)
 - ✅ Generates coverage report
+- ✅ **Validates 95% coverage threshold** (`bun run test:coverage:threshold`)
 - ✅ Builds the package (`bun run build`)
 
 ### 2. Release Workflow (`release.yml`)

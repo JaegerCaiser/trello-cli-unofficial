@@ -1,6 +1,6 @@
+import { CreateCardUseCase } from '@application/use-cases';
+import { MockTrelloRepository } from '@tests/mocks';
 import { beforeEach, describe, expect, test } from 'bun:test';
-import { CreateCardUseCase } from '../../../../src/application/use-cases';
-import { MockTrelloRepository } from '../../../mocks';
 
 describe('CreateCardUseCase', () => {
   let mockTrelloRepo: MockTrelloRepository;

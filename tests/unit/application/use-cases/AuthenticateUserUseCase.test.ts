@@ -1,7 +1,7 @@
+import { AuthenticateUserUseCase } from '@application/use-cases';
+import { ConfigEntity } from '@domain/entities';
+import { MockConfigRepository } from '@tests/mocks';
 import { beforeEach, describe, expect, test } from 'bun:test';
-import { AuthenticateUserUseCase } from '../../../../src/application/use-cases';
-import { ConfigEntity } from '../../../../src/domain/entities';
-import { MockConfigRepository } from '../../../mocks';
 
 describe('AuthenticateUserUseCase', () => {
   let mockConfigRepo: MockConfigRepository;

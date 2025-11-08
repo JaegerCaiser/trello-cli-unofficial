@@ -1,6 +1,6 @@
+import { BoardEntity } from '@domain/entities';
+import { TestData } from '@tests/helpers';
 import { describe, expect, test } from 'bun:test';
-import { BoardEntity } from '../../../../src/domain/entities';
-import { TestData } from '../../../helpers';
 
 describe('BoardEntity', () => {
   describe('constructor', () => {

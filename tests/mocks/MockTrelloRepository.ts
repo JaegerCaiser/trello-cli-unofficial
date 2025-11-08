@@ -1,6 +1,6 @@
-import type { CreateCardData, UpdateCardData } from '../../src/domain/entities';
-import type { TrelloRepository } from '../../src/domain/repositories';
-import { BoardEntity, CardEntity, ListEntity } from '../../src/domain/entities';
+import type { CreateCardData, UpdateCardData } from '@domain/entities';
+import type { TrelloRepository } from '@domain/repositories';
+import { BoardEntity, CardEntity, ListEntity } from '@domain/entities';
 
 export class MockTrelloRepository implements TrelloRepository {
   private boards: BoardEntity[] = [];
@@ -86,6 +86,7 @@ export class MockTrelloRepository implements TrelloRepository {
         // If moving to a different list, remove from old list and add to new list
         if (updates.idList && updates.idList !== listId) {
           cards.splice(cardIndex, 1);
+          this.cards.set(listId, cards); // Save the modified original list
           const targetListCards = this.cards.get(updates.idList) || [];
           targetListCards.push(updatedCard);
           this.cards.set(updates.idList, targetListCards);

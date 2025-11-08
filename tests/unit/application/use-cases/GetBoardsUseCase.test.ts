@@ -1,6 +1,6 @@
+import { GetBoardsUseCase } from '@application/use-cases';
+import { MockTrelloRepository } from '@tests/mocks';
 import { beforeEach, describe, expect, test } from 'bun:test';
-import { GetBoardsUseCase } from '../../../../src/application/use-cases';
-import { MockTrelloRepository } from '../../../mocks';
 
 describe('GetBoardsUseCase', () => {
   let mockTrelloRepo: MockTrelloRepository;

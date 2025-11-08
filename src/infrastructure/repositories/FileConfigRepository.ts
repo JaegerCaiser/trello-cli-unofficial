@@ -1,7 +1,7 @@
-import type { ConfigRepository } from '../../domain/repositories';
+import type { ConfigRepository } from '@domain/repositories';
 import path from 'node:path';
+import { ConfigEntity } from '@domain/entities';
 import fs from 'fs-extra';
-import { ConfigEntity } from '../../domain/entities';
 
 export class FileConfigRepository implements ConfigRepository {
   private readonly configDir: string;
@@ -24,8 +24,7 @@ export class FileConfigRepository implements ConfigRepository {
           data.token || process.env.TRELLO_TOKEN,
         );
       }
-    }
-    catch (error) {
+    } catch (error) {
       console.error('Error loading config:', (error as Error).message);
     }
 
@@ -43,8 +42,7 @@ export class FileConfigRepository implements ConfigRepository {
         },
         { spaces: 2 },
       );
-    }
-    catch (error) {
+    } catch (error) {
       console.error('Error saving config:', (error as Error).message);
     }
   }

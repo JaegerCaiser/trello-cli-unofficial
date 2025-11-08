@@ -1,5 +1,5 @@
-import type { ListEntity } from '../../domain/entities';
-import type { TrelloRepository } from '../../domain/repositories';
+import type { ListEntity } from '@domain/entities';
+import type { TrelloRepository } from '@domain/repositories';
 
 export class GetListsUseCase {
   constructor(private trelloRepository: TrelloRepository) {}
