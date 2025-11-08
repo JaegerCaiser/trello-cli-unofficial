@@ -1,5 +1,7 @@
 import { CONFIG_ACTIONS } from '@shared/types';
+
 import inquirer from 'inquirer';
+import { t } from '@/i18n';
 
 export class ConfigController {
   constructor(private authController: { getConfig: () => Promise<unknown>; setupToken: () => Promise<void> }) {}
@@ -10,12 +12,12 @@ export class ConfigController {
         {
           type: 'list',
           name: 'configAction',
-          message: '⚙️ Configurações',
+          message: t('menu.configTitle'),
           choices: [
-            { name: '🔑 Configurar token', value: CONFIG_ACTIONS.TOKEN },
-            { name: '👀 Ver configuração atual', value: CONFIG_ACTIONS.VIEW },
-            { name: '🔄 Resetar configuração', value: CONFIG_ACTIONS.RESET },
-            { name: '⬅️  Voltar', value: CONFIG_ACTIONS.BACK },
+            { name: t('menu.configToken'), value: CONFIG_ACTIONS.TOKEN },
+            { name: t('menu.configView'), value: CONFIG_ACTIONS.VIEW },
+            { name: t('menu.configReset'), value: CONFIG_ACTIONS.RESET },
+            { name: t('menu.configBack'), value: CONFIG_ACTIONS.BACK },
           ],
         },
       ]);
@@ -26,27 +28,26 @@ export class ConfigController {
           break;
         case CONFIG_ACTIONS.VIEW:
           const config = await this.authController.getConfig() as any;
-          console.log('📋 Configuração atual:');
+          console.log(t('menu.currentConfig'));
           console.log(`API Key: ${config.apiKey}`);
-          console.log(
-            `Token configurado: ${config.hasValidToken() ? '✅ Sim' : '❌ Não'}`,
-          );
-          console.log(
-            `Arquivo de config: ~/.trello-cli-unofficial/config.json`,
-          );
+          const tokenStatus = config.hasValidToken()
+            ? `✅ ${t('common.yes')}`
+            : `❌ ${t('common.no')}`;
+          console.log(`${t('menu.tokenConfigured')} ${tokenStatus}`);
+          console.log(t('menu.configFile'));
           break;
         case CONFIG_ACTIONS.RESET:
           const { confirm } = await inquirer.prompt([
             {
               type: 'confirm',
               name: 'confirm',
-              message: 'Tem certeza que deseja resetar toda a configuração?',
+              message: t('menu.confirmReset'),
               default: false,
             },
           ]);
           if (confirm) {
             // Reset logic would need to be implemented in the use case
-            console.log('✅ Configuração resetada!');
+            console.log(t('menu.configResetted'));
           }
           break;
         case CONFIG_ACTIONS.BACK:

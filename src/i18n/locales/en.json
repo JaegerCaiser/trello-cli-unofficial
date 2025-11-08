@@ -1,0 +1,129 @@
+{
+  "common": {
+    "yes": "Yes",
+    "no": "No",
+    "cancel": "Cancel",
+    "back": "Back",
+    "exit": "Exit",
+    "success": "✅ Success!",
+    "error": "❌ Error!",
+    "loading": "⏳ Loading..."
+  },
+  "auth": {
+    "notAuthenticated": "🔐 You are not authenticated!",
+    "enterToken": "Please enter your Trello token:",
+    "tokenInvalid": "❌ Invalid token! Token must start with 'ATTA' and be at least 11 characters long.",
+    "tokenSaved": "✅ Token saved successfully!",
+    "authenticated": "✅ You are already authenticated!"
+  },
+  "menu": {
+    "title": "� Main Menu - Trello CLI Unofficial",
+    "boards": "📋 View my boards",
+    "explore": "📝 Explore board",
+    "create": "➕ Create card",
+    "config": "⚙️  Settings",
+    "exit": "🚪 Exit",
+    "goodbye": "👋 Goodbye!",
+    "exploreInDevelopment": "� Explore board - Under development",
+    "configTitle": "⚙️ Settings",
+    "configToken": "🔑 Configure token",
+    "configView": "👀 View current configuration",
+    "configReset": "🔄 Reset configuration",
+    "configBack": "⬅️  Back",
+    "currentConfig": "� Current configuration:",
+    "tokenConfigured": "Token configured:",
+    "configFile": "Config file: ~/.trello-cli-unofficial/config.json",
+    "confirmReset": "Are you sure you want to reset all configuration?",
+    "configResetted": "✅ Configuration resetted!",
+    "selectBoard": "Select a board:",
+    "selectList": "Select a list:",
+    "selectCard": "Select a card:"
+  },
+  "board": {
+    "loading": "⏳ Loading boards...",
+    "empty": "📋 No boards found.",
+    "notFound": "❌ Board \"{{name}}\" not found",
+    "lists": "📝 Lists of Board: {{name}}",
+    "yourBoards": "📋 Your Trello Boards:"
+  },
+  "list": {
+    "loading": "⏳ Loading lists...",
+    "empty": "📝 No lists found in this board.",
+    "notFound": "❌ List \"{{listName}}\" not found in board \"{{boardName}}\"",
+    "cards": "🃏 Cards of List: {{name}}",
+    "boardLists": "📋 Lists from board \"{{boardName}}\":"
+  },
+  "card": {
+    "loading": "⏳ Loading cards...",
+    "empty": "🃏 No cards found in this list.",
+    "notFound": "❌ Card with ID \"{{cardId}}\" not found",
+    "created": "✅ Card created successfully!",
+    "updated": "✅ Card updated successfully!",
+    "deleted": "✅ Card deleted successfully!",
+    "moved": "✅ Card moved successfully!",
+    "enterName": "Card name:",
+    "enterDescription": "Description (optional):",
+    "confirmDelete": "Are you sure you want to delete \"{{name}}\"?",
+    "listCards": "📋 Cards from list \"{{listName}}\" in board \"{{boardName}}\":",
+    "emptyList": "📭 This list is empty.",
+    "selectBoard": "Select board:",
+    "selectList": "Select list:",
+    "selectCard": "Select a card:",
+    "whatToDo": "What would you like to do?",
+    "newName": "New name:",
+    "newDescription": "New description:",
+    "moveToWhichList": "Move to which list?",
+    "cardName": "📝 Name: {{name}}",
+    "cardUrl": "🔗 URL: {{url}}",
+    "cardId": "🆔 ID: {{id}}",
+    "movedTo": "➡️  To: {{listName}}",
+    "actions": {
+      "view": "👁️  View Details",
+      "create": "➕ Create Card",
+      "edit": "✏️  Edit Card",
+      "move": "🔄 Move Card",
+      "delete": "🗑️  Delete Card",
+      "back": "⬅️  Back"
+    }
+  },
+  "errors": {
+    "general": "❌ An error occurred: {{message}}",
+    "generic": "❌ Error:",
+    "network": "❌ Network error. Check your connection.",
+    "invalidInput": "❌ Invalid input: {{field}}",
+    "required": "❌ Required field: {{field}}"
+  },
+  "commands": {
+    "boards": {
+      "description": "List all available boards",
+      "success": "📋 Boards loaded successfully!"
+    },
+    "lists": {
+      "description": "List the lists of a specific board",
+      "boardRequired": "❌ Board name is required",
+      "success": "📝 Lists loaded successfully!"
+    },
+    "cards": {
+      "description": "List the cards of a specific list",
+      "boardRequired": "❌ Board name is required",
+      "listRequired": "❌ List name is required",
+      "success": "🃏 Cards loaded successfully!"
+    },
+    "createCard": {
+      "description": "Create a new card in a list",
+      "nameRequired": "❌ Card name is required",
+      "success": "✅ Card '{{name}}' created successfully!"
+    },
+    "moveCard": {
+      "description": "Move a card to another list",
+      "cardIdRequired": "❌ Card ID is required",
+      "targetListRequired": "❌ Target list ID is required",
+      "success": "✅ Card moved successfully!"
+    },
+    "deleteCard": {
+      "description": "Delete a card",
+      "cardIdRequired": "❌ Card ID is required",
+      "success": "✅ Card deleted successfully!"
+    }
+  }
+}

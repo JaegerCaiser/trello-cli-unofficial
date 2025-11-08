@@ -1,5 +1,7 @@
 import type { TrelloRepository } from '@domain/repositories';
+
 import { GetBoardsUseCase, GetCardsUseCase, GetListsUseCase } from '@application/use-cases';
+import { t } from '@/i18n';
 
 export class BoardController {
   private getBoardsUseCase: GetBoardsUseCase;
@@ -15,7 +17,7 @@ export class BoardController {
   async showBoards(): Promise<void> {
     const boards = await this.getBoardsUseCase.execute();
 
-    console.log('📋 Seus Quadros do Trello:');
+    console.log(t('board.yourBoards'));
     boards.forEach((board, index) => {
       console.log(`${index + 1}. ${board.name}`);
       console.log(`   🔗 ${board.url}`);
@@ -28,12 +30,12 @@ export class BoardController {
     const board = boards.find(b => b.name === boardName);
 
     if (!board) {
-      throw new Error(`Quadro "${boardName}" não encontrado`);
+      throw new Error(t('board.notFound', { name: boardName }));
     }
 
     const lists = await this.getListsUseCase.execute(board.id);
 
-    console.log(`📋 Listas do quadro "${boardName}":`);
+    console.log(t('list.boardLists', { boardName }));
     lists.forEach((list, index) => {
       console.log(`${index + 1}. ${list.name}`);
       console.log(`   🆔 ${list.id}\n`);
@@ -45,23 +47,21 @@ export class BoardController {
     const board = boards.find(b => b.name === boardName);
 
     if (!board) {
-      throw new Error(`Quadro "${boardName}" não encontrado`);
+      throw new Error(t('board.notFound', { name: boardName }));
     }
 
     const lists = await this.getListsUseCase.execute(board.id);
     const list = lists.find(l => l.name === listName);
 
     if (!list) {
-      throw new Error(
-        `Lista "${listName}" não encontrada no quadro "${boardName}"`,
-      );
+      throw new Error(t('list.notFound', { listName, boardName }));
     }
 
     const cards = await this.getCardsUseCase.execute(list.id);
 
-    console.log(`📋 Cartões da lista "${listName}" no quadro "${boardName}":`);
+    console.log(t('card.listCards', { listName, boardName }));
     if (cards.length === 0) {
-      console.log('📭 Esta lista está vazia.');
+      console.log(t('card.emptyList'));
       return;
     }
 

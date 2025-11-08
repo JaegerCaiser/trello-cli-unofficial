@@ -1,6 +1,9 @@
 import type { ListEntity } from '@domain/entities';
+
 import { MENU_ACTIONS } from '@shared/types';
+
 import inquirer from 'inquirer';
+import { t } from '@/i18n';
 
 export class MainMenuController {
   constructor(
@@ -18,13 +21,13 @@ export class MainMenuController {
         {
           type: 'list',
           name: 'action',
-          message: '🏠 Menu Principal - Trello CLI Unofficial',
+          message: t('menu.title'),
           choices: [
-            { name: '📋 Ver meus quadros', value: MENU_ACTIONS.BOARDS },
-            { name: '📝 Explorar quadro', value: MENU_ACTIONS.EXPLORE },
-            { name: '➕ Criar cartão', value: MENU_ACTIONS.CREATE },
-            { name: '⚙️  Configurações', value: MENU_ACTIONS.CONFIG },
-            { name: '🚪 Sair', value: MENU_ACTIONS.EXIT },
+            { name: t('menu.boards'), value: MENU_ACTIONS.BOARDS },
+            { name: t('menu.explore'), value: MENU_ACTIONS.EXPLORE },
+            { name: t('menu.create'), value: MENU_ACTIONS.CREATE },
+            { name: t('menu.config'), value: MENU_ACTIONS.CONFIG },
+            { name: t('menu.exit'), value: MENU_ACTIONS.EXIT },
           ],
         },
       ]);
@@ -44,11 +47,11 @@ export class MainMenuController {
             await this.configController.showConfigMenu();
             break;
           case MENU_ACTIONS.EXIT:
-            console.log('👋 Até logo!');
+            console.log(t('menu.goodbye'));
             return;
         }
       } catch (error) {
-        console.error('❌ Erro:', (error as Error).message);
+        console.error(t('errors.generic'), (error as Error).message);
       }
 
       console.log(`\n${'='.repeat(50)}\n`);
@@ -57,6 +60,6 @@ export class MainMenuController {
 
   private async exploreBoard(): Promise<void> {
     // This will be implemented when we refactor the main controller
-    console.log('🚧 Explorar quadro - Em desenvolvimento');
+    console.log(t('menu.exploreInDevelopment'));
   }
 }

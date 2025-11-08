@@ -1,13 +1,16 @@
 import type { CardEntity, ListEntity } from '@domain/entities';
 import type { TrelloRepository } from '@domain/repositories';
+
 import {
   CreateCardUseCase,
   DeleteCardUseCase,
   MoveCardUseCase,
   UpdateCardUseCase,
-} from '@application/use-cases';
+} from "@application/use-cases";
+
 import { CARD_ACTIONS } from '@shared/types';
 import inquirer from 'inquirer';
+import { t } from "@/i18n";
 
 export class CardController {
   private createCardUseCase: CreateCardUseCase;
@@ -30,10 +33,13 @@ export class CardController {
 
     const { selectedBoard } = await inquirer.prompt([
       {
-        type: 'list',
-        name: 'selectedBoard',
-        message: 'Selecione o quadro:',
-        choices: boards.map((board: any) => ({ name: board.name, value: board.id })),
+        type: "list",
+        name: "selectedBoard",
+        message: t("card.selectBoard"),
+        choices: boards.map((board: any) => ({
+          name: board.name,
+          value: board.id,
+        })),
       },
     ]);
 
@@ -41,24 +47,27 @@ export class CardController {
 
     const { selectedList } = await inquirer.prompt([
       {
-        type: 'list',
-        name: 'selectedList',
-        message: 'Selecione a lista:',
-        choices: lists.map((list: any) => ({ name: list.name, value: list.id })),
+        type: "list",
+        name: "selectedList",
+        message: t("card.selectList"),
+        choices: lists.map((list: any) => ({
+          name: list.name,
+          value: list.id,
+        })),
       },
     ]);
 
     const { cardName, cardDesc } = await inquirer.prompt([
       {
-        type: 'input',
-        name: 'cardName',
-        message: 'Nome do cartão:',
-        validate: input => input.length > 0 || 'Nome é obrigatório',
+        type: "input",
+        name: "cardName",
+        message: t("card.enterName"),
+        validate: (input) => input.length > 0 || "Nome é obrigatório",
       },
       {
-        type: 'input',
-        name: 'cardDesc',
-        message: 'Descrição (opcional):',
+        type: "input",
+        name: "cardDesc",
+        message: t("card.enterDescription"),
       },
     ]);
 
@@ -68,25 +77,25 @@ export class CardController {
       listId: selectedList,
     });
 
-    console.log('✅ Cartão criado com sucesso!');
-    console.log(`📝 Nome: ${newCard.name}`);
-    console.log(`🔗 URL: ${newCard.url}`);
+    console.log(t("card.created"));
+    console.log(t("card.cardName", { name: newCard.name }));
+    console.log(t("card.cardUrl", { url: newCard.url }));
   }
 
   async exploreCards(boardId: string, lists: ListEntity[]): Promise<void> {
     const { selectedList } = await inquirer.prompt([
       {
-        type: 'list',
-        name: 'selectedList',
-        message: 'Selecione uma lista:',
-        choices: lists.map(list => ({ name: list.name, value: list.id })),
+        type: "list",
+        name: "selectedList",
+        message: t("card.selectList"),
+        choices: lists.map((list) => ({ name: list.name, value: list.id })),
       },
     ]);
 
     const cards = await (this.boardController as any).getCards(selectedList);
 
     if (cards.length === 0) {
-      console.log('📭 Esta lista está vazia.');
+      console.log(t("card.emptyList"));
       return;
     }
 
@@ -108,14 +117,14 @@ export class CardController {
     // Opções adicionais
     const { nextAction } = await inquirer.prompt([
       {
-        type: 'list',
-        name: 'nextAction',
-        message: 'O que deseja fazer?',
+        type: "list",
+        name: "nextAction",
+        message: t("card.whatToDo"),
         choices: [
-          { name: '⬅️  Voltar ao menu', value: CARD_ACTIONS.BACK },
-          { name: '📝 Editar cartão', value: CARD_ACTIONS.EDIT },
-          { name: '🗑️  Deletar cartão', value: CARD_ACTIONS.DELETE },
-          { name: '📦 Mover cartão', value: CARD_ACTIONS.MOVE },
+          { name: t("card.actions.back"), value: CARD_ACTIONS.BACK },
+          { name: t("card.actions.edit"), value: CARD_ACTIONS.EDIT },
+          { name: t("card.actions.delete"), value: CARD_ACTIONS.DELETE },
+          { name: "📦 Mover cartão", value: CARD_ACTIONS.MOVE },
         ],
       },
     ]);
@@ -123,10 +132,13 @@ export class CardController {
     if (nextAction !== CARD_ACTIONS.BACK) {
       const { selectedCard } = await inquirer.prompt([
         {
-          type: 'list',
-          name: 'selectedCard',
-          message: 'Selecione um cartão:',
-          choices: cards.map((card: any) => ({ name: card.name, value: card.id })),
+          type: "list",
+          name: "selectedCard",
+          message: t("card.selectCard"),
+          choices: cards.map((card: any) => ({
+            name: card.name,
+            value: card.id,
+          })),
         },
       ]);
 
@@ -149,16 +161,16 @@ export class CardController {
   private async editCard(cardId: string, card: CardEntity): Promise<void> {
     const { newName, newDesc } = await inquirer.prompt([
       {
-        type: 'input',
-        name: 'newName',
-        message: 'Novo nome:',
+        type: "input",
+        name: "newName",
+        message: t("card.newName"),
         default: card.name,
       },
       {
-        type: 'input',
-        name: 'newDesc',
-        message: 'Nova descrição:',
-        default: card.desc || '',
+        type: "input",
+        name: "newDesc",
+        message: t("card.newDescription"),
+        default: card.desc || "",
       },
     ]);
 
@@ -166,7 +178,7 @@ export class CardController {
       name: newName,
       desc: newDesc,
     });
-    console.log('✅ Cartão atualizado com sucesso!');
+    console.log(t("card.updated"));
   }
 
   private async deleteCardInteractive(
@@ -175,9 +187,9 @@ export class CardController {
   ): Promise<void> {
     const { confirm } = await inquirer.prompt([
       {
-        type: 'confirm',
-        name: 'confirm',
-        message: `Tem certeza que deseja deletar "${card.name}"?`,
+        type: "confirm",
+        name: "confirm",
+        message: t("card.confirmDelete", { name: card.name }),
         default: false,
       },
     ]);
@@ -194,10 +206,10 @@ export class CardController {
   ): Promise<void> {
     const { targetList } = await inquirer.prompt([
       {
-        type: 'list',
-        name: 'targetList',
-        message: 'Mover para qual lista?',
-        choices: lists.map(list => ({ name: list.name, value: list.id })),
+        type: "list",
+        name: "targetList",
+        message: t("card.moveToWhichList"),
+        choices: lists.map((list) => ({ name: list.name, value: list.id })),
       },
     ]);
 
@@ -218,16 +230,14 @@ export class CardController {
     const board = boards.find((b: any) => b.name === boardName);
 
     if (!board) {
-      throw new Error(`Quadro "${boardName}" não encontrado`);
+      throw new Error(t("board.notFound", { name: boardName }));
     }
 
     const lists = await (this.boardController as any).getLists(board.id);
     const list = lists.find((l: any) => l.name === listName);
 
     if (!list) {
-      throw new Error(
-        `Lista "${listName}" não encontrada no quadro "${boardName}"`,
-      );
+      throw new Error(t("list.notFound", { listName, boardName }));
     }
 
     const newCard = await this.createCardUseCase.execute({
@@ -236,10 +246,10 @@ export class CardController {
       listId: list.id,
     });
 
-    console.log('✅ Cartão criado com sucesso!');
-    console.log(`📝 Nome: ${newCard.name}`);
-    console.log(`🔗 URL: ${newCard.url}`);
-    console.log(`🆔 ID: ${newCard.id}`);
+    console.log(t("card.created"));
+    console.log(t("card.cardName", { name: newCard.name }));
+    console.log(t("card.cardUrl", { url: newCard.url }));
+    console.log(t("card.cardId", { id: newCard.id }));
   }
 
   async moveCard(cardId: string, targetListName: string): Promise<void> {
@@ -262,14 +272,17 @@ export class CardController {
 
             if (!targetList) {
               throw new Error(
-                `Lista "${targetListName}" não encontrada no quadro "${board.name}"`,
+                t("list.notFound", {
+                  listName: targetListName,
+                  boardName: board.name,
+                })
               );
             }
 
             await this.moveCardUseCase.execute(cardId, targetList.id);
-            console.log('✅ Cartão movido com sucesso!');
-            console.log(`📝 Cartão: ${card.name}`);
-            console.log(`➡️  Para: ${targetList.name}`);
+            console.log(t("card.moved"));
+            console.log(t("card.cardName", { name: card.name }));
+            console.log(t("card.movedTo", { listName: targetList.name }));
             return;
           }
         } catch {
@@ -279,7 +292,7 @@ export class CardController {
       }
     }
 
-    throw new Error(`Cartão com ID "${cardId}" não encontrado`);
+    throw new Error(t("card.notFound", { cardId }));
   }
 
   async deleteCard(cardId: string, card?: CardEntity): Promise<void> {
@@ -308,12 +321,12 @@ export class CardController {
       }
 
       if (!card) {
-        throw new Error(`Cartão com ID "${cardId}" não encontrado`);
+        throw new Error(t("card.notFound", { cardId }));
       }
     }
 
     await this.deleteCardUseCase.execute(cardId);
-    console.log('✅ Cartão deletado com sucesso!');
-    console.log(`📝 Nome: ${card.name}`);
+    console.log(t("card.deleted"));
+    console.log(t("card.cardName", { name: card.name }));
   }
 }

@@ -1,6 +1,7 @@
 import type { ConfigRepository } from '@domain/repositories';
 import { AuthenticateUserUseCase } from '@application/use-cases';
 import inquirer from 'inquirer';
+import { t } from '@/i18n';
 
 export class AuthController {
   private authenticateUseCase: AuthenticateUserUseCase;
@@ -12,7 +13,7 @@ export class AuthController {
   async ensureAuthenticated(): Promise<void> {
     const result = await this.authenticateUseCase.execute();
     if (!result.success) {
-      console.log(result.message);
+      console.log(t('auth.notAuthenticated'));
       await this.setupToken();
     }
   }
@@ -22,14 +23,13 @@ export class AuthController {
       {
         type: 'input',
         name: 'token',
-        message: 'Digite seu token do Trello (ATTA...):',
-        validate: input =>
-          input.startsWith('ATTA') || 'Token deve começar com ATTA',
+        message: t('auth.enterToken'),
+        validate: input => input.startsWith('ATTA') || t('auth.tokenInvalid'),
       },
     ]);
 
     const result = await this.authenticateUseCase.execute(token);
-    console.log(result.message);
+    console.log(result.success ? t('auth.tokenSaved') : result.message);
   }
 
   async getConfig() {

@@ -1,0 +1,129 @@
+{
+  "common": {
+    "yes": "Sim",
+    "no": "Não",
+    "cancel": "Cancelar",
+    "back": "Voltar",
+    "exit": "Sair",
+    "success": "✅ Sucesso!",
+    "error": "❌ Erro!",
+    "loading": "⏳ Carregando..."
+  },
+  "auth": {
+    "notAuthenticated": "🔐 Você não está autenticado!",
+    "enterToken": "Por favor, insira seu token do Trello:",
+    "tokenInvalid": "❌ Token inválido! O token deve começar com 'ATTA' e ter pelo menos 11 caracteres.",
+    "tokenSaved": "✅ Token salvo com sucesso!",
+    "authenticated": "✅ Você já está autenticado!"
+  },
+  "menu": {
+    "title": "� Menu Principal - Trello CLI Unofficial",
+    "boards": "📋 Ver meus quadros",
+    "explore": "📝 Explorar quadro",
+    "create": "➕ Criar cartão",
+    "config": "⚙️  Configurações",
+    "exit": "🚪 Sair",
+    "goodbye": "👋 Até logo!",
+    "exploreInDevelopment": "🚧 Explorar quadro - Em desenvolvimento",
+    "configTitle": "⚙️ Configurações",
+    "configToken": "� Configurar token",
+    "configView": "👀 Ver configuração atual",
+    "configReset": "🔄 Resetar configuração",
+    "configBack": "⬅️  Voltar",
+    "currentConfig": "� Configuração atual:",
+    "tokenConfigured": "Token configurado:",
+    "configFile": "Arquivo de config: ~/.trello-cli-unofficial/config.json",
+    "confirmReset": "Tem certeza que deseja resetar toda a configuração?",
+    "configResetted": "✅ Configuração resetada!",
+    "selectBoard": "Selecione um board:",
+    "selectList": "Selecione uma lista:",
+    "selectCard": "Selecione um card:"
+  },
+  "board": {
+    "loading": "⏳ Carregando boards...",
+    "empty": "📋 Nenhum board encontrado.",
+    "notFound": "❌ Quadro \"{{name}}\" não encontrado",
+    "lists": "📝 Listas do Board: {{name}}",
+    "yourBoards": "📋 Seus Quadros do Trello:"
+  },
+  "list": {
+    "loading": "⏳ Carregando listas...",
+    "empty": "📝 Nenhuma lista encontrada neste board.",
+    "notFound": "❌ Lista \"{{listName}}\" não encontrada no quadro \"{{boardName}}\"",
+    "cards": "🃏 Cards da Lista: {{name}}",
+    "boardLists": "📋 Listas do quadro \"{{boardName}}\":"
+  },
+  "card": {
+    "loading": "⏳ Carregando cards...",
+    "empty": "🃏 Nenhum card encontrado nesta lista.",
+    "notFound": "❌ Cartão com ID \"{{cardId}}\" não encontrado",
+    "created": "✅ Cartão criado com sucesso!",
+    "updated": "✅ Cartão atualizado com sucesso!",
+    "deleted": "✅ Cartão deletado com sucesso!",
+    "moved": "✅ Cartão movido com sucesso!",
+    "enterName": "Nome do cartão:",
+    "enterDescription": "Descrição (opcional):",
+    "confirmDelete": "Tem certeza que deseja deletar \"{{name}}\"?",
+    "listCards": "📋 Cartões da lista \"{{listName}}\" no quadro \"{{boardName}}\":",
+    "emptyList": "📭 Esta lista está vazia.",
+    "selectBoard": "Selecione o quadro:",
+    "selectList": "Selecione a lista:",
+    "selectCard": "Selecione um cartão:",
+    "whatToDo": "O que deseja fazer?",
+    "newName": "Novo nome:",
+    "newDescription": "Nova descrição:",
+    "moveToWhichList": "Mover para qual lista?",
+    "cardName": "📝 Nome: {{name}}",
+    "cardUrl": "🔗 URL: {{url}}",
+    "cardId": "🆔 ID: {{id}}",
+    "movedTo": "➡️  Para: {{listName}}",
+    "actions": {
+      "view": "👁️  Ver Detalhes",
+      "create": "➕ Criar Card",
+      "edit": "✏️  Editar Card",
+      "move": "🔄 Mover Card",
+      "delete": "🗑️  Deletar Card",
+      "back": "⬅️  Voltar"
+    }
+  },
+  "errors": {
+    "general": "❌ Ocorreu um erro: {{message}}",
+    "generic": "❌ Erro:",
+    "network": "❌ Erro de rede. Verifique sua conexão.",
+    "invalidInput": "❌ Entrada inválida: {{field}}",
+    "required": "❌ Campo obrigatório: {{field}}"
+  },
+  "commands": {
+    "boards": {
+      "description": "Lista todos os boards disponíveis",
+      "success": "📋 Boards carregados com sucesso!"
+    },
+    "lists": {
+      "description": "Lista as listas de um board específico",
+      "boardRequired": "❌ Nome do board é obrigatório",
+      "success": "📝 Listas carregadas com sucesso!"
+    },
+    "cards": {
+      "description": "Lista os cards de uma lista específica",
+      "boardRequired": "❌ Nome do board é obrigatório",
+      "listRequired": "❌ Nome da lista é obrigatório",
+      "success": "🃏 Cards carregados com sucesso!"
+    },
+    "createCard": {
+      "description": "Cria um novo card em uma lista",
+      "nameRequired": "❌ Nome do card é obrigatório",
+      "success": "✅ Card '{{name}}' criado com sucesso!"
+    },
+    "moveCard": {
+      "description": "Move um card para outra lista",
+      "cardIdRequired": "❌ ID do card é obrigatório",
+      "targetListRequired": "❌ ID da lista de destino é obrigatório",
+      "success": "✅ Card movido com sucesso!"
+    },
+    "deleteCard": {
+      "description": "Deleta um card",
+      "cardIdRequired": "❌ ID do card é obrigatório",
+      "success": "✅ Card deletado com sucesso!"
+    }
+  }
+}
