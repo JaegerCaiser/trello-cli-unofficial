@@ -1,7 +1,7 @@
 {
   "name": "trello-cli-unofficial",
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.6.0",
   "private": false,
   "description": "Unofficial Trello CLI using Power-Up authentication, built with Bun for maximum performance",
   "author": "Matheus Caiser <matheus.kaiser@gmail.com> (https://www.mrdeveloper.com.br/)",
@@ -33,7 +33,7 @@
   "scripts": {
     "start": "bun run main.ts",
     "dev": "bun run --watch main.ts",
-    "build": "bun build main.ts --outdir ./dist",
+    "build": "bun build main.ts --outdir ./dist --target node",
     "install-global": "./install.sh",
     "test": "bun test",
     "test:watch": "bun test --watch",
