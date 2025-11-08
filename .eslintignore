@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+bun.lock
+
+# Build outputs
+dist/
+*.tsbuildinfo
+
+# Config files backup
+*.backup
+
+# Environment
+.env
+.env.*
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+*.lcov

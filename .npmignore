@@ -1,0 +1,48 @@
+# NPM Ignore - Files to exclude from NPM package
+
+# Development files
+.history/
+.github/
+tests/
+coverage/
+*.test.ts
+*.spec.ts
+
+# Configuration files
+.gitignore
+.eslintcache
+eslint.config.js
+tsconfig.json
+.env.example
+
+# Documentation (keep only README.md)
+CONTRIBUTING.md
+
+# Build artifacts
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# Backup files
+*.backup
+index.ts.backup
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# CI/CD
+.github/workflows/
+
+# Git
+.git/
+.gitattributes
+
+# Lock files (users should generate their own)
+bun.lockb
+package-lock.json
+yarn.lock

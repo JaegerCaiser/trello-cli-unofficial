@@ -1,0 +1,75 @@
+{
+  "name": "trello-cli-unofficial",
+  "type": "module",
+  "version": "0.1.0",
+  "private": false,
+  "description": "Unofficial Trello CLI using Power-Up authentication, built with Bun for maximum performance",
+  "author": "Matheus Caiser <matheus.kaiser@gmail.com> (https://www.mrdeveloper.com.br/)",
+  "license": "MIT",
+  "homepage": "https://github.com/JaegerCaiser/trello-cli-unofficial#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JaegerCaiser/trello-cli-unofficial.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JaegerCaiser/trello-cli-unofficial/issues"
+  },
+  "keywords": [
+    "trello",
+    "cli",
+    "power-up",
+    "api",
+    "bun",
+    "typescript"
+  ],
+  "module": "main.ts",
+  "bin": {
+    "trello-cli-unofficial": "./main.ts",
+    "tcu": "./main.ts"
+  },
+  "engines": {
+    "bun": ">=1.0.0"
+  },
+  "scripts": {
+    "start": "bun run main.ts",
+    "dev": "bun run --watch main.ts",
+    "build": "bun build main.ts --outdir ./dist",
+    "install-global": "./install.sh",
+    "test": "bun test",
+    "test:watch": "bun test --watch",
+    "test:unit": "bun test tests/unit",
+    "test:integration": "bun test tests/integration",
+    "test:coverage": "bun test --coverage",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc --noEmit",
+    "validate": "bun run lint && bun run typecheck && bun run test",
+    "version:patch": "bun version patch && git push --follow-tags",
+    "version:minor": "bun version minor && git push --follow-tags",
+    "version:major": "bun version major && git push --follow-tags",
+    "prepublishOnly": "bun run validate && bun run build"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@types/node": "^24.10.0",
+    "commander": "^14.0.2",
+    "dotenv": "^17.2.3",
+    "fs-extra": "^11.3.2",
+    "inquirer": "^12.10.0"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^6.2.0",
+    "@types/bun": "latest",
+    "@types/fs-extra": "^11.0.4",
+    "@types/inquirer": "^9.0.9",
+    "eslint": "^9.39.1",
+    "eslint-plugin-format": "^1.0.2"
+  },
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ]
+}

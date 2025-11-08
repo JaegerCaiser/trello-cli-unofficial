@@ -1,0 +1,25 @@
+feature/*:
+  - feature
+  - enhancement
+
+fix/*:
+  - bug
+  - fix
+
+hotfix/*:
+  - hotfix
+  - urgent
+  - priority:high
+
+release/*:
+  - release
+
+docs/*:
+  - documentation
+
+chore/*:
+  - maintenance
+  - dependencies
+
+test/*:
+  - testing

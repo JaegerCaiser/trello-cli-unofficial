@@ -1,0 +1,508 @@
+#!/usr/bin/env bun
+import { Command } from 'commander';
+import inquirer from 'inquirer';
+import fs from 'fs-extra';
+import path from 'path';
+import { config } from 'dotenv';
+
+config();
+
+const CONFIG_DIR = path.join(process.env.HOME || '~', '.trello-cli-unofficial');
+const CONFIG_FILE = path.join(CONFIG_DIR, 'config.json');
+
+interface Config {
+  apiKey: string;
+  token?: string;
+}
+
+interface TrelloBoard {
+  id: string;
+  name: string;
+  url: string;
+}
+
+interface TrelloList {
+  id: string;
+  name: string;
+}
+
+interface TrelloCard {
+  id: string;
+  name: string;
+  desc?: string;
+  idList: string;
+  url?: string;
+}
+
+class ConfigManager {
+  private config: Config = {
+    apiKey: '630a01228b85df706aa520f3611e6490', // Default API key
+  };
+
+  async load(): Promise<void> {
+    try {
+      if (await fs.pathExists(CONFIG_FILE)) {
+        const data = await fs.readJson(CONFIG_FILE);
+        this.config = { ...this.config, ...data };
+      }
+    } catch (error) {
+      console.error('Error loading config:', error.message);
+    }
+  }
+
+  async save(): Promise<void> {
+    try {
+      await fs.ensureDir(CONFIG_DIR);
+      await fs.writeJson(CONFIG_FILE, this.config, { spaces: 2 });
+    } catch (error) {
+      console.error('Error saving config:', error.message);
+    }
+  }
+
+  get apiKey(): string {
+    return this.config.apiKey;
+  }
+
+  get token(): string | undefined {
+    return this.config.token || process.env.TRELLO_TOKEN;
+  }
+
+  set token(value: string | undefined) {
+    this.config.token = value;
+  }
+
+  hasToken(): boolean {
+    return !!(this.token);
+  }
+}
+
+class TrelloAPI {
+  constructor(private apiKey: string, private token: string) {}
+
+  private async request(endpoint: string, options?: RequestInit): Promise<any> {
+    const url = `https://api.trello.com/1${endpoint}?key=${this.apiKey}&token=${this.token}`;
+    
+    const response = await fetch(url, options);
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Trello API error: ${response.status} ${response.statusText}\n${errorText}`);
+    }
+
+    return response.json();
+  }
+
+  async getBoards(): Promise<TrelloBoard[]> {
+    return this.request('/members/me/boards');
+  }
+
+  async getLists(boardId: string): Promise<TrelloList[]> {
+    return this.request(`/boards/${boardId}/lists`);
+  }
+
+  async getCards(listId: string): Promise<TrelloCard[]> {
+    return this.request(`/lists/${listId}/cards`);
+  }
+
+  async createCard(listId: string, name: string, desc?: string): Promise<TrelloCard> {
+    const body = new URLSearchParams({
+      idList: listId,
+      name,
+      desc: desc || '',
+      key: this.apiKey,
+      token: this.token,
+    });
+
+    return this.request('/cards', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: body.toString(),
+    });
+  }
+
+  async updateCard(cardId: string, updates: Partial<TrelloCard>): Promise<TrelloCard> {
+    const body = new URLSearchParams({
+      key: this.apiKey,
+      token: this.token,
+      ...updates,
+    });
+
+    return this.request(`/cards/${cardId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: body.toString(),
+    });
+  }
+
+  async deleteCard(cardId: string): Promise<void> {
+    await this.request(`/cards/${cardId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async moveCard(cardId: string, listId: string): Promise<TrelloCard> {
+    return this.updateCard(cardId, { idList: listId });
+  }
+}
+
+class TrelloCLI {
+  private configManager = new ConfigManager();
+  private api?: TrelloAPI;
+
+  async initialize(): Promise<void> {
+    await this.configManager.load();
+    
+    if (this.configManager.hasToken()) {
+      this.api = new TrelloAPI(this.configManager.apiKey, this.configManager.token!);
+    }
+  }
+
+  async ensureAuthenticated(): Promise<void> {
+    if (!this.api) {
+      console.log('🔐 Você precisa configurar seu token do Trello primeiro.');
+      await this.setupToken();
+    }
+  }
+
+  private async setupToken(): Promise<void> {
+    const { token } = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'token',
+        message: 'Digite seu token do Trello (ATTA...):',
+        validate: (input) => input.startsWith('ATTA') || 'Token deve começar com ATTA',
+      },
+    ]);
+
+    this.configManager.token = token;
+    await this.configManager.save();
+    this.api = new TrelloAPI(this.configManager.apiKey, token);
+    console.log('✅ Token configurado com sucesso!');
+  }
+
+  async showMenu(): Promise<void> {
+    await this.ensureAuthenticated();
+
+    while (true) {
+      const { action } = await inquirer.prompt([
+        {
+          type: 'list',
+          name: 'action',
+          message: '🏠 Menu Principal - Trello CLI Unofficial',
+          choices: [
+            { name: '📋 Ver meus quadros', value: 'boards' },
+            { name: '📝 Explorar quadro', value: 'explore' },
+            { name: '➕ Criar cartão', value: 'create' },
+            { name: '⚙️  Configurações', value: 'config' },
+            { name: '🚪 Sair', value: 'exit' },
+          ],
+        },
+      ]);
+
+      try {
+        switch (action) {
+          case 'boards':
+            await this.showBoards();
+            break;
+          case 'explore':
+            await this.exploreBoard();
+            break;
+          case 'create':
+            await this.createCardInteractive();
+            break;
+          case 'config':
+            await this.showConfigMenu();
+            break;
+          case 'exit':
+            console.log('👋 Até logo!');
+            return;
+        }
+      } catch (error) {
+        console.error('❌ Erro:', error.message);
+      }
+
+      console.log('\n' + '='.repeat(50) + '\n');
+    }
+  }
+
+  private async showBoards(): Promise<void> {
+    const boards = await this.api!.getBoards();
+    
+    console.log('📋 Seus Quadros do Trello:');
+    boards.forEach((board, index) => {
+      console.log(`${index + 1}. ${board.name}`);
+      console.log(`   🔗 ${board.url}`);
+      console.log(`   🆔 ${board.id}\n`);
+    });
+  }
+
+  private async exploreBoard(): Promise<void> {
+    const boards = await this.api!.getBoards();
+    
+    const { selectedBoard } = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'selectedBoard',
+        message: 'Selecione um quadro:',
+        choices: boards.map(board => ({ name: board.name, value: board.id })),
+      },
+    ]);
+
+    const lists = await this.api!.getLists(selectedBoard);
+    
+    const { selectedList } = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'selectedList',
+        message: 'Selecione uma lista:',
+        choices: lists.map(list => ({ name: list.name, value: list.id })),
+      },
+    ]);
+
+    const cards = await this.api!.getCards(selectedList);
+    
+    if (cards.length === 0) {
+      console.log('📭 Esta lista está vazia.');
+      return;
+    }
+
+    console.log(`🃏 Cartões em "${lists.find(l => l.id === selectedList)?.name}":`);
+    cards.forEach((card, index) => {
+      console.log(`${index + 1}. ${card.name}`);
+      if (card.desc) {
+        const desc = card.desc.length > 100 ? card.desc.substring(0, 100) + '...' : card.desc;
+        console.log(`   📝 ${desc}`);
+      }
+      console.log(`   🔗 ${card.url}\n`);
+    });
+
+    // Opções adicionais
+    const { nextAction } = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'nextAction',
+        message: 'O que deseja fazer?',
+        choices: [
+          { name: '⬅️  Voltar ao menu', value: 'back' },
+          { name: '📝 Editar cartão', value: 'edit' },
+          { name: '🗑️  Deletar cartão', value: 'delete' },
+          { name: '📦 Mover cartão', value: 'move' },
+        ],
+      },
+    ]);
+
+    if (nextAction !== 'back') {
+      const { selectedCard } = await inquirer.prompt([
+        {
+          type: 'list',
+          name: 'selectedCard',
+          message: 'Selecione um cartão:',
+          choices: cards.map(card => ({ name: card.name, value: card.id })),
+        },
+      ]);
+
+      switch (nextAction) {
+        case 'edit':
+          await this.editCard(selectedCard, cards.find(c => c.id === selectedCard)!);
+          break;
+        case 'delete':
+          await this.deleteCard(selectedCard, cards.find(c => c.id === selectedCard)!);
+          break;
+        case 'move':
+          await this.moveCard(selectedCard, selectedBoard, lists);
+          break;
+      }
+    }
+  }
+
+  private async createCardInteractive(): Promise<void> {
+    const boards = await this.api!.getBoards();
+    
+    const { selectedBoard } = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'selectedBoard',
+        message: 'Selecione o quadro:',
+        choices: boards.map(board => ({ name: board.name, value: board.id })),
+      },
+    ]);
+
+    const lists = await this.api!.getLists(selectedBoard);
+
+    const { selectedList } = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'selectedList',
+        message: 'Selecione a lista:',
+        choices: lists.map(list => ({ name: list.name, value: list.id })),
+      },
+    ]);
+
+    const { cardName, cardDesc } = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'cardName',
+        message: 'Nome do cartão:',
+        validate: (input) => input.length > 0 || 'Nome é obrigatório',
+      },
+      {
+        type: 'input',
+        name: 'cardDesc',
+        message: 'Descrição (opcional):',
+      },
+    ]);
+
+    const newCard = await this.api!.createCard(selectedList, cardName, cardDesc);
+    
+    console.log('✅ Cartão criado com sucesso!');
+    console.log(`📝 Nome: ${newCard.name}`);
+    console.log(`🔗 URL: ${newCard.url}`);
+  }
+
+  private async editCard(cardId: string, card: TrelloCard): Promise<void> {
+    const { newName, newDesc } = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'newName',
+        message: 'Novo nome:',
+        default: card.name,
+      },
+      {
+        type: 'input',
+        name: 'newDesc',
+        message: 'Nova descrição:',
+        default: card.desc || '',
+      },
+    ]);
+
+    await this.api!.updateCard(cardId, { name: newName, desc: newDesc });
+    console.log('✅ Cartão atualizado com sucesso!');
+  }
+
+  private async deleteCard(cardId: string, card: TrelloCard): Promise<void> {
+    const { confirm } = await inquirer.prompt([
+      {
+        type: 'confirm',
+        name: 'confirm',
+        message: `Tem certeza que deseja deletar "${card.name}"?`,
+        default: false,
+      },
+    ]);
+
+    if (confirm) {
+      await this.api!.deleteCard(cardId);
+      console.log('✅ Cartão deletado com sucesso!');
+    }
+  }
+
+  private async moveCard(cardId: string, currentBoardId: string, lists: TrelloList[]): Promise<void> {
+    const { targetList } = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'targetList',
+        message: 'Mover para qual lista?',
+        choices: lists.map(list => ({ name: list.name, value: list.id })),
+      },
+    ]);
+
+    await this.api!.moveCard(cardId, targetList);
+    console.log('✅ Cartão movido com sucesso!');
+  }
+
+  private async showConfigMenu(): Promise<void> {
+    while (true) {
+      const { configAction } = await inquirer.prompt([
+        {
+          type: 'list',
+          name: 'configAction',
+          message: '⚙️ Configurações',
+          choices: [
+            { name: '🔑 Configurar token', value: 'token' },
+            { name: '👀 Ver configuração atual', value: 'view' },
+            { name: '🔄 Resetar configuração', value: 'reset' },
+            { name: '⬅️  Voltar', value: 'back' },
+          ],
+        },
+      ]);
+
+      switch (configAction) {
+        case 'token':
+          await this.setupToken();
+          break;
+        case 'view':
+          console.log('📋 Configuração atual:');
+          console.log(`API Key: ${this.configManager.apiKey}`);
+          console.log(`Token configurado: ${this.configManager.hasToken() ? '✅ Sim' : '❌ Não'}`);
+          console.log(`Arquivo de config: ${CONFIG_FILE}`);
+          break;
+        case 'reset':
+          const { confirm } = await inquirer.prompt([
+            {
+              type: 'confirm',
+              name: 'confirm',
+              message: 'Tem certeza que deseja resetar toda a configuração?',
+              default: false,
+            },
+          ]);
+          if (confirm) {
+            await fs.remove(CONFIG_FILE);
+            this.configManager = new ConfigManager();
+            await this.configManager.load();
+            this.api = undefined;
+            console.log('✅ Configuração resetada!');
+          }
+          break;
+        case 'back':
+          return;
+      }
+    }
+  }
+}
+
+// CLI Commands (para uso direto na linha de comando)
+const program = new Command();
+
+program
+  .name('trello-cli-unofficial')
+  .description('Unofficial Trello CLI using Power-Up authentication')
+  .version('1.0.0');
+
+program
+  .command('interactive')
+  .alias('i')
+  .description('Start interactive mode')
+  .action(async () => {
+    const cli = new TrelloCLI();
+    await cli.initialize();
+    await cli.showMenu();
+  });
+
+program
+  .command('boards')
+  .description('List all your Trello boards')
+  .action(async () => {
+    const cli = new TrelloCLI();
+    await cli.initialize();
+    await cli.showBoards();
+  });
+
+program
+  .command('setup')
+  .description('Setup your Trello token')
+  .action(async () => {
+    const cli = new TrelloCLI();
+    await cli.initialize();
+    await cli.setupToken();
+  });
+
+// Fallback to interactive mode if no command specified
+if (process.argv.length === 2) {
+  const cli = new TrelloCLI();
+  cli.initialize().then(() => cli.showMenu()).catch(console.error);
+} else {
+  program.parse();
+}
