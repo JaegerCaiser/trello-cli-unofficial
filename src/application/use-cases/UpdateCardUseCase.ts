@@ -1,5 +1,5 @@
-import type { CardEntity, UpdateCardData } from '../../domain/entities';
-import type { TrelloRepository } from '../../domain/repositories';
+import type { CardEntity, UpdateCardData } from '@domain/entities';
+import type { TrelloRepository } from '@domain/repositories';
 
 export class UpdateCardUseCase {
   constructor(private trelloRepository: TrelloRepository) {}

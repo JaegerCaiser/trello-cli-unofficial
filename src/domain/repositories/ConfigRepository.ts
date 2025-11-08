@@ -1,4 +1,4 @@
-import type { ConfigEntity } from '../entities';
+import type { ConfigEntity } from '@domain/entities';
 
 export interface ConfigRepository {
   load: () => Promise<ConfigEntity>;

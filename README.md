@@ -21,7 +21,8 @@ An unofficial Trello CLI using Power-Up authentication, built with Bun for maxim
 - 📦 **Move Cards**: Between lists in the same board
 - 🛠️ **Traditional CLI**: Also works as a command-line tool
 - 🤖 **Automated CI/CD**: Semantic versioning and NPM publishing on every release
-- 🔒 **Secure Publishing**: NPM provenance with GitHub Actions OIDC
+- � **Quality Gates**: 95% test coverage threshold enforced in CI/CD
+- �🔒 **Secure Publishing**: NPM provenance with GitHub Actions OIDC
 
 ## 📦 Installation
 

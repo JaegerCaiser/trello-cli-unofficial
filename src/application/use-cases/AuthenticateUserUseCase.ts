@@ -1,5 +1,5 @@
-import type { ConfigRepository } from '../../domain/repositories';
-import { AuthenticationService } from '../../domain/services';
+import type { ConfigRepository } from '@domain/repositories';
+import { AuthenticationService } from '@domain/services';
 
 export class AuthenticateUserUseCase {
   private authService: AuthenticationService;

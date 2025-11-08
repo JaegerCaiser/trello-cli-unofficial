@@ -1,6 +1,6 @@
-import type { CreateCardData, UpdateCardData } from '../../domain/entities';
-import type { TrelloRepository } from '../../domain/repositories';
-import { BoardEntity, CardEntity, ListEntity } from '../../domain/entities';
+import type { CreateCardData, UpdateCardData } from '@domain/entities';
+import type { TrelloRepository } from '@domain/repositories';
+import { BoardEntity, CardEntity, ListEntity } from '@domain/entities';
 
 export class TrelloApiRepository implements TrelloRepository {
   private readonly baseUrl = 'https://api.trello.com/1';

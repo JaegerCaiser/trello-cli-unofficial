@@ -1,5 +1,5 @@
-import type { ConfigEntity } from '../entities';
-import type { ConfigRepository } from '../repositories';
+import type { ConfigEntity } from '@domain/entities';
+import type { ConfigRepository } from '@domain/repositories';
 
 export class AuthenticationService {
   constructor(private configRepository: ConfigRepository) {}

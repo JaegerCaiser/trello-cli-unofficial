@@ -3,7 +3,7 @@ import {
   CardEntity,
   ConfigEntity,
   ListEntity,
-} from '../../src/domain/entities';
+} from '@domain/entities';
 
 export const TestData = {
   boards: {

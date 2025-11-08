@@ -1,4 +1,4 @@
-import type { TrelloRepository } from '../../domain/repositories';
+import type { TrelloRepository } from '@domain/repositories';
 
 export class DeleteCardUseCase {
   constructor(private trelloRepository: TrelloRepository) {}
