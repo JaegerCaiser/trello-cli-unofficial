@@ -321,7 +321,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📊 Project Status
 
-- ✅ Latest version: **v0.5.0**
 - 🚀 57 tests passing
 - 📦 Clean Domain-Driven Design architecture
 - 🎨 ESLint + TypeScript strict mode
