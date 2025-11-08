@@ -83,6 +83,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Debug OIDC Token
+        if: steps.version.outputs.bump != 'none'
+        run: |
+          echo "🔍 Checking OIDC token availability..."
+          echo "Repository: ${{ github.repository }}"
+          echo "Workflow: ${{ github.workflow }}"
+          echo "Job: ${{ github.job }}"
+          echo "ID Token Request URL: $ACTIONS_ID_TOKEN_REQUEST_URL"
+          echo "ID Token Request Token exists: $([[ -n "$ACTIONS_ID_TOKEN_REQUEST_TOKEN" ]] && echo "yes" || echo "no")"
+
       - name: Publish to NPM
         if: steps.version.outputs.bump != 'none'
         run: npm publish --provenance --access public

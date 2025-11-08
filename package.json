@@ -27,6 +27,23 @@
     "trello-cli-unofficial": "./main.ts",
     "tcu": "./main.ts"
   },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "files": [
+    "CHANGELOG.md",
+    "LICENSE",
+    "README.md",
+    "bun.lock",
+    "bunfig.toml",
+    "dist",
+    "install.sh",
+    "main.ts",
+    "scripts",
+    "src",
+    "test_trigger.txt"
+  ],
   "engines": {
     "bun": ">=1.0.0"
   },
