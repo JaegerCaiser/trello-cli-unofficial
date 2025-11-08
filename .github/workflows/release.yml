@@ -83,9 +83,18 @@ jobs:
           draft: false
           prerelease: false
 
+      - name: Setup Node.js for NPM publishing
+        if: steps.version.outputs.bump != 'none'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org/'
+
       - name: Publish to NPM
         if: steps.version.outputs.bump != 'none'
         run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Generate release notes
         if: steps.version.outputs.bump != 'none'
