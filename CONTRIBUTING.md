@@ -107,21 +107,29 @@ test("should create a card", async () => {
 
 Follow [Conventional Commits](https://www.conventionalcommits.org/):
 
-- `feat:` new feature
-- `fix:` bug fix
-- `docs:` documentation changes
-- `test:` adding or updating tests
-- `refactor:` code refactoring
-- `chore:` maintenance tasks
+- `feat:` new feature → **Minor version bump** (0.5.0 → 0.6.0)
+- `fix:` bug fix → **Patch version bump** (0.5.0 → 0.5.1)
+- `docs:` documentation changes → No version bump
+- `test:` adding or updating tests → No version bump
+- `refactor:` code refactoring → No version bump
+- `chore:` maintenance tasks → No version bump
+- `BREAKING CHANGE:` in commit body → **Major version bump** (0.5.0 → 1.0.0)
 
 Examples:
 
+```bash
+feat: add support for card labels         # 0.5.0 → 0.6.0
+fix: handle network errors gracefully     # 0.5.0 → 0.5.1
+docs: update installation instructions    # No release
+test: add tests for MoveCardUseCase       # No release
+
+# Breaking change example
+feat!: redesign authentication flow        # 0.5.0 → 1.0.0
+
+BREAKING CHANGE: token format changed from legacy to Power-Up
 ```
-feat: add support for card labels
-fix: handle network errors gracefully
-docs: update installation instructions
-test: add tests for MoveCardUseCase
-```
+
+**Important:** Version bumps are **automatic** based on commit messages when merged to `main`.
 
 ### Code Style
 
@@ -160,16 +168,24 @@ bun run validate
 
 ## Release Process (Maintainers)
 
+Releases are **fully automated** via GitHub Actions. When commits are pushed to `main`:
+
+1. **Automatic Version Bump**: Based on commit message type
+   - `feat:` → Minor bump (0.6.0 → 0.7.0)
+   - `fix:` → Patch bump (0.6.0 → 0.6.1)
+   - `BREAKING CHANGE:` → Major bump (0.6.0 → 1.0.0)
+   
+2. **Automatic Publishing**:
+   - Git tag created (`v0.7.0`)
+   - GitHub Release published
+   - NPM package published with provenance
+   - CHANGELOG.md should be updated manually before merge
+
+**Manual version bumps** (for testing only):
 ```bash
-# Update version and create git tag
-bun run version:patch   # 0.1.0 -> 0.1.1
-bun run version:minor   # 0.1.0 -> 0.2.0
-bun run version:major   # 0.1.0 -> 1.0.0
-
-# Update CHANGELOG.md with the new version
-
-# Publish to NPM (when ready)
-npm publish
+bun run version:patch   # 0.1.0 → 0.1.1
+bun run version:minor   # 0.1.0 → 0.2.0
+bun run version:major   # 0.1.0 → 1.0.0
 ```
 
 ## Questions?

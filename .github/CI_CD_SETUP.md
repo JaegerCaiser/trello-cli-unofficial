@@ -64,27 +64,35 @@ Same process as NPM_TOKEN, but name it `CODECOV_TOKEN`
 
 **Triggers:**
 
-- On push to `main` (after PR merge)
+- On push to `main` (after PR merge or direct commit)
 
 **What it does:**
 
-- 📦 Analyzes commit message to determine version bump:
+- 📦 Analyzes **commit message** to determine version bump:
   - `feat:` → Minor bump (0.x.0)
   - `fix:` → Patch bump (0.0.x)
-  - `BREAKING CHANGE:` → Major bump (x.0.0)
+  - `BREAKING CHANGE:` in commit body → Major bump (x.0.0)
   - Other commits → No release
 - 🏷️ Creates git tag with new version
 - 📝 Creates GitHub Release
-- 🚀 Publishes to NPM automatically
+- 🚀 Publishes to NPM automatically with provenance
 
 **Example commit messages:**
 
 ```bash
 feat: add label support           # 0.1.0 → 0.2.0
 fix: resolve authentication bug   # 0.1.0 → 0.1.1
+docs: update README               # No release
+
+# Breaking change (two ways)
 feat!: change API structure       # 0.1.0 → 1.0.0
-BREAKING CHANGE: remove old API   # 0.1.0 → 1.0.0
+# OR
+feat: change API structure
+
+BREAKING CHANGE: removed old authentication method
 ```
+
+**Important:** Version bumps are based on the **commit message**, not PR title or body.
 
 ### 3. PR Validation Workflow (`pr-validation.yml`)
 
@@ -96,7 +104,6 @@ BREAKING CHANGE: remove old API   # 0.1.0 → 1.0.0
 
 - ✅ Validates PR title follows Conventional Commits
 - 🏷️ Automatically labels PRs based on branch name
-- ⚠️ Detects breaking changes in PR body
 
 **Valid PR titles:**
 

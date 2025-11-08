@@ -110,10 +110,14 @@ git commit -m "feat: add new feature"
 git push origin feature/new-feature
 gh pr create --title "feat: Add new feature" --body "Detailed description"
 
-# 4. After approval and merge to main, CI/CD decides:
-#    - If BREAKING CHANGE → Major bump (1.0.0)
-#    - If feat: → Minor bump (0.2.0)
-#    - If fix: → Patch bump (0.1.1)
+# 4. After approval and merge to main, CI/CD automatically:
+#    - Analyzes the COMMIT MESSAGE (not PR title/body)
+#    - If commit has "BREAKING CHANGE:" in body → Major bump (1.0.0)
+#    - If commit message starts with "feat:" → Minor bump (0.2.0)
+#    - If commit message starts with "fix:" → Patch bump (0.1.1)
+#    - Other commits (docs, test, chore) → No release
+
+# IMPORTANT: Ensure merge commit message follows Conventional Commits!
 ```
 
 ### Hotfix Flow (Urgent)

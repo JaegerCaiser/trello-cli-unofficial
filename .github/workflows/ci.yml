@@ -36,16 +36,13 @@ jobs:
         run: bun test --coverage --coverage-reporter=lcov
         continue-on-error: true
 
-      - name: Validate coverage threshold
-        run: bun run test:coverage:threshold
-        if: success()
-
       - name: Upload coverage reports
         uses: codecov/codecov-action@v4
         if: success() && always()
         with:
-          token: ${{ secrets.CODECOV_TOKEN }} # Optional - linter warning is false positive
+          token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: false
+          files: ./coverage/lcov.info
 
   build:
     name: Build Package

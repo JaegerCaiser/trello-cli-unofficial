@@ -165,35 +165,47 @@ tcu
 
 ## 🤖 CI/CD & Automation
 
-This project uses automated CI/CD with semantic versioning:
+This project uses automated CI/CD with semantic versioning based on **commit messages**:
 
 ### Version Bumping
 
-- `feat:` commits → Minor version bump (0.5.0 → 0.6.0)
-- `fix:` commits → Patch version bump (0.5.0 → 0.5.1)
-- `BREAKING CHANGE:` → Major version bump (0.5.0 → 1.0.0)
+- `feat:` commits → **Minor version bump** (0.5.0 → 0.6.0)
+- `fix:` commits → **Patch version bump** (0.5.0 → 0.5.1)
+- `BREAKING CHANGE:` in commit body → **Major version bump** (0.5.0 → 1.0.0)
+- Other commits (docs, test, chore) → **No release**
 
 ### Automated Publishing
 
 Every push to `main` branch triggers:
-1. **CI Pipeline**: Linting, type checking, tests, and build
-2. **Release Pipeline**: Version bump, NPM publish, GitHub release
-3. **Security**: NPM provenance with signed builds
+1. **CI Pipeline**: Linting, type checking, tests, coverage, and build
+2. **Release Pipeline**: Automatic version bump based on commit message
+3. **NPM Publishing**: Package published with provenance and signed builds
+4. **GitHub Release**: Automatic release notes and changelog
 
 ### Conventional Commits
 
 ```bash
-# Feature commit (minor version)
+# Feature commit (minor version bump)
 git commit -m "feat: add new card templates"
 
-# Bug fix (patch version)
+# Bug fix (patch version bump)
 git commit -m "fix: handle network timeouts gracefully"
 
-# Breaking change (major version)
-git commit -m "feat!: redesign authentication flow
+# Breaking change (major version bump) - Method 1
+git commit -m "feat!: redesign authentication flow"
 
-BREAKING CHANGE: token format changed"
+# Breaking change (major version bump) - Method 2
+git commit -m "feat: redesign authentication flow
+
+BREAKING CHANGE: token format changed from legacy API to Power-Up"
+
+# Non-releasing commits
+git commit -m "docs: update installation guide"
+git commit -m "test: add integration tests"
+git commit -m "chore: update dependencies"
 ```
+
+**Important:** Version bumps are **automatic** and based on the **commit message when merged to main**, not PR titles or descriptions.
 
 ## 🛠️ Development
 
