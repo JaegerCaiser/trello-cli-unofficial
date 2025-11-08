@@ -8,6 +8,9 @@ jobs:
   release:
     name: Release to NPM
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
     # Skip if commit message contains [skip ci] or chore(release)
     if: ${{ !contains(github.event.head_commit.message, 'chore(release)') }}
 
@@ -82,11 +85,9 @@ jobs:
 
       - name: Publish to NPM
         if: steps.version.outputs.bump != 'none'
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc  # NPM_TOKEN must be configured in repo secrets
-          npm publish
+        run: npm publish --provenance --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # Linter warning is false positive - secret must be added manually
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Generate release notes
         if: steps.version.outputs.bump != 'none'
