@@ -46,8 +46,8 @@ jobs:
             exit 0
           fi
 
-          # Use GitHub CLI to get PR body safely
-          gh pr view ${{ github.event.pull_request.number }} --json body -q .body > /tmp/pr_body.txt
+          # Store PR body in a temporary file to avoid bash execution issues
+          printf '%s\n' "${{ github.event.pull_request.body }}" > /tmp/pr_body.txt
           # Sanitize HTML entities that might break bash
           sed -i 's/&amp;/\&/g; s/&lt;/</g; s/&gt;/>/g; s/&quot;/"/g; s/&#39;/'\''/g' /tmp/pr_body.txt
           # Remove ALL markdown formatting and code blocks to prevent any command execution
