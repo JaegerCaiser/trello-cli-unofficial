@@ -83,6 +83,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Setup Node.js for NPM
+        if: steps.version.outputs.bump != 'none'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Upgrade npm to latest
+        if: steps.version.outputs.bump != 'none'
+        run: npm install -g npm@latest
+
       - name: Debug OIDC Token
         if: steps.version.outputs.bump != 'none'
         run: |
@@ -90,6 +101,8 @@ jobs:
           echo "Repository: ${{ github.repository }}"
           echo "Workflow: ${{ github.workflow }}"
           echo "Job: ${{ github.job }}"
+          echo "Node version: $(node --version)"
+          echo "NPM version: $(npm --version)"
           echo "ID Token Request URL: $ACTIONS_ID_TOKEN_REQUEST_URL"
           echo "ID Token Request Token exists: $([[ -n "$ACTIONS_ID_TOKEN_REQUEST_TOKEN" ]] && echo "yes" || echo "no")"
 
