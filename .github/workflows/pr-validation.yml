@@ -47,16 +47,20 @@ jobs:
           fi
 
           # Get PR body and immediately sanitize to prevent any command execution
-          PR_BODY_RAW="${{ github.event.pull_request.body }}"
+          # Store PR body in a temporary file to avoid bash execution issues
+          echo "${{ github.event.pull_request.body }}" > /tmp/pr_body.txt
           # Sanitize HTML entities that might break bash
-          PR_BODY=$(echo "$PR_BODY_RAW" | sed 's/&amp;/\&/g; s/&lt;/</g; s/&gt;/>/g; s/&quot;/"/g; s/&#39;/'\''/g')
+          sed -i 's/&amp;/\&/g; s/&lt;/</g; s/&gt;/>/g; s/&quot;/"/g; s/&#39;/'\''/g' /tmp/pr_body.txt
           # Remove ALL markdown formatting and code blocks to prevent any command execution
-          PR_BODY=$(echo "$PR_BODY" | sed 's/`[^`]*`//g' | sed '/```/,/```/d' | sed 's/```//g' | sed 's/^\s*[-*+]\s*//g' | sed 's/^\s*[0-9]\+\.\s*//g')
+          sed -i 's/`[^`]*`//g; /```/,/```/d; s/```//g; s/^\s*[-*+]\s*//g; s/^\s*[0-9]\+\.\s*//g' /tmp/pr_body.txt
 
-          if echo "$PR_BODY" | grep -q "BREAKING CHANGE"; then
+          if grep -q "BREAKING CHANGE" /tmp/pr_body.txt; then
             echo "⚠️ Breaking change detected - will trigger MAJOR version bump"
             echo "breaking_change=true" >> $GITHUB_ENV
           fi
+
+          # Clean up temporary file
+          rm -f /tmp/pr_body.txt
 
       - name: Label PR
         uses: actions/labeler@v4
