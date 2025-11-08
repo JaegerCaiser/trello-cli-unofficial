@@ -38,10 +38,11 @@ jobs:
 
       - name: Upload coverage reports
         uses: codecov/codecov-action@v4
-        if: success() && always()
+        if: always()
         with:
-          token: ${{ secrets.CODECOV_TOKEN }} # Optional - linter warning is false positive
+          token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: false
+          files: ./coverage/lcov.info
 
   build:
     name: Build Package

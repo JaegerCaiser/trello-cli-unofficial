@@ -20,11 +20,13 @@ jobs:
           bun-version: latest
 
       - name: Check for outdated packages
+        continue-on-error: true
         run: |
           echo "📦 Checking for outdated dependencies..."
-          bun outdated || true
+          bun outdated
 
       - name: Run security audit
+        continue-on-error: true
         run: |
           echo "🔒 Running security audit..."
-          bun audit || true
+          bun audit

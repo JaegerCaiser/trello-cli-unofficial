@@ -38,31 +38,6 @@ jobs:
             didn't match the configured pattern. Please ensure that the subject
             doesn't start with an uppercase character.
 
-      - name: Check for breaking changes
-        run: |
-          # Skip breaking change check for Dependabot PRs as they contain HTML entities
-          if [[ "${{ github.actor }}" == "dependabot[bot]" ]]; then
-            echo "⏭️ Skipping breaking change check for Dependabot PR"
-            exit 0
-          fi
-
-          # Use GitHub CLI to get PR body safely
-          gh pr view ${{ github.event.pull_request.number }} --json body -q .body > /tmp/pr_body.txt
-          # Sanitize HTML entities that might break bash
-          sed -i 's/&amp;/\&/g; s/&lt;/</g; s/&gt;/>/g; s/&quot;/"/g; s/&#39;/'\''/g' /tmp/pr_body.txt
-          # Remove ALL markdown formatting and code blocks to prevent any command execution
-          sed -i 's/`[^`]*`//g; /```/,/```/d; s/```//g; s/^\s*[-*+]\s*//g; s/^\s*[0-9]\+\.\s*//g' /tmp/pr_body.txt
-
-          if grep -q "BREAKING CHANGE" /tmp/pr_body.txt; then
-            echo "⚠️ Breaking change detected - will trigger MAJOR version bump"
-            echo "breaking_change=true" >> $GITHUB_ENV
-          fi
-
-          # Clean up temporary file
-          rm -f /tmp/pr_body.txt
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Label PR
         uses: actions/labeler@v4
         with:
