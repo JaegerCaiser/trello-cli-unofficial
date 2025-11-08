@@ -20,6 +20,7 @@ An unofficial Trello CLI using Power-Up authentication, built with Bun for maxim
 - ✏️ **CRUD Operations**: Create, read, update, and delete cards
 - 📦 **Move Cards**: Between lists in the same board
 - 🛠️ **Traditional CLI**: Also works as a command-line tool
+- 🌍 **Internationalization**: Support for Portuguese (pt-BR) and English (en) with auto-detection
 - 🤖 **Automated CI/CD**: Semantic versioning and NPM publishing on every release
 - � **Quality Gates**: 95% test coverage threshold enforced in CI/CD
 - �🔒 **Secure Publishing**: NPM provenance with GitHub Actions OIDC
@@ -100,7 +101,40 @@ The token is automatically saved in `~/.trello-cli-unofficial/config.json`:
 }
 ```
 
-## 🎮 Usage
+## � Internationalization (i18n)
+
+The CLI automatically detects your system language and displays messages in the appropriate language.
+
+### Supported Languages
+
+- 🇧🇷 **Portuguese (pt-BR)** - Default for Portuguese-speaking systems
+- 🇺🇸 **English (en)** - Default for other systems
+
+### Language Detection
+
+The language is automatically detected from your system's `LANG` environment variable:
+
+```bash
+# Force Portuguese
+LANG=pt_BR.UTF-8 tcu
+
+# Force English
+LANG=en_US.UTF-8 tcu
+```
+
+### Manual Language Switching
+
+```typescript
+import { changeLanguage } from 'trello-cli-unofficial';
+
+// Switch to Portuguese
+changeLanguage('pt-BR');
+
+// Switch to English
+changeLanguage('en');
+```
+
+## �🎮 Usage
 
 ### Interactive Mode (Recommended)
 
