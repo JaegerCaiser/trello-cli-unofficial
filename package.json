@@ -34,6 +34,7 @@
   "files": [
     "CHANGELOG.md",
     "LICENSE",
+    "PAT_SETUP.md",
     "README.md",
     "bun.lock",
     "bunfig.toml",
