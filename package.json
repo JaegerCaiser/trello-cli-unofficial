@@ -20,7 +20,9 @@
     "power-up",
     "api",
     "bun",
-    "typescript"
+    "typescript",
+    "i18n",
+    "internationalization"
   ],
   "module": "main.ts",
   "bin": {
