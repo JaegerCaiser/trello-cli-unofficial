@@ -101,7 +101,7 @@ The token is automatically saved in `~/.trello-cli-unofficial/config.json`:
 }
 ```
 
-## � Internationalization (i18n)
+## Internationalization (i18n)
 
 The CLI automatically detects your system language and displays messages in the appropriate language.
 
@@ -125,13 +125,13 @@ LANG=en_US.UTF-8 tcu
 ### Manual Language Switching
 
 ```typescript
-import { changeLanguage } from 'trello-cli-unofficial';
+import { changeLanguage } from "trello-cli-unofficial";
 
 // Switch to Portuguese
-changeLanguage('pt-BR');
+changeLanguage("pt-BR");
 
 // Switch to English
-changeLanguage('en');
+changeLanguage("en");
 ```
 
 ## �🎮 Usage
@@ -211,6 +211,7 @@ This project uses automated CI/CD with semantic versioning based on **commit mes
 ### Automated Publishing
 
 Every push to `main` branch triggers:
+
 1. **CI Pipeline**: Linting, type checking, tests, coverage, and build
 2. **Release Pipeline**: Automatic version bump based on commit message
 3. **NPM Publishing**: Package published with provenance and signed builds
