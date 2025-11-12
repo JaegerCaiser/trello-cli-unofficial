@@ -1,17 +1,17 @@
-import type { BoardEntity, CardEntity, ListEntity } from "@domain/entities";
-import type { TrelloRepository } from "@domain/repositories";
-import type { BoardController } from "./BoardController";
+import type { BoardEntity, CardEntity, ListEntity } from '@domain/entities';
+import type { TrelloRepository } from '@domain/repositories';
+import type { BoardController } from './BoardController';
 
 import {
   CreateCardUseCase,
   DeleteCardUseCase,
   MoveCardUseCase,
   UpdateCardUseCase,
-} from "@application/use-cases";
+} from '@application/use-cases';
 
-import { CARD_ACTIONS } from "@shared/types";
-import inquirer from "inquirer";
-import { t } from "@/i18n";
+import { CARD_ACTIONS } from '@shared/types';
+import inquirer from 'inquirer';
+import { t } from '@/i18n';
 
 export class CardController {
   private createCardUseCase: CreateCardUseCase;
@@ -21,7 +21,7 @@ export class CardController {
 
   constructor(
     private trelloRepository: TrelloRepository,
-    private boardController: BoardController // Will be injected to avoid circular dependency
+    private boardController: BoardController, // Will be injected to avoid circular dependency
   ) {
     this.createCardUseCase = new CreateCardUseCase(trelloRepository);
     this.updateCardUseCase = new UpdateCardUseCase(trelloRepository);
@@ -34,9 +34,9 @@ export class CardController {
 
     const { selectedBoard } = await inquirer.prompt([
       {
-        type: "list",
-        name: "selectedBoard",
-        message: t("card.selectBoard"),
+        type: 'list',
+        name: 'selectedBoard',
+        message: t('card.selectBoard'),
         choices: boards.map((board: BoardEntity) => ({
           name: board.name,
           value: board.id,
@@ -48,9 +48,9 @@ export class CardController {
 
     const { selectedList } = await inquirer.prompt([
       {
-        type: "list",
-        name: "selectedList",
-        message: t("card.selectList"),
+        type: 'list',
+        name: 'selectedList',
+        message: t('card.selectList'),
         choices: lists.map((list: ListEntity) => ({
           name: list.name,
           value: list.id,
@@ -60,15 +60,15 @@ export class CardController {
 
     const { cardName, cardDesc } = await inquirer.prompt([
       {
-        type: "input",
-        name: "cardName",
-        message: t("card.enterName"),
-        validate: (input) => input.length > 0 || "Nome é obrigatório",
+        type: 'input',
+        name: 'cardName',
+        message: t('card.enterName'),
+        validate: input => input.length > 0 || 'Nome é obrigatório',
       },
       {
-        type: "input",
-        name: "cardDesc",
-        message: t("card.enterDescription"),
+        type: 'input',
+        name: 'cardDesc',
+        message: t('card.enterDescription'),
       },
     ]);
 
@@ -78,36 +78,36 @@ export class CardController {
       listId: selectedList,
     });
 
-    console.log(t("card.created"));
-    console.log(t("card.cardName", { name: newCard.name }));
-    console.log(t("card.cardUrl", { url: newCard.url }));
+    console.log(t('card.created'));
+    console.log(t('card.cardName', { name: newCard.name }));
+    console.log(t('card.cardUrl', { url: newCard.url }));
   }
 
   async exploreCards(boardId: string, lists: ListEntity[]): Promise<void> {
     const { selectedList } = await inquirer.prompt([
       {
-        type: "list",
-        name: "selectedList",
-        message: t("card.selectList"),
-        choices: lists.map((list) => ({ name: list.name, value: list.id })),
+        type: 'list',
+        name: 'selectedList',
+        message: t('card.selectList'),
+        choices: lists.map(list => ({ name: list.name, value: list.id })),
       },
     ]);
 
     const cards = await this.boardController.getCards(selectedList);
 
     if (cards.length === 0) {
-      console.log(t("card.emptyList"));
+      console.log(t('card.emptyList'));
       return;
     }
 
     console.log(
-      `🃏 Cartões em "${lists.find((l) => l.id === selectedList)?.name}":`
+      `🃏 Cartões em "${lists.find(l => l.id === selectedList)?.name}":`,
     );
     cards.forEach((card: CardEntity, index: number) => {
       console.log(`${index + 1}. ${card.name}`);
       if (card.desc) {
-        const desc =
-          card.desc.length > 100
+        const desc
+          = card.desc.length > 100
             ? `${card.desc.substring(0, 100)}...`
             : card.desc;
         console.log(`   📝 ${desc}`);
@@ -118,14 +118,14 @@ export class CardController {
     // Opções adicionais
     const { nextAction } = await inquirer.prompt([
       {
-        type: "list",
-        name: "nextAction",
-        message: t("card.whatToDo"),
+        type: 'list',
+        name: 'nextAction',
+        message: t('card.whatToDo'),
         choices: [
-          { name: t("card.actions.back"), value: CARD_ACTIONS.BACK },
-          { name: t("card.actions.edit"), value: CARD_ACTIONS.EDIT },
-          { name: t("card.actions.delete"), value: CARD_ACTIONS.DELETE },
-          { name: "📦 Mover cartão", value: CARD_ACTIONS.MOVE },
+          { name: t('card.actions.back'), value: CARD_ACTIONS.BACK },
+          { name: t('card.actions.edit'), value: CARD_ACTIONS.EDIT },
+          { name: t('card.actions.delete'), value: CARD_ACTIONS.DELETE },
+          { name: '📦 Mover cartão', value: CARD_ACTIONS.MOVE },
         ],
       },
     ]);
@@ -133,9 +133,9 @@ export class CardController {
     if (nextAction !== CARD_ACTIONS.BACK) {
       const { selectedCard } = await inquirer.prompt([
         {
-          type: "list",
-          name: "selectedCard",
-          message: t("card.selectCard"),
+          type: 'list',
+          name: 'selectedCard',
+          message: t('card.selectCard'),
           choices: cards.map((card: CardEntity) => ({
             name: card.name,
             value: card.id,
@@ -144,7 +144,7 @@ export class CardController {
       ]);
 
       const selectedCardEntity = cards.find(
-        (c: CardEntity) => c.id === selectedCard
+        (c: CardEntity) => c.id === selectedCard,
       )!;
 
       switch (nextAction) {
@@ -164,16 +164,16 @@ export class CardController {
   private async editCard(cardId: string, card: CardEntity): Promise<void> {
     const { newName, newDesc } = await inquirer.prompt([
       {
-        type: "input",
-        name: "newName",
-        message: t("card.newName"),
+        type: 'input',
+        name: 'newName',
+        message: t('card.newName'),
         default: card.name,
       },
       {
-        type: "input",
-        name: "newDesc",
-        message: t("card.newDescription"),
-        default: card.desc || "",
+        type: 'input',
+        name: 'newDesc',
+        message: t('card.newDescription'),
+        default: card.desc || '',
       },
     ]);
 
@@ -181,18 +181,18 @@ export class CardController {
       name: newName,
       desc: newDesc,
     });
-    console.log(t("card.updated"));
+    console.log(t('card.updated'));
   }
 
   private async deleteCardInteractive(
     cardId: string,
-    card: CardEntity
+    card: CardEntity,
   ): Promise<void> {
     const { confirm } = await inquirer.prompt([
       {
-        type: "confirm",
-        name: "confirm",
-        message: t("card.confirmDelete", { name: card.name }),
+        type: 'confirm',
+        name: 'confirm',
+        message: t('card.confirmDelete', { name: card.name }),
         default: false,
       },
     ]);
@@ -205,19 +205,19 @@ export class CardController {
   private async moveCardInteractive(
     cardId: string,
     currentBoardId: string,
-    lists: ListEntity[]
+    lists: ListEntity[],
   ): Promise<void> {
     const { targetList } = await inquirer.prompt([
       {
-        type: "list",
-        name: "targetList",
-        message: t("card.moveToWhichList"),
-        choices: lists.map((list) => ({ name: list.name, value: list.id })),
+        type: 'list',
+        name: 'targetList',
+        message: t('card.moveToWhichList'),
+        choices: lists.map(list => ({ name: list.name, value: list.id })),
       },
     ]);
 
     // Encontrar o nome da lista de destino para passar para o método público
-    const targetListObj = lists.find((list) => list.id === targetList);
+    const targetListObj = lists.find(list => list.id === targetList);
     if (targetListObj) {
       await this.moveCard(cardId, targetListObj.name);
     }
@@ -227,32 +227,32 @@ export class CardController {
     boardName: string,
     listName: string,
     cardName: string,
-    description?: string
+    description?: string,
   ): Promise<void> {
     const boards = await this.boardController.getBoards();
     const board = boards.find((b: BoardEntity) => b.name === boardName);
 
     if (!board) {
-      throw new Error(t("board.notFound", { name: boardName }));
+      throw new Error(t('board.notFound', { name: boardName }));
     }
 
     const lists = await this.boardController.getLists(board.id);
     const list = lists.find((l: ListEntity) => l.name === listName);
 
     if (!list) {
-      throw new Error(t("list.notFound", { listName, boardName }));
+      throw new Error(t('list.notFound', { listName, boardName }));
     }
 
     const newCard = await this.createCardUseCase.execute({
       name: cardName,
-      desc: description || "",
+      desc: description || '',
       listId: list.id,
     });
 
-    console.log(t("card.created"));
-    console.log(t("card.cardName", { name: newCard.name }));
-    console.log(t("card.cardUrl", { url: newCard.url }));
-    console.log(t("card.cardId", { id: newCard.id }));
+    console.log(t('card.created'));
+    console.log(t('card.cardName', { name: newCard.name }));
+    console.log(t('card.cardUrl', { url: newCard.url }));
+    console.log(t('card.cardId', { id: newCard.id }));
   }
 
   async moveCard(cardId: string, targetListName: string): Promise<void> {
@@ -272,22 +272,22 @@ export class CardController {
           if (card) {
             // Encontrou o cartão! Agora procurar a lista de destino
             const targetList = lists.find(
-              (l: ListEntity) => l.name === targetListName
+              (l: ListEntity) => l.name === targetListName,
             );
 
             if (!targetList) {
               throw new Error(
-                t("list.notFound", {
+                t('list.notFound', {
                   listName: targetListName,
                   boardName: board.name,
-                })
+                }),
               );
             }
 
             await this.moveCardUseCase.execute(cardId, targetList.id);
-            console.log(t("card.moved"));
-            console.log(t("card.cardName", { name: card.name }));
-            console.log(t("card.movedTo", { listName: targetList.name }));
+            console.log(t('card.moved'));
+            console.log(t('card.cardName', { name: card.name }));
+            console.log(t('card.movedTo', { listName: targetList.name }));
             return;
           }
         } catch {
@@ -297,7 +297,7 @@ export class CardController {
       }
     }
 
-    throw new Error(t("card.notFound", { cardId }));
+    throw new Error(t('card.notFound', { cardId }));
   }
 
   async deleteCard(cardId: string): Promise<void> {
@@ -326,35 +326,35 @@ export class CardController {
     }
 
     if (!card) {
-      throw new Error(t("card.notFound", { cardId }));
+      throw new Error(t('card.notFound', { cardId }));
     }
 
     await this.deleteCardUseCase.execute(cardId);
-    console.log(t("card.deleted"));
-    console.log(t("card.cardName", { name: card.name }));
+    console.log(t('card.deleted'));
+    console.log(t('card.cardName', { name: card.name }));
   }
 
   async createCardByListId(
     listId: string,
     cardName: string,
-    description?: string
+    description?: string,
   ): Promise<void> {
     const newCard = await this.createCardUseCase.execute({
       name: cardName,
-      desc: description || "",
+      desc: description || '',
       listId,
     });
 
-    console.log(t("card.created"));
-    console.log(t("card.cardName", { name: newCard.name }));
-    console.log(t("card.cardUrl", { url: newCard.url }));
-    console.log(t("card.cardId", { id: newCard.id }));
+    console.log(t('card.created'));
+    console.log(t('card.cardName', { name: newCard.name }));
+    console.log(t('card.cardUrl', { url: newCard.url }));
+    console.log(t('card.cardId', { id: newCard.id }));
   }
 
   async updateCard(
     cardId: string,
     name?: string,
-    desc?: string
+    desc?: string,
   ): Promise<void> {
     // Primeiro precisamos encontrar o cartão para mostrar informações
     const boards = await this.trelloRepository.getBoards();
@@ -381,7 +381,7 @@ export class CardController {
     }
 
     if (!card) {
-      throw new Error(t("card.notFound", { cardId }));
+      throw new Error(t('card.notFound', { cardId }));
     }
 
     const updateData: { name?: string; desc?: string } = {};
@@ -394,10 +394,10 @@ export class CardController {
 
     const updatedCard = await this.updateCardUseCase.execute(
       cardId,
-      updateData
+      updateData,
     );
-    console.log(t("card.updated"));
-    console.log(t("card.cardName", { name: updatedCard.name }));
+    console.log(t('card.updated'));
+    console.log(t('card.cardName', { name: updatedCard.name }));
   }
 
   async moveCardToList(cardId: string, targetListId: string): Promise<void> {
@@ -426,7 +426,7 @@ export class CardController {
     }
 
     if (!card) {
-      throw new Error(t("card.notFound", { cardId }));
+      throw new Error(t('card.notFound', { cardId }));
     }
 
     // Verificar se a lista de destino existe procurando em todos os boards
@@ -440,12 +440,12 @@ export class CardController {
     }
 
     if (!targetList) {
-      throw new Error(t("list.notFound", { listId: targetListId }));
+      throw new Error(t('list.notFound', { listId: targetListId }));
     }
 
     await this.moveCardUseCase.execute(cardId, targetListId);
-    console.log(t("card.moved"));
-    console.log(t("card.cardName", { name: card.name }));
-    console.log(t("card.movedTo", { listName: targetList.name }));
+    console.log(t('card.moved'));
+    console.log(t('card.cardName', { name: card.name }));
+    console.log(t('card.movedTo', { listName: targetList.name }));
   }
 }
