@@ -17,7 +17,7 @@ export class BoardController {
   async showBoards(): Promise<void> {
     const boards = await this.getBoardsUseCase.execute();
 
-    console.log(t('board.yourBoards'));
+    console.log(t("board.yourBoards"));
     boards.forEach((board, index) => {
       console.log(`${index + 1}. ${board.name}`);
       console.log(`   🔗 ${board.url}`);
@@ -27,15 +27,15 @@ export class BoardController {
 
   async showLists(boardName: string): Promise<void> {
     const boards = await this.getBoardsUseCase.execute();
-    const board = boards.find(b => b.name === boardName);
+    const board = boards.find((b) => b.name === boardName);
 
     if (!board) {
-      throw new Error(t('board.notFound', { name: boardName }));
+      throw new Error(t("board.notFound", { name: boardName }));
     }
 
     const lists = await this.getListsUseCase.execute(board.id);
 
-    console.log(t('list.boardLists', { boardName }));
+    console.log(t("list.boardLists", { boardName }));
     lists.forEach((list, index) => {
       console.log(`${index + 1}. ${list.name}`);
       console.log(`   🆔 ${list.id}\n`);
@@ -44,24 +44,24 @@ export class BoardController {
 
   async showCards(boardName: string, listName: string): Promise<void> {
     const boards = await this.getBoardsUseCase.execute();
-    const board = boards.find(b => b.name === boardName);
+    const board = boards.find((b) => b.name === boardName);
 
     if (!board) {
-      throw new Error(t('board.notFound', { name: boardName }));
+      throw new Error(t("board.notFound", { name: boardName }));
     }
 
     const lists = await this.getListsUseCase.execute(board.id);
-    const list = lists.find(l => l.name === listName);
+    const list = lists.find((l) => l.name === listName);
 
     if (!list) {
-      throw new Error(t('list.notFound', { listName, boardName }));
+      throw new Error(t("list.notFound", { listName, boardName }));
     }
 
     const cards = await this.getCardsUseCase.execute(list.id);
 
-    console.log(t('card.listCards', { listName, boardName }));
+    console.log(t("card.listCards", { listName, boardName }));
     if (cards.length === 0) {
-      console.log(t('card.emptyList'));
+      console.log(t("card.emptyList"));
       return;
     }
 
@@ -71,15 +71,28 @@ export class BoardController {
     });
   }
 
-  async getBoards() {
-    return await this.getBoardsUseCase.execute();
+  async showListsById(boardId: string): Promise<void> {
+    const lists = await this.getListsUseCase.execute(boardId);
+
+    console.log(t("list.boardListsById", { boardId }));
+    lists.forEach((list, index) => {
+      console.log(`${index + 1}. ${list.name}`);
+      console.log(`   🆔 ${list.id}\n`);
+    });
   }
 
-  async getLists(boardId: string) {
-    return await this.getListsUseCase.execute(boardId);
-  }
+  async showCardsByListId(listId: string): Promise<void> {
+    const cards = await this.getCardsUseCase.execute(listId);
 
-  async getCards(listId: string) {
-    return await this.getCardsUseCase.execute(listId);
+    console.log(t("card.listCardsById", { listId }));
+    if (cards.length === 0) {
+      console.log(t("card.emptyList"));
+      return;
+    }
+
+    cards.forEach((card, index) => {
+      console.log(`${index + 1}. ${card.name}`);
+      console.log(`   🆔 ${card.id}\n`);
+    });
   }
 }
