@@ -96,6 +96,7 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: '20'
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upgrade npm to latest
         if: steps.version.outputs.bump != 'none'
