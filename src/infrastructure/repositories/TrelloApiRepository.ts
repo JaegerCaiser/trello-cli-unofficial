@@ -28,16 +28,16 @@ interface TrelloCardResponse {
 }
 
 export class TrelloApiRepository implements TrelloRepository {
-  private readonly baseUrl = "https://api.trello.com/1";
+  private readonly baseUrl = 'https://api.trello.com/1';
 
   constructor(
     private readonly apiKey: string,
-    private readonly token: string
+    private readonly token: string,
   ) {}
 
   private async request(
     endpoint: string,
-    options?: RequestInit
+    options?: RequestInit,
   ): Promise<unknown> {
     const url = `${this.baseUrl}${endpoint}?key=${this.apiKey}&token=${this.token}`;
 
@@ -46,7 +46,7 @@ export class TrelloApiRepository implements TrelloRepository {
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(
-        `Trello API error: ${response.status} ${response.statusText}\n${errorText}`
+        `Trello API error: ${response.status} ${response.statusText}\n${errorText}`,
       );
     }
 
@@ -55,7 +55,7 @@ export class TrelloApiRepository implements TrelloRepository {
 
   private async requestBoards(
     endpoint: string,
-    options?: RequestInit
+    options?: RequestInit,
   ): Promise<TrelloBoardResponse[]> {
     const data = await this.request(endpoint, options);
     return data as TrelloBoardResponse[];
@@ -63,7 +63,7 @@ export class TrelloApiRepository implements TrelloRepository {
 
   private async requestLists(
     endpoint: string,
-    options?: RequestInit
+    options?: RequestInit,
   ): Promise<TrelloListResponse[]> {
     const data = await this.request(endpoint, options);
     return data as TrelloListResponse[];
@@ -71,7 +71,7 @@ export class TrelloApiRepository implements TrelloRepository {
 
   private async requestCards(
     endpoint: string,
-    options?: RequestInit
+    options?: RequestInit,
   ): Promise<TrelloCardResponse[]> {
     const data = await this.request(endpoint, options);
     return data as TrelloCardResponse[];
@@ -79,31 +79,31 @@ export class TrelloApiRepository implements TrelloRepository {
 
   private async requestList(
     endpoint: string,
-    options?: RequestInit
+    options?: RequestInit,
   ): Promise<TrelloListResponse> {
     const data = await this.request(endpoint, options);
     return data as TrelloListResponse;
   }
 
   async getBoards(): Promise<BoardEntity[]> {
-    const data = await this.requestBoards("/members/me/boards");
+    const data = await this.requestBoards('/members/me/boards');
     return data.map((board: TrelloBoardResponse) =>
-      BoardEntity.fromApiResponse(board)
+      BoardEntity.fromApiResponse(board),
     );
   }
 
   async createBoard(name: string, description?: string): Promise<BoardEntity> {
     const body = new URLSearchParams({
       name,
-      desc: description || "",
+      desc: description || '',
       key: this.apiKey,
       token: this.token,
     });
 
-    const data = await this.request("/boards", {
-      method: "POST",
+    const data = await this.request('/boards', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: body.toString(),
     });
@@ -114,7 +114,7 @@ export class TrelloApiRepository implements TrelloRepository {
   async getLists(boardId: string): Promise<ListEntity[]> {
     const data = await this.requestLists(`/boards/${boardId}/lists`);
     return data.map((list: TrelloListResponse) =>
-      ListEntity.fromApiResponse(list)
+      ListEntity.fromApiResponse(list),
     );
   }
 
@@ -126,10 +126,10 @@ export class TrelloApiRepository implements TrelloRepository {
       token: this.token,
     });
 
-    const data = await this.request("/lists", {
-      method: "POST",
+    const data = await this.request('/lists', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: body.toString(),
     });
@@ -139,7 +139,7 @@ export class TrelloApiRepository implements TrelloRepository {
 
   async deleteList(listId: string): Promise<void> {
     await this.request(`/lists/${listId}`, {
-      method: "DELETE",
+      method: 'DELETE',
     });
   }
 
@@ -151,9 +151,9 @@ export class TrelloApiRepository implements TrelloRepository {
     });
 
     const data = await this.requestList(`/lists/${listId}`, {
-      method: "PUT",
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: body.toString(),
     });
@@ -164,7 +164,7 @@ export class TrelloApiRepository implements TrelloRepository {
   async getCards(listId: string): Promise<CardEntity[]> {
     const data = await this.requestCards(`/lists/${listId}/cards`);
     return data.map((card: TrelloCardResponse) =>
-      CardEntity.fromApiResponse(card)
+      CardEntity.fromApiResponse(card),
     );
   }
 
@@ -172,15 +172,15 @@ export class TrelloApiRepository implements TrelloRepository {
     const body = new URLSearchParams({
       idList: cardData.listId,
       name: cardData.name,
-      desc: cardData.desc || "",
+      desc: cardData.desc || '',
       key: this.apiKey,
       token: this.token,
     });
 
-    const data = await this.request("/cards", {
-      method: "POST",
+    const data = await this.request('/cards', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: body.toString(),
     });
@@ -190,7 +190,7 @@ export class TrelloApiRepository implements TrelloRepository {
 
   async updateCard(
     cardId: string,
-    updates: UpdateCardData
+    updates: UpdateCardData,
   ): Promise<CardEntity> {
     const body = new URLSearchParams({
       key: this.apiKey,
@@ -199,9 +199,9 @@ export class TrelloApiRepository implements TrelloRepository {
     });
 
     const data = await this.request(`/cards/${cardId}`, {
-      method: "PUT",
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: body.toString(),
     });
@@ -211,7 +211,7 @@ export class TrelloApiRepository implements TrelloRepository {
 
   async deleteCard(cardId: string): Promise<void> {
     await this.request(`/cards/${cardId}`, {
-      method: "DELETE",
+      method: 'DELETE',
     });
   }
 

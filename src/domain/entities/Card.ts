@@ -35,7 +35,7 @@ export class CardEntity implements Card {
     public readonly name: string,
     public readonly idList: string,
     public readonly desc?: string,
-    public readonly url?: string
+    public readonly url?: string,
   ) {}
 
   static fromApiResponse(data: TrelloCardResponse): CardEntity {
@@ -43,8 +43,8 @@ export class CardEntity implements Card {
   }
 
   static create(
-    data: CreateCardData
-  ): Pick<CardEntity, "name" | "desc" | "idList"> {
+    data: CreateCardData,
+  ): Pick<CardEntity, 'name' | 'desc' | 'idList'> {
     return {
       name: data.name,
       desc: data.desc,
@@ -58,7 +58,7 @@ export class CardEntity implements Card {
       data.name ?? this.name,
       data.idList ?? this.idList,
       data.desc ?? this.desc,
-      this.url
+      this.url,
     );
   }
 }

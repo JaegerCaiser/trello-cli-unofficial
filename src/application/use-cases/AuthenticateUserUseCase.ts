@@ -1,6 +1,6 @@
-import type { ConfigEntity } from "@domain/entities";
-import type { ConfigRepository } from "@domain/repositories";
-import { AuthenticationService } from "@domain/services";
+import type { ConfigEntity } from '@domain/entities';
+import type { ConfigRepository } from '@domain/repositories';
+import { AuthenticationService } from '@domain/services';
 
 export class AuthenticateUserUseCase {
   private authService: AuthenticationService;
@@ -10,21 +10,21 @@ export class AuthenticateUserUseCase {
   }
 
   async execute(
-    token?: string
+    token?: string,
   ): Promise<{ success: boolean; message: string }> {
     if (token) {
       if (!this.authService.validateToken(token)) {
         return {
           success: false,
           message:
-            "❌ Token inválido. Deve começar com ATTA e ter pelo menos 10 caracteres.",
+            '❌ Token inválido. Deve começar com ATTA e ter pelo menos 10 caracteres.',
         };
       }
 
       await this.authService.saveToken(token);
       return {
         success: true,
-        message: "✅ Token configurado com sucesso!",
+        message: '✅ Token configurado com sucesso!',
       };
     }
 
@@ -32,13 +32,13 @@ export class AuthenticateUserUseCase {
     if (isAuthenticated) {
       return {
         success: true,
-        message: "Usuário já autenticado.",
+        message: 'Usuário já autenticado.',
       };
     }
 
     return {
       success: false,
-      message: "🔐 Você precisa configurar seu token do Trello primeiro.",
+      message: '🔐 Você precisa configurar seu token do Trello primeiro.',
     };
   }
 

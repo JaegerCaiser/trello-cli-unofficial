@@ -15,7 +15,7 @@ interface TrelloListResponse {
 export class ListEntity implements List {
   constructor(
     public readonly id: string,
-    public readonly name: string
+    public readonly name: string,
   ) {}
 
   static fromApiResponse(data: TrelloListResponse): ListEntity {
