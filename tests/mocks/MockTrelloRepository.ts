@@ -42,8 +42,26 @@ export class MockTrelloRepository implements TrelloRepository {
     return Promise.resolve(this.boards);
   }
 
+  async createBoard(name: string, _description?: string): Promise<BoardEntity> {
+    const newBoard = new BoardEntity(
+      `board-${Date.now()}`,
+      name,
+      `https://trello.com/b/board-${Date.now()}`,
+    );
+    this.boards.push(newBoard);
+    return Promise.resolve(newBoard);
+  }
+
   async getLists(boardId: string): Promise<ListEntity[]> {
     return Promise.resolve(this.lists.get(boardId) || []);
+  }
+
+  async createList(boardId: string, name: string): Promise<ListEntity> {
+    const newList = new ListEntity(`list-${Date.now()}`, name);
+    const boardLists = this.lists.get(boardId) || [];
+    boardLists.push(newList);
+    this.lists.set(boardId, boardLists);
+    return Promise.resolve(newList);
   }
 
   async getCards(listId: string): Promise<CardEntity[]> {
@@ -112,7 +130,56 @@ export class MockTrelloRepository implements TrelloRepository {
   }
 
   async moveCard(cardId: string, targetListId: string): Promise<CardEntity> {
-    return this.updateCard(cardId, { idList: targetListId });
+    // Find the card in all lists
+    for (const [_listId, cards] of this.cards.entries()) {
+      const cardIndex = cards.findIndex(card => card.id === cardId);
+      if (cardIndex !== -1) {
+        const card = cards[cardIndex]!;
+        // Remove from current list
+        cards.splice(cardIndex, 1);
+        // Add to target list
+        const targetCards = this.cards.get(targetListId) || [];
+        const updatedCard = new CardEntity(
+          card.id,
+          card.name,
+          targetListId,
+          card.desc,
+          card.url,
+        );
+        targetCards.push(updatedCard);
+        this.cards.set(targetListId, targetCards);
+        return Promise.resolve(updatedCard);
+      }
+    }
+    throw new Error('Card not found');
+  }
+
+  async deleteList(listId: string): Promise<void> {
+    // Remove list from all boards
+    for (const [_boardId, lists] of this.lists.entries()) {
+      const filteredLists = lists.filter(list => list.id !== listId);
+      this.lists.set(_boardId, filteredLists);
+    }
+    // Remove all cards from this list
+    this.cards.delete(listId);
+    return Promise.resolve();
+  }
+
+  async moveList(listId: string, position: number): Promise<ListEntity> {
+    // Find the list in all boards
+    for (const [_boardId, lists] of this.lists.entries()) {
+      const listIndex = lists.findIndex(list => list.id === listId);
+      if (listIndex !== -1) {
+        const list = lists[listIndex]!;
+        // Remove from current position
+        lists.splice(listIndex, 1);
+        // Insert at new position
+        lists.splice(position - 1, 0, list); // position is 1-based
+        this.lists.set(_boardId, lists);
+        return Promise.resolve(list);
+      }
+    }
+    throw new Error(`List with id ${listId} not found`);
   }
 
   // Helper methods for testing

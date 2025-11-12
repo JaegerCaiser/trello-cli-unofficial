@@ -22,8 +22,10 @@ describe('ListEntity', () => {
   describe('fromApiResponse', () => {
     test('should create list from API response', () => {
       const apiData = {
-        id: 'list123',
-        name: 'In Progress',
+        id: "list123",
+        name: "In Progress",
+        idBoard: "board1",
+        pos: 1,
       };
 
       const list = ListEntity.fromApiResponse(apiData);

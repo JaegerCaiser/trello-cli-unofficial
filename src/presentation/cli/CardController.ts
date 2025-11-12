@@ -1,16 +1,17 @@
-import type { CardEntity, ListEntity } from '@domain/entities';
-import type { TrelloRepository } from '@domain/repositories';
+import type { BoardEntity, CardEntity, ListEntity } from "@domain/entities";
+import type { TrelloRepository } from "@domain/repositories";
+import type { BoardController } from "./BoardController";
 
 import {
   CreateCardUseCase,
   DeleteCardUseCase,
   MoveCardUseCase,
   UpdateCardUseCase,
-} from '@application/use-cases';
+} from "@application/use-cases";
 
-import { CARD_ACTIONS } from '@shared/types';
-import inquirer from 'inquirer';
-import { t } from '@/i18n';
+import { CARD_ACTIONS } from "@shared/types";
+import inquirer from "inquirer";
+import { t } from "@/i18n";
 
 export class CardController {
   private createCardUseCase: CreateCardUseCase;
@@ -20,7 +21,7 @@ export class CardController {
 
   constructor(
     private trelloRepository: TrelloRepository,
-    private boardController: unknown // Will be injected to avoid circular dependency
+    private boardController: BoardController // Will be injected to avoid circular dependency
   ) {
     this.createCardUseCase = new CreateCardUseCase(trelloRepository);
     this.updateCardUseCase = new UpdateCardUseCase(trelloRepository);
@@ -29,28 +30,28 @@ export class CardController {
   }
 
   async createCardInteractive(): Promise<void> {
-    const boards = await (this.boardController as any).getBoards();
+    const boards = await this.boardController.getBoards();
 
     const { selectedBoard } = await inquirer.prompt([
       {
         type: "list",
         name: "selectedBoard",
         message: t("card.selectBoard"),
-        choices: boards.map((board: any) => ({
+        choices: boards.map((board: BoardEntity) => ({
           name: board.name,
           value: board.id,
         })),
       },
     ]);
 
-    const lists = await (this.boardController as any).getLists(selectedBoard);
+    const lists = await this.boardController.getLists(selectedBoard);
 
     const { selectedList } = await inquirer.prompt([
       {
         type: "list",
         name: "selectedList",
         message: t("card.selectList"),
-        choices: lists.map((list: any) => ({
+        choices: lists.map((list: ListEntity) => ({
           name: list.name,
           value: list.id,
         })),
@@ -92,7 +93,7 @@ export class CardController {
       },
     ]);
 
-    const cards = await (this.boardController as any).getCards(selectedList);
+    const cards = await this.boardController.getCards(selectedList);
 
     if (cards.length === 0) {
       console.log(t("card.emptyList"));
@@ -102,7 +103,7 @@ export class CardController {
     console.log(
       `🃏 Cartões em "${lists.find((l) => l.id === selectedList)?.name}":`
     );
-    cards.forEach((card: any, index: number) => {
+    cards.forEach((card: CardEntity, index: number) => {
       console.log(`${index + 1}. ${card.name}`);
       if (card.desc) {
         const desc =
@@ -135,14 +136,16 @@ export class CardController {
           type: "list",
           name: "selectedCard",
           message: t("card.selectCard"),
-          choices: cards.map((card: any) => ({
+          choices: cards.map((card: CardEntity) => ({
             name: card.name,
             value: card.id,
           })),
         },
       ]);
 
-      const selectedCardEntity = cards.find((c: any) => c.id === selectedCard)!;
+      const selectedCardEntity = cards.find(
+        (c: CardEntity) => c.id === selectedCard
+      )!;
 
       switch (nextAction) {
         case CARD_ACTIONS.EDIT:
@@ -195,7 +198,7 @@ export class CardController {
     ]);
 
     if (confirm) {
-      await this.deleteCard(cardId, card);
+      await this.deleteCard(cardId);
     }
   }
 
@@ -226,15 +229,15 @@ export class CardController {
     cardName: string,
     description?: string
   ): Promise<void> {
-    const boards = await (this.boardController as any).getBoards();
-    const board = boards.find((b: any) => b.name === boardName);
+    const boards = await this.boardController.getBoards();
+    const board = boards.find((b: BoardEntity) => b.name === boardName);
 
     if (!board) {
       throw new Error(t("board.notFound", { name: boardName }));
     }
 
-    const lists = await (this.boardController as any).getLists(board.id);
-    const list = lists.find((l: any) => l.name === listName);
+    const lists = await this.boardController.getLists(board.id);
+    const list = lists.find((l: ListEntity) => l.name === listName);
 
     if (!list) {
       throw new Error(t("list.notFound", { listName, boardName }));
@@ -255,21 +258,21 @@ export class CardController {
   async moveCard(cardId: string, targetListName: string): Promise<void> {
     // Primeiro precisamos encontrar em qual board o cartão está
     // Para isso, vamos buscar todas as listas de todos os boards
-    const boards = await (this.boardController as any).getBoards();
+    const boards = await this.boardController.getBoards();
 
     for (const board of boards) {
-      const lists = await (this.boardController as any).getLists(board.id);
+      const lists = await this.boardController.getLists(board.id);
 
       // Verificar se alguma lista contém o cartão
       for (const list of lists) {
         try {
-          const cards = await (this.boardController as any).getCards(list.id);
-          const card = cards.find((c: any) => c.id === cardId);
+          const cards = await this.boardController.getCards(list.id);
+          const card = cards.find((c: CardEntity) => c.id === cardId);
 
           if (card) {
             // Encontrou o cartão! Agora procurar a lista de destino
             const targetList = lists.find(
-              (l: any) => l.name === targetListName
+              (l: ListEntity) => l.name === targetListName
             );
 
             if (!targetList) {
@@ -297,34 +300,33 @@ export class CardController {
     throw new Error(t("card.notFound", { cardId }));
   }
 
-  async deleteCard(cardId: string, card?: CardEntity): Promise<void> {
-    // Se não passou o card, tentar encontrar
-    if (!card) {
-      const boards = await (this.boardController as any).getBoards();
+  async deleteCard(cardId: string): Promise<void> {
+    // Primeiro precisamos encontrar o cartão para mostrar informações
+    const boards = await this.trelloRepository.getBoards();
+    let card: CardEntity | undefined;
 
-      for (const board of boards) {
-        const lists = await (this.boardController as any).getLists(board.id);
+    for (const board of boards) {
+      const lists = await this.trelloRepository.getLists(board.id);
 
-        for (const list of lists) {
-          try {
-            const cards = await (this.boardController as any).getCards(list.id);
-            card = cards.find((c: any) => c.id === cardId);
+      for (const list of lists) {
+        try {
+          const cards = await this.trelloRepository.getCards(list.id);
+          card = cards.find((c: CardEntity) => c.id === cardId);
 
-            if (card) {
-              break;
-            }
-          } catch {
-            continue;
+          if (card) {
+            break;
           }
-        }
-        if (card) {
-          break;
+        } catch {
+          continue;
         }
       }
+      if (card) {
+        break;
+      }
+    }
 
-      if (!card) {
-        throw new Error(t("card.notFound", { cardId }));
-      }
+    if (!card) {
+      throw new Error(t("card.notFound", { cardId }));
     }
 
     await this.deleteCardUseCase.execute(cardId);
@@ -347,5 +349,54 @@ export class CardController {
     console.log(t("card.cardName", { name: newCard.name }));
     console.log(t("card.cardUrl", { url: newCard.url }));
     console.log(t("card.cardId", { id: newCard.id }));
+  }
+
+  async moveCardToList(cardId: string, targetListId: string): Promise<void> {
+    // Primeiro precisamos encontrar o cartão para mostrar informações
+    const boards = await this.trelloRepository.getBoards();
+    let card: CardEntity | undefined;
+
+    for (const board of boards) {
+      const lists = await this.trelloRepository.getLists(board.id);
+
+      for (const list of lists) {
+        try {
+          const cards = await this.trelloRepository.getCards(list.id);
+          card = cards.find((c: CardEntity) => c.id === cardId);
+
+          if (card) {
+            break;
+          }
+        } catch {
+          continue;
+        }
+      }
+      if (card) {
+        break;
+      }
+    }
+
+    if (!card) {
+      throw new Error(t("card.notFound", { cardId }));
+    }
+
+    // Verificar se a lista de destino existe procurando em todos os boards
+    let targetList: ListEntity | undefined;
+    for (const board of boards) {
+      const lists = await this.trelloRepository.getLists(board.id);
+      targetList = lists.find((l: ListEntity) => l.id === targetListId);
+      if (targetList) {
+        break;
+      }
+    }
+
+    if (!targetList) {
+      throw new Error(t("list.notFound", { listId: targetListId }));
+    }
+
+    await this.moveCardUseCase.execute(cardId, targetListId);
+    console.log(t("card.moved"));
+    console.log(t("card.cardName", { name: card.name }));
+    console.log(t("card.movedTo", { listName: targetList.name }));
   }
 }

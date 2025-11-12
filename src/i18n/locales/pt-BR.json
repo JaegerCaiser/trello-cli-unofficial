@@ -44,14 +44,19 @@
     "empty": "📋 Nenhum board encontrado.",
     "notFound": "❌ Quadro \"{{name}}\" não encontrado",
     "lists": "📝 Listas do Board: {{name}}",
-    "yourBoards": "📋 Seus Quadros do Trello:"
+    "yourBoards": "📋 Seus Quadros do Trello:",
+    "created": "✅ Quadro \"{{name}}\" criado com sucesso!"
   },
   "list": {
     "loading": "⏳ Carregando listas...",
     "empty": "📝 Nenhuma lista encontrada neste board.",
     "notFound": "❌ Lista \"{{listName}}\" não encontrada no quadro \"{{boardName}}\"",
     "cards": "🃏 Cards da Lista: {{name}}",
-    "boardLists": "📋 Listas do quadro \"{{boardName}}\":"
+    "boardLists": "📋 Listas do quadro \"{{boardName}}\":",
+    "created": "✅ Lista \"{{name}}\" criada com sucesso!",
+    "deleted": "✅ Lista deletada com sucesso!",
+    "moved": "✅ Lista movida para a posição {{position}}!",
+    "notEmpty": "❌ Não é possível deletar a lista \"{{listName}}\" porque ela contém cards. Mova ou delete os cards primeiro."
   },
   "card": {
     "loading": "⏳ Carregando cards...",

@@ -44,14 +44,19 @@
     "empty": "📋 No boards found.",
     "notFound": "❌ Board \"{{name}}\" not found",
     "lists": "📝 Lists of Board: {{name}}",
-    "yourBoards": "📋 Your Trello Boards:"
+    "yourBoards": "📋 Your Trello Boards:",
+    "created": "✅ Board \"{{name}}\" created successfully!"
   },
   "list": {
     "loading": "⏳ Loading lists...",
     "empty": "📝 No lists found in this board.",
     "notFound": "❌ List \"{{listName}}\" not found in board \"{{boardName}}\"",
     "cards": "🃏 Cards of List: {{name}}",
-    "boardLists": "📋 Lists from board \"{{boardName}}\":"
+    "boardLists": "📋 Lists from board \"{{boardName}}\":",
+    "created": "✅ List \"{{name}}\" created successfully!",
+    "deleted": "✅ List deleted successfully!",
+    "moved": "✅ List moved to position {{position}}!",
+    "notEmpty": "❌ Cannot delete list \"{{listName}}\" because it contains cards. Move or delete the cards first."
   },
   "card": {
     "loading": "⏳ Loading cards...",

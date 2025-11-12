@@ -39,7 +39,7 @@ i18next.init({
  * @param key - Chave da tradução (ex: 'auth.notAuthenticated')
  * @param options - Opções de interpolação (ex: { name: 'João' })
  */
-export function t(key: string, options?: Record<string, any>): string {
+export function t(key: string, options?: Record<string, unknown>): string {
   return i18next.t(key, options);
 }
 

@@ -1,5 +1,7 @@
 export * from './AuthenticateUserUseCase';
+export * from './CreateBoardUseCase';
 export * from './CreateCardUseCase';
+export * from './CreateListUseCase';
 export * from './DeleteCardUseCase';
 export * from './GetBoardsUseCase';
 export * from './GetCardsUseCase';

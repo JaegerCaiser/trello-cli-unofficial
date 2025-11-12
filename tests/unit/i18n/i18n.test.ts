@@ -1,5 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
 import { changeLanguage, getCurrentLanguage, t } from '@/i18n';
+import enTranslations from '@/i18n/locales/en.json';
+import ptBRTranslations from '@/i18n/locales/pt-BR.json';
 
 describe('i18n', () => {
   // Store original LANG to restore after tests
@@ -132,6 +134,38 @@ describe('i18n', () => {
 
       changeLanguage('en');
       expect(t('errors.generic')).toContain('Error');
+    });
+
+    test('should have complete translation coverage between languages', () => {
+      // Helper function to get all keys from nested object
+      const getAllKeys = (obj: any, prefix = ''): string[] => {
+        const keys: string[] = [];
+        for (const key in obj) {
+          const fullKey = prefix ? `${prefix}.${key}` : key;
+          if (typeof obj[key] === 'object' && obj[key] !== null) {
+            keys.push(...getAllKeys(obj[key], fullKey));
+          } else {
+            keys.push(fullKey);
+          }
+        }
+        return keys;
+      };
+
+      const ptBRKeys = getAllKeys(ptBRTranslations);
+      const enKeys = getAllKeys(enTranslations);
+
+      // Check that all Portuguese keys exist in English
+      for (const key of ptBRKeys) {
+        expect(enKeys).toContain(key);
+      }
+
+      // Check that all English keys exist in Portuguese
+      for (const key of enKeys) {
+        expect(ptBRKeys).toContain(key);
+      }
+
+      // Verify counts match
+      expect(ptBRKeys.length).toBe(enKeys.length);
     });
   });
 
