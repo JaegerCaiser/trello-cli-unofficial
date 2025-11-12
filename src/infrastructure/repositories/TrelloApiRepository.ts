@@ -138,6 +138,22 @@ export class TrelloApiRepository implements TrelloRepository {
   }
 
   async deleteList(listId: string): Promise<void> {
+    // Primeiro, fechar (arquivar) a lista
+    const closeBody = new URLSearchParams({
+      closed: 'true',
+      key: this.apiKey,
+      token: this.token,
+    });
+
+    await this.request(`/lists/${listId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: closeBody.toString(),
+    });
+
+    // Depois, deletar a lista
     await this.request(`/lists/${listId}`, {
       method: 'DELETE',
     });

@@ -160,8 +160,9 @@ export class BoardController {
       throw new Error(t('list.notEmpty', { listName: list.name }));
     }
 
-    // Aqui seria necessário implementar o delete no TrelloApiRepository
-    // Por enquanto, vamos apenas mostrar que seria deletada
+    // Deletar a lista usando o repositório
+    await this.trelloRepository.deleteList(listId);
+
     console.log(t('list.deleted', { name: list.name }));
     console.log(`🆔 ${list.id}`);
   }
