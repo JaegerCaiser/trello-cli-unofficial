@@ -242,6 +242,26 @@ export class CommandController {
         }
       });
 
+    cardsCmd
+      .command("update <cardId>")
+      .description("Update a card")
+      .option("-n, --name <name>", "New card name")
+      .option("-d, --desc <description>", "New card description")
+      .action(
+        async (cardId: string, options: { name?: string; desc?: string }) => {
+          try {
+            await this.initializeTrelloControllers();
+            await this.cardController.updateCard(
+              cardId,
+              options.name,
+              options.desc
+            );
+          } catch (error) {
+            console.error("❌ Erro:", (error as Error).message);
+          }
+        }
+      );
+
     // Legacy commands with deprecation warnings
     this.program
       .command('cards-legacy <boardName> <listName>')
