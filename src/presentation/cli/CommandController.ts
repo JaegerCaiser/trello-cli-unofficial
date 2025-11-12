@@ -1,9 +1,11 @@
+import type { OutputFormat } from '@/shared';
 import { AuthenticationService } from '@domain/services';
 import {
   FileConfigRepository,
   TrelloApiRepository,
 } from '@infrastructure/repositories';
 import { Command } from 'commander';
+import { ErrorHandler, OutputFormatter } from '@/shared';
 import { AuthController, BoardController, CardController } from './index';
 
 export class CommandController {
@@ -11,11 +13,13 @@ export class CommandController {
   private boardController!: BoardController;
   private cardController!: CardController;
   private program: Command;
+  private outputFormatter: OutputFormatter;
 
   constructor() {
     const configRepository = new FileConfigRepository();
     this.authController = new AuthController(configRepository);
     this.program = new Command();
+    this.outputFormatter = new OutputFormatter();
     this.setupCommands();
   }
 
@@ -29,10 +33,14 @@ export class CommandController {
       config.token!,
     );
 
-    this.boardController = new BoardController(trelloRepository);
+    this.boardController = new BoardController(
+      trelloRepository,
+      this.outputFormatter,
+    );
     this.cardController = new CardController(
       trelloRepository,
       this.boardController,
+      this.outputFormatter,
     );
   }
 
@@ -40,7 +48,15 @@ export class CommandController {
     this.program
       .name('trello-cli-unofficial')
       .description('Unofficial Trello CLI using Power-Up authentication')
-      .version('1.0.0');
+      .version('1.0.0')
+      .option(
+        '-f, --format <format>',
+        'Output format: table, json, csv',
+        'table',
+      )
+      .on('option:format', (format) => {
+        this.outputFormatter.setFormat(format as OutputFormat);
+      });
 
     // Interactive mode
     this.program
@@ -51,7 +67,7 @@ export class CommandController {
         const configRepository = new FileConfigRepository();
         const cli = new (
           await import('./TrelloCliController')
-        ).TrelloCliController(configRepository);
+        ).TrelloCliController(configRepository, this.outputFormatter);
         await cli.run();
       });
 
@@ -71,12 +87,40 @@ export class CommandController {
     boardsCmd
       .command('list')
       .description('List all your Trello boards')
-      .action(async () => {
+      .option(
+        '-f, --format <format>',
+        'Output format: table, json, csv',
+        'table',
+      )
+      .action(async (options: { format?: string }) => {
         try {
           await this.initializeTrelloControllers();
+          if (options.format) {
+            this.outputFormatter.setFormat(options.format as OutputFormat);
+          }
           await this.boardController.showBoards();
         } catch (error) {
-          console.error('❌ Erro:', (error as Error).message);
+          ErrorHandler.handle(error, 'boards list');
+        }
+      });
+
+    boardsCmd
+      .command('show <boardId>')
+      .description('Show detailed information about a specific board')
+      .option(
+        '-f, --format <format>',
+        'Output format: table, json, csv',
+        'table',
+      )
+      .action(async (boardId: string, options: { format?: string }) => {
+        try {
+          await this.initializeTrelloControllers();
+          if (options.format) {
+            this.outputFormatter.setFormat(options.format as OutputFormat);
+          }
+          await this.boardController.showBoardDetails(boardId);
+        } catch (error) {
+          ErrorHandler.handle(error, 'boards show');
         }
       });
 
@@ -117,12 +161,20 @@ export class CommandController {
     listsCmd
       .command('list <boardId>')
       .description('List all lists in a specific board')
-      .action(async (boardId: string) => {
+      .option(
+        '-f, --format <format>',
+        'Output format: table, json, csv',
+        'table',
+      )
+      .action(async (boardId: string, options: { format?: string }) => {
         try {
           await this.initializeTrelloControllers();
+          if (options.format) {
+            this.outputFormatter.setFormat(options.format as OutputFormat);
+          }
           await this.boardController.showListsById(boardId);
         } catch (error) {
-          console.error('❌ Erro:', (error as Error).message);
+          ErrorHandler.handle(error, 'lists list');
         }
       });
 
@@ -189,12 +241,20 @@ export class CommandController {
     cardsCmd
       .command('list <listId>')
       .description('List all cards in a specific list')
-      .action(async (listId: string) => {
+      .option(
+        '-f, --format <format>',
+        'Output format: table, json, csv',
+        'table',
+      )
+      .action(async (listId: string, options: { format?: string }) => {
         try {
           await this.initializeTrelloControllers();
+          if (options.format) {
+            this.outputFormatter.setFormat(options.format as OutputFormat);
+          }
           await this.boardController.showCardsByListId(listId);
         } catch (error) {
-          console.error('❌ Erro:', (error as Error).message);
+          ErrorHandler.handle(error, 'cards list');
         }
       });
 
@@ -345,7 +405,7 @@ export class CommandController {
       const configRepository = new FileConfigRepository();
       const cli = new (
         await import('./TrelloCliController')
-      ).TrelloCliController(configRepository);
+      ).TrelloCliController(configRepository, this.outputFormatter);
       await cli.run();
     } else {
       this.program.parse();

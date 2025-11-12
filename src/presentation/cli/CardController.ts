@@ -1,6 +1,7 @@
 import type { BoardEntity, CardEntity, ListEntity } from '@domain/entities';
 import type { TrelloRepository } from '@domain/repositories';
 import type { BoardController } from './BoardController';
+import type { OutputFormatter } from '@/shared';
 
 import {
   CreateCardUseCase,
@@ -22,6 +23,7 @@ export class CardController {
   constructor(
     private trelloRepository: TrelloRepository,
     private boardController: BoardController, // Will be injected to avoid circular dependency
+    private outputFormatter: OutputFormatter,
   ) {
     this.createCardUseCase = new CreateCardUseCase(trelloRepository);
     this.updateCardUseCase = new UpdateCardUseCase(trelloRepository);
