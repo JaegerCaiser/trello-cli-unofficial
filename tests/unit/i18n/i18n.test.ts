@@ -1,7 +1,16 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
 import { changeLanguage, getCurrentLanguage, t } from '@/i18n';
-import enTranslations from '@/i18n/locales/en.json';
-import ptBRTranslations from '@/i18n/locales/pt-BR.json';
+
+// Load translations for testing
+const translationsPath = path.join(process.cwd(), 'src', 'i18n', 'locales');
+const enTranslations = JSON.parse(
+  fs.readFileSync(path.join(translationsPath, 'en.json'), 'utf-8'),
+);
+const ptBRTranslations = JSON.parse(
+  fs.readFileSync(path.join(translationsPath, 'pt-BR.json'), 'utf-8'),
+);
 
 describe('i18n', () => {
   // Store original LANG to restore after tests
