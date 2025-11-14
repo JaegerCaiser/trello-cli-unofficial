@@ -26,6 +26,11 @@ const ptBRTranslations
 function detectLanguage(): string {
   const lang = process.env.LANG || process.env.LANGUAGE || 'en_US';
 
+  // Durante testes, sempre usar português para manter consistência
+  if (process.env.NODE_ENV === 'test') {
+    return 'pt-BR';
+  }
+
   // Mapeia common locales para nossos idiomas suportados
   if (lang.startsWith('pt')) {
     return 'pt-BR';
@@ -58,7 +63,7 @@ function loadTranslations() {
     cachedTranslations = { en: enTranslations, ptBR: ptBRTranslations };
     return cachedTranslations;
   } catch (error) {
-    console.error('Error loading translation files:', error);
+    console.error(t('errors.translationLoadError'), error);
     cachedTranslations = {
       en: { common: { yes: 'Yes', no: 'No' } },
       ptBR: { common: { yes: 'Sim', no: 'Não' } },

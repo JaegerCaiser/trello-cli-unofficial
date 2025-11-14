@@ -48,22 +48,29 @@ export class BoardController {
   async showBoardDetails(boardId: string): Promise<void> {
     const details = await this.getBoardDetailsUseCase.execute(boardId);
 
-    this.outputFormatter.message(`📋 Board: ${details.board.name}`);
-    this.outputFormatter.message(`🔗 URL: ${details.board.url}`);
-    this.outputFormatter.message(`🆔 ID: ${details.board.id}`);
     this.outputFormatter.message(
-      `📊 Statistics: ${details.totalLists} lists, ${details.totalCards} cards`,
+      t('board.boardName', { name: details.board.name }),
+    );
+    this.outputFormatter.message(
+      t('board.boardUrl', { url: details.board.url }),
+    );
+    this.outputFormatter.message(t('board.boardId', { id: details.board.id }));
+    this.outputFormatter.message(
+      t('board.boardStats', {
+        lists: details.totalLists,
+        cards: details.totalCards,
+      }),
     );
     this.outputFormatter.message('');
 
     if (details.lists.length > 0) {
-      this.outputFormatter.message('📝 Lists:');
+      this.outputFormatter.message(t('board.listsTitle'));
       this.outputFormatter.output(details.lists, {
         fields: ['name', 'id'],
-        headers: ['List Name', 'List ID'],
+        headers: [t('board.listsHeaders.name'), t('board.listsHeaders.id')],
       });
     } else {
-      this.outputFormatter.message('📝 No lists found in this board');
+      this.outputFormatter.message(t('board.listsEmpty'));
     }
   }
 
@@ -84,7 +91,7 @@ export class BoardController {
     console.log(t('list.boardLists', { boardName }));
     lists.forEach((list, index) => {
       console.log(`${index + 1}. ${list.name}`);
-      console.log(`   🆔 ${list.id}\n`);
+      console.log(`   ${t('list.listId', { id: list.id })}\n`);
     });
   }
 
@@ -121,7 +128,7 @@ export class BoardController {
 
     cards.forEach((card, index) => {
       console.log(`${index + 1}. ${card.name}`);
-      console.log(`   🆔 ${card.id}\n`);
+      console.log(`   ${t('card.cardId', { id: card.id })}\n`);
     });
   }
 
@@ -138,7 +145,7 @@ export class BoardController {
     const cards = await this.getCardsUseCase.execute(listId);
 
     if (cards.length === 0) {
-      this.outputFormatter.message('No cards found in this list');
+      this.outputFormatter.message(t('list.cardsEmpty'));
       return;
     }
 

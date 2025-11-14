@@ -2,6 +2,7 @@ import type { ConfigRepository } from '@domain/repositories';
 import path from 'node:path';
 import { ConfigEntity } from '@domain/entities';
 import fs from 'fs-extra';
+import { t } from '@/i18n';
 
 export class FileConfigRepository implements ConfigRepository {
   private readonly configDir: string;
@@ -20,12 +21,14 @@ export class FileConfigRepository implements ConfigRepository {
       if (await fs.pathExists(this.configFile)) {
         const data = await fs.readJson(this.configFile);
         return new ConfigEntity(
-          data.apiKey || '630a01228b85df706aa520f3611e6490',
+          data.apiKey
+          || process.env.TRELLO_API_KEY
+          || '630a01228b85df706aa520f3611e6490',
           data.token || process.env.TRELLO_TOKEN,
         );
       }
     } catch (error) {
-      console.error('Error loading config:', (error as Error).message);
+      console.error(t('menu.errors.loadConfig'), (error as Error).message);
     }
 
     return ConfigEntity.createDefault();
@@ -43,7 +46,7 @@ export class FileConfigRepository implements ConfigRepository {
         { spaces: 2 },
       );
     } catch (error) {
-      console.error('Error saving config:', (error as Error).message);
+      console.error(t('menu.errors.saveConfig'), (error as Error).message);
     }
   }
 }

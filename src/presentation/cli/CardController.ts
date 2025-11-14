@@ -65,7 +65,8 @@ export class CardController {
         type: 'input',
         name: 'cardName',
         message: t('card.enterName'),
-        validate: input => input.length > 0 || 'Nome é obrigatório',
+        validate: input =>
+          input.length > 0 || t('card.validation.requiredName'),
       },
       {
         type: 'input',
@@ -103,7 +104,9 @@ export class CardController {
     }
 
     console.log(
-      `🃏 Cartões em "${lists.find(l => l.id === selectedList)?.name}":`,
+      t('card.cardsInList', {
+        listName: lists.find(l => l.id === selectedList)?.name,
+      }),
     );
     cards.forEach((card: CardEntity, index: number) => {
       console.log(`${index + 1}. ${card.name}`);
@@ -112,9 +115,9 @@ export class CardController {
           = card.desc.length > 100
             ? `${card.desc.substring(0, 100)}...`
             : card.desc;
-        console.log(`   📝 ${desc}`);
+        console.log(t('card.cardDescription', { description: desc }));
       }
-      console.log(`   🔗 ${card.url}\n`);
+      console.log(`${t('card.cardUrl', { url: card.url })}\n`);
     });
 
     // Opções adicionais
@@ -127,7 +130,7 @@ export class CardController {
           { name: t('card.actions.back'), value: CARD_ACTIONS.BACK },
           { name: t('card.actions.edit'), value: CARD_ACTIONS.EDIT },
           { name: t('card.actions.delete'), value: CARD_ACTIONS.DELETE },
-          { name: '📦 Mover cartão', value: CARD_ACTIONS.MOVE },
+          { name: t('card.actions.moveCard'), value: CARD_ACTIONS.MOVE },
         ],
       },
     ]);

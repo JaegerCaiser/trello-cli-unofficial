@@ -1,6 +1,8 @@
 /**
  * Base error class for Trello CLI application
  */
+import { t } from '@/i18n';
+
 export class TrelloCliError extends Error {
   constructor(
     message: string,
@@ -72,7 +74,7 @@ export class ConfigurationError extends TrelloCliError {
  * Network connectivity errors
  */
 export class NetworkError extends TrelloCliError {
-  constructor(message: string = 'Network connection failed') {
+  constructor(message: string = t('api.networkConnectionFailed')) {
     super(message, 'NETWORK_ERROR', 0);
   }
 }
@@ -105,46 +107,50 @@ export class ErrorHandler {
 
     switch (error.code) {
       case 'AUTH_ERROR':
-        console.error(`❌ ${prefix}Authentication failed: ${error.message}`);
-        console.error('💡 Try running: trello-cli-unofficial setup');
+        console.error(t('errors.authFailed', { message: error.message }));
+        console.error(t('errors.trySetup'));
         break;
 
       case 'API_ERROR':
         console.error(
-          `❌ ${prefix}API Error (${error.statusCode}): ${error.message}`,
+          t('errors.apiError', { statusCode: error.statusCode, message: error.message }),
         );
         if (error instanceof ApiError && error.endpoint) {
-          console.error(`📍 Endpoint: ${error.endpoint}`);
+          console.error(t('errors.endpoint', { endpoint: error.endpoint }));
         }
         break;
 
       case 'VALIDATION_ERROR':
-        console.error(`❌ ${prefix}Validation Error: ${error.message}`);
+        console.error(t('errors.validationError', { message: error.message }));
         if (error instanceof ValidationError && error.field) {
-          console.error(`📝 Field: ${error.field}`);
+          console.error(t('errors.field', { field: error.field }));
         }
         break;
 
       case 'NOT_FOUND_ERROR':
-        console.error(`❌ ${prefix}Not Found: ${error.message}`);
+        console.error(t('errors.notFound', { message: error.message }));
         if (error instanceof NotFoundError) {
-          console.error(`🔍 Resource Type: ${error.resourceType}`);
+          if (error.resourceType) {
+            console.error(
+              t('errors.resourceType', { resourceType: error.resourceType }),
+            );
+          }
           if (error.resourceId) {
-            console.error(`🆔 Resource ID: ${error.resourceId}`);
+            console.error(
+              t('errors.resourceId', { resourceId: error.resourceId }),
+            );
           }
         }
         break;
 
       case 'CONFIG_ERROR':
-        console.error(`❌ ${prefix}Configuration Error: ${error.message}`);
-        console.error(
-          '💡 Check your configuration file: ~/.trello-cli-unofficial/config.json',
-        );
+        console.error(t('errors.configError', { message: error.message }));
+        console.error(t('errors.checkConfig'));
         break;
 
       case 'NETWORK_ERROR':
-        console.error(`❌ ${prefix}Network Error: ${error.message}`);
-        console.error('💡 Check your internet connection and try again');
+        console.error(t('errors.networkError', { message: error.message }));
+        console.error(t('errors.checkConnection'));
         break;
 
       default:
@@ -158,13 +164,12 @@ export class ErrorHandler {
   /**
    * Handle generic JavaScript errors
    */
-  private static handleGenericError(error: Error, context?: string): void {
-    const prefix = context ? `[${context}] ` : '';
-    console.error(`❌ ${prefix}Unexpected error: ${error.message}`);
+  private static handleGenericError(error: Error, _context?: string): void {
+    console.error(t('errors.unexpectedError', { message: error.message }));
 
     // In development, show stack trace
     if (process.env.NODE_ENV === 'development') {
-      console.error('Stack trace:', error.stack);
+      console.error(t('errors.stackTrace'), error.stack);
     }
 
     process.exit(1);
@@ -173,9 +178,8 @@ export class ErrorHandler {
   /**
    * Handle unknown errors
    */
-  private static handleUnknownError(error: unknown, context?: string): void {
-    const prefix = context ? `[${context}] ` : '';
-    console.error(`❌ ${prefix}Unknown error occurred:`, error);
+  private static handleUnknownError(error: unknown, _context?: string): void {
+    console.error(t('errors.unknownError'), error);
     process.exit(1);
   }
 
@@ -207,29 +211,21 @@ export class ErrorHandler {
     const message
       = (response.message as string)
         || (response.error as string)
-        || 'Unknown API error';
+        || t('api.unknownApiError');
 
     switch (statusCode) {
       case 401:
-        return new AuthenticationError('Invalid or expired token');
+        return new AuthenticationError(t('api.invalidToken'));
       case 403:
         return new AuthenticationError('Access denied');
       case 404:
-        return new NotFoundError('Resource not found', 'unknown');
+        return new NotFoundError(t('api.resourceNotFound'), 'unknown');
       case 400:
         return new ValidationError(message);
       case 429:
-        return new ApiError(
-          'Rate limit exceeded. Please try again later.',
-          statusCode,
-          endpoint,
-        );
+        return new ApiError(t('api.rateLimitExceeded'), statusCode, endpoint);
       case 500:
-        return new ApiError(
-          'Internal server error. Please try again later.',
-          statusCode,
-          endpoint,
-        );
+        return new ApiError(t('api.internalServerError'), statusCode, endpoint);
       default:
         return new ApiError(message, statusCode, endpoint);
     }

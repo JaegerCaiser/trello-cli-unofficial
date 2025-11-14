@@ -30,7 +30,7 @@ export class ConfigController {
         case CONFIG_ACTIONS.VIEW:
           const config = await this.authController.getConfig();
           console.log(t('menu.currentConfig'));
-          console.log(`API Key: ${config.apiKey}`);
+          console.log(`${t('menu.apiKey')} ${config.apiKey}`);
           const tokenStatus = config.hasValidToken()
             ? `✅ ${t('common.yes')}`
             : `❌ ${t('common.no')}`;

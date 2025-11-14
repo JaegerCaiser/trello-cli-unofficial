@@ -1,5 +1,6 @@
 import type { BoardEntity, ListEntity } from '@domain/entities';
 import type { TrelloRepository } from '@domain/repositories';
+import { t } from '@/i18n';
 
 export interface BoardDetails {
   board: BoardEntity;
@@ -17,7 +18,7 @@ export class GetBoardDetailsUseCase {
     const board = boards.find(b => b.id === boardId);
 
     if (!board) {
-      throw new Error(`Board with ID '${boardId}' not found`);
+      throw new Error(t('board.notFoundById', { id: boardId }));
     }
 
     // Get lists for this board

@@ -7,7 +7,8 @@
     "exit": "Exit",
     "success": "✅ Success!",
     "error": "❌ Error!",
-    "loading": "⏳ Loading..."
+    "loading": "⏳ Loading...",
+    "noData": "No data to display"
   },
   "auth": {
     "notAuthenticated": "🔐 You are not authenticated!",
@@ -32,9 +33,14 @@
     "configBack": "⬅️  Back",
     "currentConfig": "� Current configuration:",
     "tokenConfigured": "Token configured:",
+    "apiKey": "API Key:",
     "configFile": "Config file: ~/.trello-cli-unofficial/config.json",
     "confirmReset": "Are you sure you want to reset all configuration?",
     "configResetted": "✅ Configuration resetted!",
+    "errors": {
+      "loadConfig": "Error loading config:",
+      "saveConfig": "Error saving config:"
+    },
     "selectBoard": "Select a board:",
     "selectList": "Select a list:",
     "selectCard": "Select a card:"
@@ -43,9 +49,25 @@
     "loading": "⏳ Loading boards...",
     "empty": "📋 No boards found.",
     "notFound": "❌ Board \"{{name}}\" not found",
+    "notFoundById": "❌ Board with ID '{{id}}' not found",
     "lists": "📝 Lists of Board: {{name}}",
+    "listsHeaders": {
+      "name": "List Name",
+      "id": "List ID"
+    },
+    "listsTitle": "📝 Lists:",
+    "listsEmpty": "📝 No lists found in this board",
+    "listId": "🆔 {{id}}",
     "yourBoards": "📋 Your Trello Boards:",
-    "created": "✅ Board \"{{name}}\" created successfully!"
+    "created": "✅ Board \"{{name}}\" created successfully!",
+    "boardName": "📋 Board: {{name}}",
+    "boardUrl": "🔗 URL: {{url}}",
+    "boardId": "🆔 ID: {{id}}",
+    "boardStats": "📊 Statistics: {{lists}} lists, {{cards}} cards",
+    "validation": {
+      "nameRequired": "Board name is required",
+      "nameTooLong": "Board name is too long (max 16384 characters)"
+    }
   },
   "list": {
     "loading": "⏳ Loading lists...",
@@ -53,10 +75,15 @@
     "notFound": "❌ List \"{{listName}}\" not found in board \"{{boardName}}\"",
     "cards": "🃏 Cards of List: {{name}}",
     "boardLists": "📋 Lists from board \"{{boardName}}\":",
+    "cardsEmpty": "No cards found in this list",
     "created": "✅ List \"{{name}}\" created successfully!",
     "deleted": "✅ List deleted successfully!",
     "moved": "✅ List moved to position {{position}}!",
-    "notEmpty": "❌ Cannot delete list \"{{listName}}\" because it contains cards. Move or delete the cards first."
+    "notEmpty": "❌ Cannot delete list \"{{listName}}\" because it contains cards. Move or delete the cards first.",
+    "validation": {
+      "nameCannotBeEmpty": "List name cannot be empty",
+      "nameTooLong": "List name cannot be longer than 16384 characters"
+    }
   },
   "card": {
     "loading": "⏳ Loading cards...",
@@ -71,6 +98,8 @@
     "confirmDelete": "Are you sure you want to delete \"{{name}}\"?",
     "listCards": "📋 Cards from list \"{{listName}}\" in board \"{{boardName}}\":",
     "emptyList": "📭 This list is empty.",
+    "cardsInList": "🃏 Cards in \"{{listName}}\":",
+    "cardDescription": "📝 {{description}}",
     "selectBoard": "Select board:",
     "selectList": "Select list:",
     "selectCard": "Select a card:",
@@ -82,13 +111,19 @@
     "cardUrl": "🔗 URL: {{url}}",
     "cardId": "🆔 ID: {{id}}",
     "movedTo": "➡️  To: {{listName}}",
+    "validation": {
+      "requiredName": "Name is required",
+      "requiredCardName": "Card name is required",
+      "cardNameCannotBeEmpty": "Card name cannot be empty"
+    },
     "actions": {
       "view": "👁️  View Details",
       "create": "➕ Create Card",
       "edit": "✏️  Edit Card",
       "move": "🔄 Move Card",
       "delete": "🗑️  Delete Card",
-      "back": "⬅️  Back"
+      "back": "⬅️  Back",
+      "moveCard": "📦 Move card"
     }
   },
   "errors": {
@@ -96,23 +131,86 @@
     "generic": "❌ Error:",
     "network": "❌ Network error. Check your connection.",
     "invalidInput": "❌ Invalid input: {{field}}",
-    "required": "❌ Required field: {{field}}"
+    "required": "❌ Required field: {{field}}",
+    "translationLoadError": "Error loading translation files:",
+    "authFailed": "❌ Authentication failed: {{message}}",
+    "trySetup": "💡 Try running: trello-cli-unofficial setup",
+    "apiError": "❌ API Error ({{statusCode}}): {{message}}",
+    "endpoint": "📍 Endpoint: {{endpoint}}",
+    "validationError": "❌ Validation Error: {{message}}",
+    "field": "📝 Field: {{field}}",
+    "notFound": "❌ Not Found: {{message}}",
+    "resourceType": "🔍 Resource Type: {{resourceType}}",
+    "resourceId": "🆔 Resource ID: {{resourceId}}",
+    "configError": "❌ Configuration Error: {{message}}",
+    "checkConfig": "💡 Check your configuration file: ~/.trello-cli-unofficial/config.json",
+    "networkError": "❌ Network Error: {{message}}",
+    "checkConnection": "💡 Check your internet connection and try again",
+    "unexpectedError": "❌ Unexpected error: {{message}}",
+    "stackTrace": "Stack trace:",
+    "unknownError": "❌ Unknown error occurred:",
+    "unknownApiError": "Unknown API error",
+    "invalidToken": "Invalid or expired token"
+  },
+  "api": {
+    "trelloError": "Trello API Error:",
+    "defaultApiKey": "630a01228b85df706aa520f3611e6490",
+    "networkConnectionFailed": "Network connection failed",
+    "unknownApiError": "Unknown API error",
+    "invalidToken": "Invalid or expired token",
+    "resourceNotFound": "Resource not found",
+    "rateLimitExceeded": "Rate limit exceeded. Please try again later.",
+    "internalServerError": "Internal server error. Please try again later."
   },
   "commands": {
+    "description": "Unofficial Trello CLI using Power-Up authentication",
+    "formatOption": "Output format: table, json, csv",
+    "deprecated": {
+      "boardsLegacyDescription": "[DEPRECATED] Use \"boards list\" instead",
+      "boardsLegacyWarning": "⚠️  Warning: \"boards\" command is deprecated. Use \"boards list\" instead.",
+      "boardsLegacyError": "❌ Error:",
+      "listsLegacyDescription": "[DEPRECATED] Use \"lists list <boardId>\" instead",
+      "listsLegacyWarning": "⚠️  Warning: \"lists <boardName>\" command is deprecated. Use \"lists list <boardId>\" instead.",
+      "listsLegacyError": "❌ Error:",
+      "cardsLegacyDescription": "[DEPRECATED] Use \"cards list <listId>\" instead",
+      "cardsLegacyWarning": "⚠️  Warning: \"cards <boardName> <listName>\" command is deprecated. Use \"cards list <listId>\" instead.",
+      "cardsLegacyError": "❌ Error:",
+      "createCardLegacyDescription": "[DEPRECATED] Use \"cards create <listId> <name>\" instead",
+      "createCardLegacyWarning": "⚠️  Warning: \"create-card\" command is deprecated. Use \"cards create <listId> <name>\" instead.",
+      "moveCardLegacyDescription": "[DEPRECATED] Use \"cards move <cardId> --to <listId>\" instead",
+      "moveCardLegacyWarning": "⚠️  Warning: \"move-card\" command is deprecated. Use \"cards move <cardId> --to <listId>\" instead.",
+      "deleteCardLegacyDescription": "[DEPRECATED] Use \"cards delete <cardId>\" instead",
+      "deleteCardLegacyWarning": "⚠️  Warning: \"delete-card\" command is deprecated. Use \"cards delete <cardId>\" instead."
+    },
+    "commandErrors": {
+      "genericError": "❌ Error:"
+    },
+    "options": {
+      "cardDescription": "Card description",
+      "targetListId": "Target list ID",
+      "newCardName": "New card name",
+      "newCardDescription": "New card description"
+    },
+    "interactive": {
+      "description": "Start interactive mode"
+    },
+    "setup": {
+      "description": "Setup Trello authentication"
+    },
     "boards": {
-      "description": "List all available boards",
+      "description": "Manage Trello boards",
+      "manage": "Manage Trello boards",
+      "list": {
+        "description": "List all your Trello boards"
+      },
+      "show": {
+        "description": "Show detailed information about a specific board"
+      },
+      "create": {
+        "description": "Create a new Trello board",
+        "descOption": "Board description"
+      },
       "success": "📋 Boards loaded successfully!"
-    },
-    "lists": {
-      "description": "List the lists of a specific board",
-      "boardRequired": "❌ Board name is required",
-      "success": "📝 Lists loaded successfully!"
-    },
-    "cards": {
-      "description": "List the cards of a specific list",
-      "boardRequired": "❌ Board name is required",
-      "listRequired": "❌ List name is required",
-      "success": "🃏 Cards loaded successfully!"
     },
     "createCard": {
       "description": "Create a new card in a list",
@@ -129,6 +227,40 @@
       "description": "Delete a card",
       "cardIdRequired": "❌ Card ID is required",
       "success": "✅ Card deleted successfully!"
+    },
+    "lists": {
+      "description": "Manage Trello lists",
+      "list": {
+        "description": "List all lists in a specific board"
+      },
+      "create": {
+        "description": "Create a new list in a board"
+      },
+      "delete": {
+        "description": "Delete a list"
+      },
+      "move": {
+        "description": "Move a list to a new position"
+      }
+    },
+    "cards": {
+      "description": "Manage Trello cards",
+      "manage": "Manage Trello cards",
+      "list": {
+        "description": "List all cards in a specific list"
+      },
+      "create": {
+        "description": "Create a new card in a list"
+      },
+      "move": {
+        "description": "Move a card to another list"
+      },
+      "update": {
+        "description": "Update an existing card"
+      },
+      "delete": {
+        "description": "Delete a card"
+      }
     }
   }
 }

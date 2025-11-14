@@ -1,3 +1,5 @@
+import { t } from '@/i18n';
+
 export type OutputFormat = 'table' | 'json' | 'csv';
 
 export interface OutputFormatterOptions {
@@ -52,13 +54,13 @@ export class OutputFormatter {
     options?: Partial<OutputFormatterOptions>,
   ): void {
     if (!Array.isArray(data) || data.length === 0) {
-      console.log('No data to display');
+      console.log(t('common.noData'));
       return;
     }
 
     const firstItem = data[0];
     if (!firstItem) {
-      console.log('No data to display');
+      console.log(t('common.noData'));
       return;
     }
 
@@ -98,13 +100,13 @@ export class OutputFormatter {
     options?: Partial<OutputFormatterOptions>,
   ): void {
     if (!Array.isArray(data) || data.length === 0) {
-      console.log('No data to display');
+      console.log(t('common.noData'));
       return;
     }
 
     const firstItem = data[0];
     if (!firstItem) {
-      console.log('No data to display');
+      console.log(t('common.noData'));
       return;
     }
 

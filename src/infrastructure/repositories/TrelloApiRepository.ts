@@ -1,6 +1,7 @@
 import type { CreateCardData, UpdateCardData } from '@domain/entities';
 import type { TrelloRepository } from '@domain/repositories';
 import { BoardEntity, CardEntity, ListEntity } from '@domain/entities';
+import { t } from '@/i18n';
 
 // API Response types
 interface TrelloBoardResponse {
@@ -46,7 +47,7 @@ export class TrelloApiRepository implements TrelloRepository {
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(
-        `Trello API error: ${response.status} ${response.statusText}\n${errorText}`,
+        `${t('api.trelloError')} ${response.status} ${response.statusText}\n${errorText}`,
       );
     }
 
