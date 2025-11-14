@@ -107,7 +107,7 @@
       "eslint --fix"
     ],
     "*.json": [
-      "bun run lint:json"
+      "eslint"
     ]
   }
 }

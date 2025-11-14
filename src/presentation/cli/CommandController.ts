@@ -442,3 +442,4 @@ export class CommandController {
 // test
 // test husky
 // final test
+// test newline detection
