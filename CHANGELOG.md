@@ -1,3 +1,12 @@
+## [0.9.2](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.9.1...v0.9.2) (2025-11-14)
+
+
+### Bug Fixes
+
+* add automatic Bun dependency check during installation ([362f68b](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/362f68bb26d330617da2bd7194e7ed0ee273d312))
+* add eslint --fix to lint-staged ([17c0d98](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/17c0d9856d044b7a83606951e0a5a995f2b6b619))
+* add NPM_TOKEN to semantic-release workflow ([9c93a67](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/9c93a678a0c46ea8a6697e05b3b38d38e756e140))
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
