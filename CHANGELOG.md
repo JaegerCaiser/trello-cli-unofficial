@@ -1,3 +1,10 @@
+# [0.11.0](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.10.8...v0.11.0) (2025-11-14)
+
+
+### Features
+
+* add --verbose option for detailed error reporting ([76d0fbe](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/76d0fbedcc6fefbe8841dfb56e1cd095cb224548))
+
 ## [0.10.8](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.10.7...v0.10.8) (2025-11-14)
 
 
