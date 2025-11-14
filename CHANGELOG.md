@@ -1,3 +1,10 @@
+## [0.11.5](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.11.4...v0.11.5) (2025-11-14)
+
+
+### Bug Fixes
+
+* Make version reading robust for Windows compatibility ([5af0780](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/5af07803c4bd074fa28a4a77de24790aa1bda666))
+
 ## [0.11.4](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.11.3...v0.11.4) (2025-11-14)
 
 
