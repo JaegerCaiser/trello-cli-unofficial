@@ -23,7 +23,12 @@ export class CommandController {
   constructor() {
     const configRepository = new FileConfigRepository();
     this.authController = new AuthController(configRepository);
-    this.program = new Command();
+    try {
+      this.program = new Command();
+    } catch (error) {
+      console.error(t('menu.errors.commanderInitError'), error);
+      throw new Error(t('menu.errors.commanderInitFailed'));
+    }
     this.outputFormatter = new OutputFormatter();
     this.initializeProgram();
     this.setupCommands();

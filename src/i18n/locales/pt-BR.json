@@ -40,7 +40,9 @@
     "errors": {
       "loadConfig": "Erro ao carregar configuração:",
       "saveConfig": "Erro ao salvar configuração:",
-      "programNotInitialized": "Programa Commander não inicializado"
+      "programNotInitialized": "Programa Commander não inicializado",
+      "commanderInitFailed": "Falha na inicialização do Commander. Verifique se o Commander.js está instalado.",
+      "commanderInitError": "Erro ao inicializar Commander:"
     },
     "selectBoard": "Selecione um board:",
     "selectList": "Selecione uma lista:",
