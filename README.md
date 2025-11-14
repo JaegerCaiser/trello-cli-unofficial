@@ -30,26 +30,25 @@ An unofficial Trello CLI using Power-Up authentication, built with Bun for maxim
 ### Prerequisites
 
 - **[Node.js 16+](https://nodejs.org/) (Required)**
-- **Bun incluído automaticamente** - Não é necessário instalar separadamente
+- **[Bun](https://bun.sh/) (Required)** - Deve ser instalado separadamente
 - Trello account with Power-Up enabled
 - **Supported Platforms:** Linux, macOS, Windows
 
 ### NPM Installation (Recommended)
 
-O CLI inclui o Bun automaticamente. Basta instalar e usar imediatamente!
+O CLI requer Bun para funcionar. Instale-o primeiro:
 
 ```bash
-# Installation - Bun is included automatically
+# 1. Instale o Bun primeiro
+curl -fsSL https://bun.sh/install | bash
+# ou no Windows: powershell -c "irm bun.sh/install.ps1 | iex"
+
+# 2. Instale o CLI
 npm install -g trello-cli-unofficial
 
-# Or with other package managers
-bun add -g trello-cli-unofficial
-yarn global add trello-cli-unofficial
+# 3. Use
+tcu --version
 ```
-
-# Option 4: Using PNPM
-
-pnpm add -g trello-cli-unofficial
 
 # Ready to use immediately!
 
@@ -59,23 +58,20 @@ tcu --version
 
 #### Windows Installation
 
-Para usuários Windows, a instalação é simples com qualquer gerenciador de pacotes:
+Para usuários Windows, primeiro instale o Bun, depois o CLI:
 
 ```powershell
-# Usando NPM (funciona com Node.js)
+# 1. Instale o Bun
+powershell -c "irm bun.sh/install.ps1 | iex"
+
+# 2. Instale o CLI
 npm install -g trello-cli-unofficial
 
-# Ou usando Bun (recomendado para melhor performance)
-bun add -g trello-cli-unofficial
-
-# Ou usando Yarn
-yarn global add trello-cli-unofficial
-
-# Pronto para usar!
+# 3. Use
 tcu --version
-````
+```
 
-**Nota:** No Windows, você pode precisar reiniciar o terminal após a instalação para atualizar o PATH.
+**Nota:** No Windows, você pode precisar reiniciar o terminal após instalar o Bun.
 
 ### Manual Installation (Development)
 
