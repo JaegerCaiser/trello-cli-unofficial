@@ -25,6 +25,12 @@ export class CommandController {
     this.authController = new AuthController(configRepository);
     this.program = new Command();
     this.outputFormatter = new OutputFormatter();
+
+    // Ensure program is properly initialized
+    if (!this.program) {
+      throw new Error(t('errors.programNotInitialized'));
+    }
+
     this.initializeProgram();
     this.setupCommands();
   }
@@ -68,12 +74,25 @@ export class CommandController {
     const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
     const version = packageJson.version;
 
+    // Initialize program with basic configuration first
+    try {
+      this.program
+        .name('trello-cli-unofficial')
+        .description(t('commands.description'))
+        .version(version)
+        .option('-f, --format <format>', t('commands.formatOption'), 'table')
+        .option('-v', t('commands.versionOption'));
+    } catch (error) {
+      // Fallback if Commander fails
+      console.error(
+        t('errors.general', { message: (error as Error).message }),
+        (error as Error).message,
+      );
+      throw error;
+    }
+
+    // Set up event handlers
     this.program
-      .name('trello-cli-unofficial')
-      .description(t('commands.description'))
-      .version(version)
-      .option('-f, --format <format>', t('commands.formatOption'), 'table')
-      .option('-v', t('commands.versionOption'))
       .on('option:format', (format: string) => {
         this.outputFormatter.setFormat(format as OutputFormat);
       })
