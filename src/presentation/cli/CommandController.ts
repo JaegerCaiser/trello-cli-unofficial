@@ -1,4 +1,3 @@
-import type { Command } from 'commander';
 import type { OutputFormat } from '@/shared';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -8,6 +7,7 @@ import {
   FileConfigRepository,
   TrelloApiRepository,
 } from '@infrastructure/repositories';
+import { Command } from 'commander';
 
 import { t } from '@/i18n';
 import { ErrorHandler, OutputFormatter } from '@/shared';
@@ -33,7 +33,7 @@ export class CommandController {
     }
 
     try {
-      const { Command } = await import('commander');
+      // Use static import - Commander is already imported at the top
       this.program = new Command();
     } catch (error) {
       console.error(t('menu.errors.commanderInitError'), error);
