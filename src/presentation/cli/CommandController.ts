@@ -24,7 +24,7 @@ export class CommandController {
     const configRepository = new FileConfigRepository();
     this.authController = new AuthController(configRepository);
     this.outputFormatter = new OutputFormatter();
-    // Commander will be initialized lazily in initializeProgram
+    // Commander will be initialized lazily in run()
   }
 
   private async initializeProgram(): Promise<void> {
@@ -79,12 +79,17 @@ export class CommandController {
       .version(version)
       .option('-f, --format <format>', t('commands.formatOption'), 'table')
       .option('-v', t('commands.versionOption'))
+      .option('--verbose', t('commands.verboseOption'))
       .on('option:format', (format: string) => {
         this.outputFormatter.setFormat(format as OutputFormat);
       })
       .on('option:v', () => {
         console.log(version);
         process.exit(0);
+      })
+      .on('option:verbose', () => {
+        // Enable verbose error reporting
+        process.env.VERBOSE_ERRORS = 'true';
       });
 
     // Interactive mode

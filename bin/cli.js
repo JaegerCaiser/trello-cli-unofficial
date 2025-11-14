@@ -90,6 +90,21 @@ if (!bunType) {
 const mainScript = path.join(__dirname, '..', 'dist', 'main.js');
 const args = process.argv.slice(2);
 
+// Check for verbose flag
+const isVerbose = args.includes('--verbose') || args.includes('-V');
+if (isVerbose) {
+  process.env.VERBOSE_ERRORS = 'true';
+  // Remove verbose flag from args so it doesn't interfere
+  const verboseIndex = args.indexOf('--verbose');
+  if (verboseIndex !== -1) {
+    args.splice(verboseIndex, 1);
+  }
+  const shortVerboseIndex = args.indexOf('-V');
+  if (shortVerboseIndex !== -1) {
+    args.splice(shortVerboseIndex, 1);
+  }
+}
+
 // Use local Bun if available, otherwise global
 const bunCommand = bunType === 'local'
   ? path.join(__dirname, '..', 'node_modules', '.bin', 'bun')
@@ -98,6 +113,7 @@ const bunCommand = bunType === 'local'
 const child = spawn(bunCommand, [mainScript, ...args], {
   stdio: 'inherit',
   cwd: process.cwd(),
+  env: { ...process.env, VERBOSE_ERRORS: process.env.VERBOSE_ERRORS || 'false' },
 });
 
 child.on('exit', (code) => {

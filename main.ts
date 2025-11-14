@@ -14,6 +14,13 @@ async function main() {
       t('errors.general', { message: (error as Error).message }),
       (error as Error).message,
     );
+
+    // Show stack trace in verbose mode
+    if (process.env.VERBOSE_ERRORS === 'true') {
+      console.error('\n--- Stack Trace ---');
+      console.error((error as Error).stack);
+    }
+
     process.exit(1);
   }
 }

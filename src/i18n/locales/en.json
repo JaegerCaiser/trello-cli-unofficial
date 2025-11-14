@@ -169,6 +169,7 @@
     "description": "Unofficial Trello CLI using Power-Up authentication",
     "formatOption": "Output format: table, json, csv",
     "versionOption": "output the version number",
+    "verboseOption": "show detailed errors for debugging",
     "deprecated": {
       "boardsLegacyDescription": "[DEPRECATED] Use \"boards list\" instead",
       "boardsLegacyWarning": "⚠️  Warning: \"boards\" command is deprecated. Use \"boards list\" instead.",
