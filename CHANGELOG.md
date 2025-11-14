@@ -1,3 +1,10 @@
+## [0.9.3](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.9.2...v0.9.3) (2025-11-14)
+
+
+### Bug Fixes
+
+* make check-dependencies script Windows-compatible ([358fb98](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/358fb9816045aef97631a257ab7a8d1dcfa4aea8))
+
 ## [0.9.2](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.9.1...v0.9.2) (2025-11-14)
 
 
