@@ -1,9 +1,0 @@
-node_modules/
-dist/
-coverage/
-*.md
-*.json
-*.lock
-*.tgz
-.husky/
-.history/
