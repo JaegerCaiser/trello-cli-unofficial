@@ -1,3 +1,18 @@
+# [0.10.0](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.9.6...v0.10.0) (2025-11-14)
+
+
+### Bug Fixes
+
+* configure lint-staged to detect JSON issues without auto-fix ([31cf1f9](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/31cf1f9e22b767bb82bd1ba55969af6e9cfa5b55))
+* correct lint-staged configuration and add pre-commit hook ([030b957](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/030b9575707e6062e826de225c5c7c7289807d98))
+* remove dotenv verbose logging messages for cleaner CLI output ([ece06aa](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/ece06aa62bfd92b3a45e3c506c4b9c7829e99e9b))
+* replace manual git hooks with husky ([18d3057](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/18d3057385756a4a75ba186a124b4d6a18f8cb83))
+
+
+### Features
+
+* implement dynamic version display from package.json ([5d2c9e3](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/5d2c9e30b0ed0dc44d65307e02ee84fbd694192f))
+
 ## [0.9.6](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.9.5...v0.9.6) (2025-11-14)
 
 
