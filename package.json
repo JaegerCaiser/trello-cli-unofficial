@@ -1,7 +1,7 @@
 {
   "name": "trello-cli-unofficial",
   "type": "module",
-  "version": "0.10.3",
+  "version": "0.10.4",
   "private": false,
   "description": "Unofficial Trello CLI using Power-Up authentication, built with Bun for maximum performance",
   "author": "Matheus Caiser <matheus.kaiser@gmail.com> (https://www.mrdeveloper.com.br/)",

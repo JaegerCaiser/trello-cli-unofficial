@@ -1,3 +1,10 @@
+## [0.10.4](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.10.3...v0.10.4) (2025-11-14)
+
+
+### Bug Fixes
+
+* update Node.js version to 22 for ESLint compatibility ([9a933e2](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/9a933e2f5d8eeb09c16cf144d5dd3a00448768ae))
+
 ## [0.10.3](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.10.2...v0.10.3) (2025-11-14)
 
 
