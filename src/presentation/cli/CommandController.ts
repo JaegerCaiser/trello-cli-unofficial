@@ -18,27 +18,15 @@ export class CommandController {
   private authController: AuthController;
   private boardController!: BoardController;
   private cardController!: CardController;
-  private program: Command | null = null;
+  private program: Command;
   private outputFormatter: OutputFormatter;
 
   constructor() {
     const configRepository = new FileConfigRepository();
     this.authController = new AuthController(configRepository);
     this.outputFormatter = new OutputFormatter();
-    // Commander will be initialized lazily in run()
-  }
-
-  private async initializeProgram(): Promise<void> {
-    if (this.program) {
-      return;
-    }
-
-    try {
-      this.program = new Command();
-    } catch (error) {
-      console.error(t('menu.errors.commanderInitError'), error);
-      throw new Error(t('menu.errors.commanderInitFailed'));
-    }
+    // Initialize Commander immediately in constructor
+    this.program = new Command();
   }
 
   private async initializeTrelloControllers(): Promise<void> {
@@ -449,7 +437,6 @@ export class CommandController {
   }
 
   async run(): Promise<void> {
-    await this.initializeProgram();
     await this.setupCommands();
 
     // Fallback to interactive mode if no command specified
@@ -460,7 +447,7 @@ export class CommandController {
       ).TrelloCliController(configRepository, this.outputFormatter);
       await cli.run();
     } else {
-      this.program!.parse();
+      await this.program.parseAsync();
     }
   }
 }
