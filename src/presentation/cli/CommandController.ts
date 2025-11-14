@@ -1,13 +1,14 @@
-import type { Command } from 'commander';
 import type { OutputFormat } from '@/shared';
 import { readFileSync } from 'node:fs';
-
 import { join } from 'node:path';
+
 import { AuthenticationService } from '@domain/services';
 import {
   FileConfigRepository,
   TrelloApiRepository,
 } from '@infrastructure/repositories';
+
+import { Command } from 'commander';
 import { t } from '@/i18n';
 import { OutputFormatter } from '@/shared';
 
@@ -33,8 +34,6 @@ export class CommandController {
     }
 
     try {
-      // Try dynamic import first (more compatible with bundling)
-      const { Command } = await import('commander');
       this.program = new Command();
     } catch (error) {
       console.error(t('menu.errors.commanderInitError'), error);
