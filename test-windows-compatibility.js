@@ -67,5 +67,28 @@ catch (error) {
   console.error('This might indicate the original issue still exists');
 }
 
+// Test 4: Test version reading specifically (suspected issue)
+console.warn('4️⃣ Testing version reading robustness...');
+try {
+  const versionOutput = execSync('tcu --version', {
+    encoding: 'utf8',
+    timeout: 3000,
+  }).trim();
+
+  // Check if version looks valid (should be like "0.11.3")
+  const versionRegex = /^\d+\.\d+\.\d+$/;
+  if (versionRegex.test(versionOutput)) {
+    console.warn(`✅ Version reading works: ${versionOutput}`);
+  }
+  else {
+    console.error(`❌ Version format unexpected: ${versionOutput}`);
+    console.error('Expected format: x.y.z (e.g., 0.11.3)');
+  }
+}
+catch (error) {
+  console.error('❌ Version reading failed:', error.message);
+  console.error('This was the suspected issue - dynamic package.json reading on Windows');
+}
+
 console.warn('🎉 All tests completed!');
 console.warn('If all tests passed, the Windows compatibility issue is likely fixed.');

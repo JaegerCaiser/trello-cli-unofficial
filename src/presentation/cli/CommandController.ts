@@ -1,6 +1,7 @@
 import type { OutputFormat } from '@/shared';
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { existsSync, readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { AuthenticationService } from '@domain/services';
 import {
@@ -27,6 +28,38 @@ export class CommandController {
     this.outputFormatter = new OutputFormatter();
     // Initialize Commander immediately in constructor
     this.program = new Command();
+  }
+
+  private getVersion(): string {
+    // Try multiple approaches to find package.json (robust for different environments)
+
+    // 1. Try relative to current working directory (development)
+    const cwdPackageJson = join(process.cwd(), 'package.json');
+    if (existsSync(cwdPackageJson)) {
+      try {
+        const packageJson = JSON.parse(readFileSync(cwdPackageJson, 'utf-8'));
+        return packageJson.version;
+      } catch {
+        // Continue to next approach
+      }
+    }
+
+    // 2. Try relative to this file's directory (when installed globally)
+    try {
+      const currentFilePath = fileURLToPath(import.meta.url);
+      const currentDir = dirname(currentFilePath);
+      const installedPackageJson = join(currentDir, '..', '..', 'package.json');
+
+      if (existsSync(installedPackageJson)) {
+        const packageJson = JSON.parse(readFileSync(installedPackageJson, 'utf-8'));
+        return packageJson.version;
+      }
+    } catch {
+      // Continue to fallback
+    }
+
+    // 3. Fallback to hardcoded version from package.json
+    return '0.11.3';
   }
 
   private async initializeTrelloControllers(): Promise<void> {
@@ -56,10 +89,8 @@ export class CommandController {
       throw new Error(t('errors.programNotInitialized'));
     }
 
-    // Get version from package.json
-    const packageJsonPath = join(process.cwd(), 'package.json');
-    const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
-    const version = packageJson.version;
+    // Get version using robust method
+    const version = this.getVersion();
 
     this.program
       .name('trello-cli-unofficial')
