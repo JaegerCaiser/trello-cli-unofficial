@@ -39,7 +39,8 @@
     "configResetted": "✅ Configuração resetada!",
     "errors": {
       "loadConfig": "Erro ao carregar configuração:",
-      "saveConfig": "Erro ao salvar configuração:"
+      "saveConfig": "Erro ao salvar configuração:",
+      "programNotInitialized": "Programa Commander não inicializado"
     },
     "selectBoard": "Selecione um board:",
     "selectList": "Selecione uma lista:",

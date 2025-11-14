@@ -50,6 +50,11 @@ export class CommandController {
   }
 
   private setupCommands(): void {
+    // Ensure program is initialized
+    if (!this.program) {
+      throw new Error(t('errors.programNotInitialized'));
+    }
+
     // Get version from package.json
     const packageJsonPath = join(process.cwd(), 'package.json');
     const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
@@ -426,16 +431,15 @@ export class CommandController {
   }
 
   async run(): Promise<void> {
-    // Parse arguments first to handle global options like --version
-    this.program.parse();
-
     // Fallback to interactive mode if no command specified
-    if (!this.program.args.length && !this.program.opts().version) {
+    if (process.argv.length === 2) {
       const configRepository = new FileConfigRepository();
       const cli = new (
         await import('./TrelloCliController')
       ).TrelloCliController(configRepository, this.outputFormatter);
       await cli.run();
+    } else {
+      this.program.parse();
     }
   }
 }

@@ -38,8 +38,9 @@
     "confirmReset": "Are you sure you want to reset all configuration?",
     "configResetted": "✅ Configuration resetted!",
     "errors": {
-      "loadConfig": "Error loading config:",
-      "saveConfig": "Error saving config:"
+      "loadConfig": "Error loading configuration:",
+      "saveConfig": "Error saving configuration:",
+      "programNotInitialized": "Commander program not initialized"
     },
     "selectBoard": "Select a board:",
     "selectList": "Select a list:",
