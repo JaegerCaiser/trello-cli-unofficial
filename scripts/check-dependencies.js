@@ -90,20 +90,65 @@ else {
   console.log(msg.bunBenefit);
   console.log('');
 
-  // Read user input
-  process.stdout.write(msg.installPrompt);
+  // Check if we're in an interactive environment
+  const isInteractive = process.stdout.isTTY && process.stdin.isTTY;
+  const isCI = process.env.CI || process.env.CONTINUOUS_INTEGRATION;
 
-  process.stdin.setRawMode(true);
-  process.stdin.resume();
+  if (!isInteractive || isCI) {
+    console.log(msg.nonInteractiveInstall);
+    console.log(msg.installing);
 
-  process.stdin.once('data', (key) => {
-    process.stdin.setRawMode(false);
-    process.stdin.pause();
+    try {
+      // Auto-install Bun in non-interactive environments
+      const platform = os.platform();
+      let installCommand;
 
-    const answer = key.toString().toLowerCase();
-    console.log(''); // New line after input
+      if (platform === 'win32') {
+        // Windows - use PowerShell (non-interactive)
+        installCommand = 'powershell -Command "try { irm bun.sh/install.ps1 | iex } catch { Write-Host \'Failed to install Bun. Please install manually from https://bun.sh\' }"';
+      }
+      else {
+        // Unix-like systems (non-interactive)
+        installCommand = 'curl -fsSL https://bun.sh/install | bash || echo "Failed to install Bun. Please install manually from https://bun.sh"';
+      }
 
-    if (answer === 'y' || answer === '\r' || answer === '\n') {
+      console.log(`Running: ${installCommand}`);
+      execSync(installCommand, { stdio: 'inherit', timeout: 30000 });
+      console.log(msg.installSuccess);
+
+      // Check if installation was successful
+      const newBunVersion = isBunInstalled();
+      if (newBunVersion) {
+        console.log(`${msg.version} ${newBunVersion}`);
+      }
+
+      console.log('');
+      console.log(msg.success);
+      process.exit(0);
+    }
+    catch (error) {
+      console.log(msg.installFailed);
+      console.log('Please install Bun manually from https://bun.sh');
+      process.exit(1);
+    }
+  }
+
+  // Interactive mode - ask user
+  console.log(msg.installPrompt);
+
+  // Use readline for cross-platform input
+  const readline = require('node:readline');
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  rl.question('', (answer) => {
+    rl.close();
+
+    const normalizedAnswer = answer.toString().toLowerCase().trim();
+
+    if (normalizedAnswer === 'y' || normalizedAnswer === 'yes' || normalizedAnswer === '') {
       console.log(msg.installing);
 
       try {
@@ -147,8 +192,8 @@ else {
       console.log(msg.retry);
       process.exit(1);
     }
+
+    console.log('');
+    console.log(msg.success);
   });
 }
-
-console.log('');
-console.log(msg.success);
