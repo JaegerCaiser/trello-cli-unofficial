@@ -8,7 +8,7 @@
 [![CI/CD](https://img.shields.io/github/actions/workflow/status/JaegerCaiser/trello-cli-unofficial/ci.yml?branch=main&label=CI)](https://github.com/JaegerCaiser/trello-cli-unofficial/actions)
 [![Release](https://img.shields.io/github/actions/workflow/status/JaegerCaiser/trello-cli-unofficial/release.yml?branch=main&label=Release)](https://github.com/JaegerCaiser/trello-cli-unofficial/actions)
 
-An unofficial Trello CLI using Power-Up authentication, built with Bun for maximum performance. Features automated CI/CD with semantic versioning and NPM publishing.
+An unofficial Trello CLI using Power-Up authentication, built with Bun for maximum performance. Features automated dependency management with Bun installation during setup.
 
 ## 🚀 Features
 
@@ -30,23 +30,22 @@ An unofficial Trello CLI using Power-Up authentication, built with Bun for maxim
 ### Prerequisites
 
 - **[Node.js 16+](https://nodejs.org/) (Required)**
-- **[Bun](https://bun.sh/) (Optional, for better performance)**
+- **[Bun](https://bun.sh/) (Required - será instalado automaticamente se não estiver presente)**
 - Trello account with Power-Up enabled
 - **Supported Platforms:** Linux, macOS, Windows
 
 ### NPM Installation (Recommended)
 
-The CLI works with both Bun and Node.js. Choose the package manager you prefer:
+O instalador verifica automaticamente se o Bun está presente no sistema. Se não estiver, perguntará se deseja instalá-lo.
 
 ```bash
-# Option 1: Using NPM (works with both Bun and Node.js)
+# Installation with automatic Bun setup
 npm install -g trello-cli-unofficial
 
-# Option 2: Using Bun (recommended for better performance)
+# Or with other package managers
 bun add -g trello-cli-unofficial
-
-# Option 3: Using Yarn
 yarn global add trello-cli-unofficial
+```
 
 # Option 4: Using PNPM
 pnpm add -g trello-cli-unofficial

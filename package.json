@@ -69,7 +69,8 @@
     "version:patch": "bun version patch && git push --follow-tags",
     "version:minor": "bun version minor && git push --follow-tags",
     "version:major": "bun version major && git push --follow-tags",
-    "prepublishOnly": "bun run validate && bun run build"
+    "prepublishOnly": "bun run validate && bun run build",
+    "postinstall": "./scripts/check-dependencies.sh"
   },
   "peerDependencies": {
     "typescript": "^5"
