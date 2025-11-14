@@ -25,7 +25,15 @@ export class CommandController {
     this.authController = new AuthController(configRepository);
     this.program = new Command();
     this.outputFormatter = new OutputFormatter();
+    this.initializeProgram();
     this.setupCommands();
+  }
+
+  private initializeProgram(): void {
+    // Ensure program is properly initialized
+    if (!this.program) {
+      this.program = new Command();
+    }
   }
 
   private async initializeTrelloControllers(): Promise<void> {
@@ -66,7 +74,7 @@ export class CommandController {
       .version(version)
       .option('-f, --format <format>', t('commands.formatOption'), 'table')
       .option('-v', t('commands.versionOption'))
-      .on('option:format', (format) => {
+      .on('option:format', (format: string) => {
         this.outputFormatter.setFormat(format as OutputFormat);
       })
       .on('option:v', () => {
@@ -431,6 +439,12 @@ export class CommandController {
   }
 
   async run(): Promise<void> {
+    // Ensure program is initialized before parsing
+    if (!this.program) {
+      this.initializeProgram();
+      this.setupCommands();
+    }
+
     // Fallback to interactive mode if no command specified
     if (process.argv.length === 2) {
       const configRepository = new FileConfigRepository();
