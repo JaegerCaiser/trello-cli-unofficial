@@ -70,7 +70,8 @@
     "version:patch": "bun version patch && git push --follow-tags",
     "version:minor": "bun version minor && git push --follow-tags",
     "version:major": "bun version major && git push --follow-tags",
-    "prepublishOnly": "bun run validate && bun run build"
+    "prepublishOnly": "bun run validate && bun run build",
+    "prepare": "husky"
   },
   "peerDependencies": {
     "typescript": "^5"
@@ -93,6 +94,7 @@
     "@types/inquirer": "^9.0.9",
     "eslint": "^9.39.1",
     "eslint-plugin-format": "^1.0.2",
+    "husky": "^9.1.7",
     "lint-staged": "^16.2.6"
   },
   "os": [
@@ -100,9 +102,6 @@
     "linux",
     "win32"
   ],
-  "gitHooks": {
-    "commit-msg": "bun run commitlint"
-  },
   "lint-staged": {
     "*.{js,ts,tsx}": [
       "eslint --fix"
@@ -112,4 +111,3 @@
     ]
   }
 }
-
