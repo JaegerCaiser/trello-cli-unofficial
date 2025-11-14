@@ -48,7 +48,7 @@
     "src"
   ],
   "engines": {
-    "node": ">=16.0.0"
+    "bun": ">=1.0.0"
   },
   "scripts": {
     "start": "bun run main.ts",
