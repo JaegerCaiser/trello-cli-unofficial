@@ -1,3 +1,10 @@
+## [0.10.5](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.10.4...v0.10.5) (2025-11-14)
+
+
+### Bug Fixes
+
+* ensure CommandController program initialization on Windows ([ed3f571](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/ed3f5710c4fd0e4d7fef9fdc3c6a1c00a49f227f))
+
 ## [0.10.4](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.10.3...v0.10.4) (2025-11-14)
 
 
