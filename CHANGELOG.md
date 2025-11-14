@@ -1,3 +1,10 @@
+## [0.9.4](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.9.3...v0.9.4) (2025-11-14)
+
+
+### Bug Fixes
+
+* create CLI wrapper to ensure Bun execution ([87deabf](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/87deabf6c8be566a764bb52d057bebb49090f88f))
+
 ## [0.9.3](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.9.2...v0.9.3) (2025-11-14)
 
 
