@@ -1,3 +1,10 @@
+## [0.9.5](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.9.4...v0.9.5) (2025-11-14)
+
+
+### Bug Fixes
+
+* improve Bun dependency management and user experience ([fe12f62](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/fe12f627de9c7e0202ce77efe563480e37ab1c34))
+
 ## [0.9.4](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.9.3...v0.9.4) (2025-11-14)
 
 
