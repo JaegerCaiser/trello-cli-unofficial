@@ -29,11 +29,10 @@ An unofficial Trello CLI using Power-Up authentication, built with Bun for maxim
 
 ### Prerequisites
 
-- **[Bun](https://bun.sh/) (Recommended)** or **Node.js 16+** installed
+- **[Node.js 16+](https://nodejs.org/) (Required)**
+- **[Bun](https://bun.sh/) (Optional, for better performance)**
 - Trello account with Power-Up enabled
 - **Supported Platforms:** Linux, macOS, Windows
-
-**Note:** Bun provides better performance, but Node.js works perfectly fine.
 
 ### NPM Installation (Recommended)
 
