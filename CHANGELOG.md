@@ -1,3 +1,10 @@
+## [0.10.7](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.10.6...v0.10.7) (2025-11-14)
+
+
+### Bug Fixes
+
+* add Prettier configuration to align with ESLint rules ([c50bab8](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/c50bab8b8451eca95a0ae60967e3ed29b2ec5dbf))
+
 ## [0.10.6](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.10.5...v0.10.6) (2025-11-14)
 
 
