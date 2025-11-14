@@ -1,3 +1,10 @@
+## [0.10.8](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.10.7...v0.10.8) (2025-11-14)
+
+
+### Bug Fixes
+
+* use dynamic import for Commander initialization ([0810a65](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/0810a65526ea55f4b6082d0f6964eed62f1eddf6))
+
 ## [0.10.7](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.10.6...v0.10.7) (2025-11-14)
 
 
