@@ -1,3 +1,4 @@
+import type { Command } from 'commander';
 import type { OutputFormat } from '@/shared';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -7,7 +8,6 @@ import {
   FileConfigRepository,
   TrelloApiRepository,
 } from '@infrastructure/repositories';
-import { Command } from 'commander';
 
 import { t } from '@/i18n';
 import { ErrorHandler, OutputFormatter } from '@/shared';
@@ -17,27 +17,27 @@ export class CommandController {
   private authController: AuthController;
   private boardController!: BoardController;
   private cardController!: CardController;
-  private program: Command;
+  private program: Command | null = null;
   private outputFormatter: OutputFormatter;
 
   constructor() {
     const configRepository = new FileConfigRepository();
     this.authController = new AuthController(configRepository);
+    this.outputFormatter = new OutputFormatter();
+    // Commander will be initialized lazily in initializeProgram
+  }
+
+  private async initializeProgram(): Promise<void> {
+    if (this.program) {
+      return;
+    }
+
     try {
+      const { Command } = await import('commander');
       this.program = new Command();
     } catch (error) {
       console.error(t('menu.errors.commanderInitError'), error);
       throw new Error(t('menu.errors.commanderInitFailed'));
-    }
-    this.outputFormatter = new OutputFormatter();
-    this.initializeProgram();
-    this.setupCommands();
-  }
-
-  private initializeProgram(): void {
-    // Ensure program is properly initialized
-    if (!this.program) {
-      this.program = new Command();
     }
   }
 
@@ -62,8 +62,8 @@ export class CommandController {
     );
   }
 
-  private setupCommands(): void {
-    // Ensure program is initialized
+  private async setupCommands(): Promise<void> {
+    // Program should be initialized by now
     if (!this.program) {
       throw new Error(t('errors.programNotInitialized'));
     }
@@ -445,10 +445,8 @@ export class CommandController {
 
   async run(): Promise<void> {
     // Ensure program is initialized before parsing
-    if (!this.program) {
-      this.initializeProgram();
-      this.setupCommands();
-    }
+    await this.initializeProgram();
+    await this.setupCommands();
 
     // Fallback to interactive mode if no command specified
     if (process.argv.length === 2) {
@@ -458,7 +456,7 @@ export class CommandController {
       ).TrelloCliController(configRepository, this.outputFormatter);
       await cli.run();
     } else {
-      this.program.parse();
+      this.program!.parse();
     }
   }
 }
