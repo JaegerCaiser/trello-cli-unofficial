@@ -3,7 +3,6 @@ import { config } from 'dotenv';
 import { t } from './src/i18n';
 import { CommandController } from './src/presentation';
 
-// Load environment variables
 config();
 
 async function main() {
