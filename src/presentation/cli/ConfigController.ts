@@ -1,10 +1,11 @@
+import type { AuthController } from './AuthController';
 import { CONFIG_ACTIONS } from '@shared/types';
 
 import inquirer from 'inquirer';
 import { t } from '@/i18n';
 
 export class ConfigController {
-  constructor(private authController: { getConfig: () => Promise<unknown>; setupToken: () => Promise<void> }) {}
+  constructor(private authController: AuthController) {}
 
   async showConfigMenu(): Promise<void> {
     while (true) {
@@ -27,9 +28,9 @@ export class ConfigController {
           await this.authController.setupToken();
           break;
         case CONFIG_ACTIONS.VIEW:
-          const config = await this.authController.getConfig() as any;
+          const config = await this.authController.getConfig();
           console.log(t('menu.currentConfig'));
-          console.log(`API Key: ${config.apiKey}`);
+          console.log(`${t('menu.apiKey')} ${config.apiKey}`);
           const tokenStatus = config.hasValidToken()
             ? `✅ ${t('common.yes')}`
             : `❌ ${t('common.no')}`;

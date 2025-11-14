@@ -101,6 +101,33 @@ The token is automatically saved in `~/.trello-cli-unofficial/config.json`:
 }
 ```
 
+### Environment Variables
+
+You can configure the CLI using environment variables instead of the configuration file:
+
+```bash
+# Copy the example file
+cp .env.example .env
+
+# Edit with your credentials
+nano .env
+```
+
+Available environment variables:
+
+- `TRELLO_API_KEY`: Your Trello API key (optional, defaults to built-in key)
+- `TRELLO_TOKEN`: Your Trello token (optional, will be prompted if not set)
+
+Example `.env` file:
+
+```bash
+# Trello CLI Unofficial - Environment Variables
+TRELLO_TOKEN=ATTA...
+TRELLO_API_KEY=your-custom-api-key
+```
+
+**Security Note**: Never commit your `.env` file to version control. The `.env.example` file contains safe defaults.
+
 ## Internationalization (i18n)
 
 The CLI automatically detects your system language and displays messages in the appropriate language.

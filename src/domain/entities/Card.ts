@@ -18,6 +18,17 @@ export interface UpdateCardData {
   idList?: string;
 }
 
+// API Response types
+interface TrelloCardResponse {
+  id: string;
+  name: string;
+  desc?: string;
+  idList: string;
+  pos: number;
+  url?: string;
+  [key: string]: unknown;
+}
+
 export class CardEntity implements Card {
   constructor(
     public readonly id: string,
@@ -27,7 +38,7 @@ export class CardEntity implements Card {
     public readonly url?: string,
   ) {}
 
-  static fromApiResponse(data: any): CardEntity {
+  static fromApiResponse(data: TrelloCardResponse): CardEntity {
     return new CardEntity(data.id, data.name, data.idList, data.desc, data.url);
   }
 

@@ -3,10 +3,22 @@ export interface List {
   name: string;
 }
 
-export class ListEntity implements List {
-  constructor(public readonly id: string, public readonly name: string) {}
+// API Response types
+interface TrelloListResponse {
+  id: string;
+  name: string;
+  idBoard: string;
+  pos: number;
+  [key: string]: unknown;
+}
 
-  static fromApiResponse(data: any): ListEntity {
+export class ListEntity implements List {
+  constructor(
+    public readonly id: string,
+    public readonly name: string,
+  ) {}
+
+  static fromApiResponse(data: TrelloListResponse): ListEntity {
     return new ListEntity(data.id, data.name);
   }
 }

@@ -1,5 +1,6 @@
 import { AuthenticateUserUseCase } from '@application/use-cases';
 import { ConfigEntity } from '@domain/entities';
+import { changeLanguage } from '@i18n';
 import { MockConfigRepository } from '@tests/mocks';
 import { beforeEach, describe, expect, test } from 'bun:test';
 
@@ -10,6 +11,7 @@ describe('AuthenticateUserUseCase', () => {
   beforeEach(() => {
     mockConfigRepo = new MockConfigRepository();
     useCase = new AuthenticateUserUseCase(mockConfigRepo);
+    changeLanguage('pt-BR'); // Ensure tests run in Portuguese
   });
 
   describe('execute with token', () => {
@@ -36,7 +38,8 @@ describe('AuthenticateUserUseCase', () => {
       const result = await useCase.execute(token);
 
       expect(result.success).toBe(false);
-      expect(result.message).toContain('10 caracteres');
+      expect(result.message).toContain('❌');
+      expect(result.message).toContain('inválido');
     });
   });
 
@@ -57,7 +60,7 @@ describe('AuthenticateUserUseCase', () => {
 
       expect(result.success).toBe(false);
       expect(result.message).toContain('🔐');
-      expect(result.message).toContain('configurar seu token');
+      expect(result.message).toContain('autenticado');
     });
   });
 

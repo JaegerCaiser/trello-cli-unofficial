@@ -4,10 +4,16 @@ import { describe, expect, test } from 'bun:test';
 describe('ConfigEntity', () => {
   describe('createDefault', () => {
     test('should create config with default API key', () => {
+      // Set environment variable for test
+      process.env.TRELLO_API_KEY = '630a01228b85df706aa520f3611e6490';
+
       const config = ConfigEntity.createDefault();
 
       expect(config.apiKey).toBe('630a01228b85df706aa520f3611e6490');
       expect(config.token).toBeUndefined();
+
+      // Clean up
+      delete process.env.TRELLO_API_KEY;
     });
   });
 

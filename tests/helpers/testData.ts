@@ -63,12 +63,15 @@ export const TestData = {
     list: {
       id: 'list1',
       name: 'To Do',
+      idBoard: 'board1',
+      pos: 1,
     },
     card: {
       id: 'card1',
       name: 'Test Card',
       desc: 'Test Description',
       idList: 'list1',
+      pos: 1,
       url: 'https://trello.com/c/card1',
     },
   },

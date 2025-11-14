@@ -1,3 +1,4 @@
+import type { ConfigEntity } from '@domain/entities';
 import type { ConfigRepository } from '@domain/repositories';
 import { AuthenticateUserUseCase } from '@application/use-cases';
 import inquirer from 'inquirer';
@@ -32,7 +33,7 @@ export class AuthController {
     console.log(result.success ? t('auth.tokenSaved') : result.message);
   }
 
-  async getConfig() {
+  async getConfig(): Promise<ConfigEntity> {
     return await this.authenticateUseCase.getConfig();
   }
 }

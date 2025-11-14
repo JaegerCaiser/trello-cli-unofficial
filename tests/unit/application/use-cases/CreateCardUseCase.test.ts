@@ -1,4 +1,5 @@
 import { CreateCardUseCase } from '@application/use-cases';
+import { changeLanguage } from '@i18n';
 import { MockTrelloRepository } from '@tests/mocks';
 import { beforeEach, describe, expect, test } from 'bun:test';
 
@@ -10,6 +11,7 @@ describe('CreateCardUseCase', () => {
     mockTrelloRepo = new MockTrelloRepository();
     mockTrelloRepo.setupMockData();
     useCase = new CreateCardUseCase(mockTrelloRepo);
+    changeLanguage('pt-BR'); // Ensure tests run in Portuguese
   });
 
   describe('execute', () => {

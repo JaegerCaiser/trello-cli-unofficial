@@ -24,6 +24,8 @@ describe('ListEntity', () => {
       const apiData = {
         id: 'list123',
         name: 'In Progress',
+        idBoard: 'board1',
+        pos: 1,
       };
 
       const list = ListEntity.fromApiResponse(apiData);

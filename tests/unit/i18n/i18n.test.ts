@@ -1,5 +1,16 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
 import { changeLanguage, getCurrentLanguage, t } from '@/i18n';
+
+// Load translations for testing
+const translationsPath = path.join(process.cwd(), 'src', 'i18n', 'locales');
+const enTranslations = JSON.parse(
+  fs.readFileSync(path.join(translationsPath, 'en.json'), 'utf-8'),
+);
+const ptBRTranslations = JSON.parse(
+  fs.readFileSync(path.join(translationsPath, 'pt-BR.json'), 'utf-8'),
+);
 
 describe('i18n', () => {
   // Store original LANG to restore after tests
@@ -132,6 +143,38 @@ describe('i18n', () => {
 
       changeLanguage('en');
       expect(t('errors.generic')).toContain('Error');
+    });
+
+    test('should have complete translation coverage between languages', () => {
+      // Helper function to get all keys from nested object
+      const getAllKeys = (obj: any, prefix = ''): string[] => {
+        const keys: string[] = [];
+        for (const key in obj) {
+          const fullKey = prefix ? `${prefix}.${key}` : key;
+          if (typeof obj[key] === 'object' && obj[key] !== null) {
+            keys.push(...getAllKeys(obj[key], fullKey));
+          } else {
+            keys.push(fullKey);
+          }
+        }
+        return keys;
+      };
+
+      const ptBRKeys = getAllKeys(ptBRTranslations);
+      const enKeys = getAllKeys(enTranslations);
+
+      // Check that all Portuguese keys exist in English
+      for (const key of ptBRKeys) {
+        expect(enKeys).toContain(key);
+      }
+
+      // Check that all English keys exist in Portuguese
+      for (const key of enKeys) {
+        expect(ptBRKeys).toContain(key);
+      }
+
+      // Verify counts match
+      expect(ptBRKeys.length).toBe(enKeys.length);
     });
   });
 

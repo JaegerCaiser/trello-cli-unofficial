@@ -7,7 +7,8 @@
     "exit": "Sair",
     "success": "✅ Sucesso!",
     "error": "❌ Erro!",
-    "loading": "⏳ Carregando..."
+    "loading": "⏳ Carregando...",
+    "noData": "Nenhum dado para exibir"
   },
   "auth": {
     "notAuthenticated": "🔐 Você não está autenticado!",
@@ -32,9 +33,14 @@
     "configBack": "⬅️  Voltar",
     "currentConfig": "� Configuração atual:",
     "tokenConfigured": "Token configurado:",
+    "apiKey": "Chave da API:",
     "configFile": "Arquivo de config: ~/.trello-cli-unofficial/config.json",
     "confirmReset": "Tem certeza que deseja resetar toda a configuração?",
     "configResetted": "✅ Configuração resetada!",
+    "errors": {
+      "loadConfig": "Erro ao carregar configuração:",
+      "saveConfig": "Erro ao salvar configuração:"
+    },
     "selectBoard": "Selecione um board:",
     "selectList": "Selecione uma lista:",
     "selectCard": "Selecione um card:"
@@ -43,15 +49,41 @@
     "loading": "⏳ Carregando boards...",
     "empty": "📋 Nenhum board encontrado.",
     "notFound": "❌ Quadro \"{{name}}\" não encontrado",
+    "notFoundById": "❌ Quadro com ID '{{id}}' não encontrado",
     "lists": "📝 Listas do Board: {{name}}",
-    "yourBoards": "📋 Seus Quadros do Trello:"
+    "listsTitle": "📝 Listas:",
+    "listsHeaders": {
+      "name": "Nome da Lista",
+      "id": "ID da Lista"
+    },
+    "listsEmpty": "📝 Nenhuma lista encontrada neste quadro",
+    "listId": "🆔 {{id}}",
+    "yourBoards": "📋 Seus Quadros do Trello:",
+    "created": "✅ Quadro \"{{name}}\" criado com sucesso!",
+    "boardName": "📋 Quadro: {{name}}",
+    "boardUrl": "🔗 URL: {{url}}",
+    "boardId": "🆔 ID: {{id}}",
+    "boardStats": "📊 Estatísticas: {{lists}} listas, {{cards}} cards",
+    "validation": {
+      "nameRequired": "Nome do quadro é obrigatório",
+      "nameTooLong": "Nome do quadro é muito longo (máximo 16384 caracteres)"
+    }
   },
   "list": {
     "loading": "⏳ Carregando listas...",
     "empty": "📝 Nenhuma lista encontrada neste board.",
     "notFound": "❌ Lista \"{{listName}}\" não encontrada no quadro \"{{boardName}}\"",
     "cards": "🃏 Cards da Lista: {{name}}",
-    "boardLists": "📋 Listas do quadro \"{{boardName}}\":"
+    "boardLists": "📋 Listas do quadro \"{{boardName}}\":",
+    "cardsEmpty": "Nenhum card encontrado nesta lista",
+    "created": "✅ Lista \"{{name}}\" criada com sucesso!",
+    "deleted": "✅ Lista deletada com sucesso!",
+    "moved": "✅ Lista movida para a posição {{position}}!",
+    "notEmpty": "❌ Não é possível deletar a lista \"{{listName}}\" porque ela contém cards. Mova ou delete os cards primeiro.",
+    "validation": {
+      "nameCannotBeEmpty": "Nome da lista não pode estar vazio",
+      "nameTooLong": "Nome da lista não pode ter mais de 16384 caracteres"
+    }
   },
   "card": {
     "loading": "⏳ Carregando cards...",
@@ -66,6 +98,8 @@
     "confirmDelete": "Tem certeza que deseja deletar \"{{name}}\"?",
     "listCards": "📋 Cartões da lista \"{{listName}}\" no quadro \"{{boardName}}\":",
     "emptyList": "📭 Esta lista está vazia.",
+    "cardsInList": "🃏 Cartões em \"{{listName}}\":",
+    "cardDescription": "📝 {{description}}",
     "selectBoard": "Selecione o quadro:",
     "selectList": "Selecione a lista:",
     "selectCard": "Selecione um cartão:",
@@ -77,13 +111,19 @@
     "cardUrl": "🔗 URL: {{url}}",
     "cardId": "🆔 ID: {{id}}",
     "movedTo": "➡️  Para: {{listName}}",
+    "validation": {
+      "requiredName": "Nome é obrigatório",
+      "requiredCardName": "Nome do cartão é obrigatório",
+      "cardNameCannotBeEmpty": "Nome do cartão não pode estar vazio"
+    },
     "actions": {
       "view": "👁️  Ver Detalhes",
       "create": "➕ Criar Card",
       "edit": "✏️  Editar Card",
       "move": "🔄 Mover Card",
       "delete": "🗑️  Deletar Card",
-      "back": "⬅️  Voltar"
+      "back": "⬅️  Voltar",
+      "moveCard": "📦 Mover cartão"
     }
   },
   "errors": {
@@ -91,23 +131,86 @@
     "generic": "❌ Erro:",
     "network": "❌ Erro de rede. Verifique sua conexão.",
     "invalidInput": "❌ Entrada inválida: {{field}}",
-    "required": "❌ Campo obrigatório: {{field}}"
+    "required": "❌ Campo obrigatório: {{field}}",
+    "translationLoadError": "Erro ao carregar arquivos de tradução:",
+    "authFailed": "❌ Falha na autenticação: {{message}}",
+    "trySetup": "💡 Tente executar: trello-cli-unofficial setup",
+    "apiError": "❌ Erro da API ({{statusCode}}): {{message}}",
+    "endpoint": "📍 Endpoint: {{endpoint}}",
+    "validationError": "❌ Erro de validação: {{message}}",
+    "field": "📝 Campo: {{field}}",
+    "notFound": "❌ Não encontrado: {{message}}",
+    "resourceType": "🔍 Tipo de recurso: {{resourceType}}",
+    "resourceId": "🆔 ID do recurso: {{resourceId}}",
+    "configError": "❌ Erro de configuração: {{message}}",
+    "checkConfig": "💡 Verifique seu arquivo de configuração: ~/.trello-cli-unofficial/config.json",
+    "networkError": "❌ Erro de rede: {{message}}",
+    "checkConnection": "💡 Verifique sua conexão com a internet e tente novamente",
+    "unexpectedError": "❌ Erro inesperado: {{message}}",
+    "stackTrace": "Rastreamento de pilha:",
+    "unknownError": "❌ Erro desconhecido ocorreu:",
+    "unknownApiError": "Erro desconhecido da API",
+    "invalidToken": "Token inválido ou expirado"
+  },
+  "api": {
+    "trelloError": "Erro da API do Trello:",
+    "defaultApiKey": "630a01228b85df706aa520f3611e6490",
+    "networkConnectionFailed": "Falha na conexão de rede",
+    "unknownApiError": "Erro desconhecido da API",
+    "invalidToken": "Token inválido ou expirado",
+    "resourceNotFound": "Recurso não encontrado",
+    "rateLimitExceeded": "Limite de taxa excedido. Tente novamente mais tarde.",
+    "internalServerError": "Erro interno do servidor. Tente novamente mais tarde."
   },
   "commands": {
+    "description": "CLI não oficial do Trello usando autenticação Power-Up",
+    "formatOption": "Formato de saída: table, json, csv",
+    "deprecated": {
+      "boardsLegacyDescription": "[DEPRECIADO] Use \"boards list\" ao invés disso",
+      "boardsLegacyWarning": "⚠️  Aviso: comando \"boards\" está depreciado. Use \"boards list\" ao invés disso.",
+      "boardsLegacyError": "❌ Erro:",
+      "listsLegacyDescription": "[DEPRECIADO] Use \"lists list <boardId>\" ao invés disso",
+      "listsLegacyWarning": "⚠️  Aviso: comando \"lists <boardName>\" está depreciado. Use \"lists list <boardId>\" ao invés disso.",
+      "listsLegacyError": "❌ Erro:",
+      "cardsLegacyDescription": "[DEPRECIADO] Use \"cards list <listId>\" ao invés disso",
+      "cardsLegacyWarning": "⚠️  Aviso: comando \"cards <boardName> <listName>\" está depreciado. Use \"cards list <listId>\" ao invés disso.",
+      "cardsLegacyError": "❌ Erro:",
+      "createCardLegacyDescription": "[DEPRECIADO] Use \"cards create <listId> <name>\" ao invés disso",
+      "createCardLegacyWarning": "⚠️  Aviso: comando \"create-card\" está depreciado. Use \"cards create <listId> <name>\" ao invés disso.",
+      "moveCardLegacyDescription": "[DEPRECIADO] Use \"cards move <cardId> --to <listId>\" ao invés disso",
+      "moveCardLegacyWarning": "⚠️  Aviso: comando \"move-card\" está depreciado. Use \"cards move <cardId> --to <listId>\" ao invés disso.",
+      "deleteCardLegacyDescription": "[DEPRECIADO] Use \"cards delete <cardId>\" ao invés disso",
+      "deleteCardLegacyWarning": "⚠️  Aviso: comando \"delete-card\" está depreciado. Use \"cards delete <cardId>\" ao invés disso."
+    },
+    "commandErrors": {
+      "genericError": "❌ Erro:"
+    },
+    "options": {
+      "cardDescription": "Descrição do card",
+      "targetListId": "ID da lista de destino",
+      "newCardName": "Novo nome do card",
+      "newCardDescription": "Nova descrição do card"
+    },
+    "interactive": {
+      "description": "Inicia o modo interativo"
+    },
+    "setup": {
+      "description": "Configura a autenticação do Trello"
+    },
     "boards": {
-      "description": "Lista todos os boards disponíveis",
+      "description": "Gerencia os boards do Trello",
+      "manage": "Gerencia os boards do Trello",
+      "list": {
+        "description": "Lista todos os seus boards do Trello"
+      },
+      "show": {
+        "description": "Mostra informações detalhadas sobre um board específico"
+      },
+      "create": {
+        "description": "Cria um novo board do Trello",
+        "descOption": "Descrição do board"
+      },
       "success": "📋 Boards carregados com sucesso!"
-    },
-    "lists": {
-      "description": "Lista as listas de um board específico",
-      "boardRequired": "❌ Nome do board é obrigatório",
-      "success": "📝 Listas carregadas com sucesso!"
-    },
-    "cards": {
-      "description": "Lista os cards de uma lista específica",
-      "boardRequired": "❌ Nome do board é obrigatório",
-      "listRequired": "❌ Nome da lista é obrigatório",
-      "success": "🃏 Cards carregados com sucesso!"
     },
     "createCard": {
       "description": "Cria um novo card em uma lista",
@@ -124,6 +227,40 @@
       "description": "Deleta um card",
       "cardIdRequired": "❌ ID do card é obrigatório",
       "success": "✅ Card deletado com sucesso!"
+    },
+    "lists": {
+      "description": "Gerencia as listas do Trello",
+      "list": {
+        "description": "Lista todas as listas em um board específico"
+      },
+      "create": {
+        "description": "Cria uma nova lista em um board"
+      },
+      "delete": {
+        "description": "Deleta uma lista"
+      },
+      "move": {
+        "description": "Move uma lista para uma nova posição"
+      }
+    },
+    "cards": {
+      "description": "Gerencia os cards do Trello",
+      "manage": "Gerencia os cards do Trello",
+      "list": {
+        "description": "Lista todos os cards em uma lista específica"
+      },
+      "create": {
+        "description": "Cria um novo card em uma lista"
+      },
+      "move": {
+        "description": "Move um card para outra lista"
+      },
+      "update": {
+        "description": "Atualiza um card existente"
+      },
+      "delete": {
+        "description": "Deleta um card"
+      }
     }
   }
 }

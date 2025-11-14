@@ -1,4 +1,5 @@
 import type { ConfigRepository } from '@domain/repositories';
+import type { OutputFormatter } from '@/shared';
 import { AuthenticationService } from '@domain/services';
 import { TrelloApiRepository } from '@infrastructure/repositories';
 import {
@@ -16,7 +17,10 @@ export class TrelloCliController {
   private configController!: ConfigController;
   private mainMenuController!: MainMenuController;
 
-  constructor(private configRepository: ConfigRepository) {
+  constructor(
+    private configRepository: ConfigRepository,
+    private outputFormatter: OutputFormatter,
+  ) {
     this.initializeControllers();
   }
 
@@ -33,10 +37,14 @@ export class TrelloCliController {
       config.token!,
     );
 
-    this.boardController = new BoardController(trelloRepository);
+    this.boardController = new BoardController(
+      trelloRepository,
+      this.outputFormatter,
+    );
     this.cardController = new CardController(
       trelloRepository,
       this.boardController,
+      this.outputFormatter,
     );
     this.configController = new ConfigController(this.authController);
     this.mainMenuController = new MainMenuController(
