@@ -1,5 +1,3 @@
-/* eslint-disable no-hardcoded-messages/no-hardcoded-messages */
-
 import type { OutputFormat } from '@/shared';
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -31,13 +29,8 @@ export class CommandController {
   }
 
   private getProgram(): Command {
-    console.log('DEBUG: getProgram() called, current program:', !!this.program);
     if (!this.program) {
-      console.log('DEBUG: Initializing new Command instance');
       this.program = new Command();
-      console.log('DEBUG: Command instance created:', !!this.program);
-    } else {
-      console.log('DEBUG: Using existing Command instance');
     }
     return this.program;
   }
@@ -96,11 +89,8 @@ export class CommandController {
   }
 
   private async setupCommands(): Promise<void> {
-    console.log('DEBUG: setupCommands() called');
-
     // Get version using robust method
     const version = this.getVersion();
-    console.log('DEBUG: Version obtained:', version);
 
     this.getProgram()
       .name('trello-cli-unofficial')
@@ -478,7 +468,6 @@ export class CommandController {
   }
 
   async run(): Promise<void> {
-    console.log('DEBUG: CommandController.run() called');
     await this.setupCommands();
 
     // Fallback to interactive mode if no command specified
