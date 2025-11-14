@@ -53,7 +53,7 @@
   "scripts": {
     "start": "bun run main.ts",
     "dev": "bun run --watch main.ts",
-    "build": "bun build main.ts --outdir ./dist --target node",
+    "build": "bun build main.ts --outdir ./dist --target bun --no-minify",
     "install-global": "./install.sh",
     "test": "bun test",
     "test:watch": "bun test --watch",
