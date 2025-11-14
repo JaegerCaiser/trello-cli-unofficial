@@ -1,3 +1,10 @@
+## [0.10.6](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.10.5...v0.10.6) (2025-11-14)
+
+
+### Bug Fixes
+
+* update package.json engines to specify Bun instead of Node ([0856f74](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/0856f7406de5eb26a3756dbc907e1e0f147a5449))
+
 ## [0.10.5](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.10.4...v0.10.5) (2025-11-14)
 
 
