@@ -1,62 +1,86 @@
-# 🪟 Windows Compatibility Test
+# 🪟 Windows Compatibility Test - UPDATED
 
-## Problema Identificado
+## Problemas Identificados e Correções
 
-O CLI estava falhando no Windows com o erro `this.program is undefined` durante a inicialização do Commander.js. O problema ocorria porque o Commander era inicializado de forma lazy no método `run()`, mas no Windows isso falhava.
+### ❌ Problema 1: Commander.js initialization
+**Sintoma**: `this.program is undefined` durante setup de comandos
+**Causa**: Inicialização lazy do Commander no método `run()`
+**Correção**: Inicializar Commander diretamente no construtor
 
-## Correção Aplicada
+### ❌ Problema 2: Leitura dinâmica da versão
+**Sintoma**: Falha ao ler `package.json` no Windows
+**Causa**: Uso de `process.cwd()` + paths relativos incompatíveis com Windows
+**Correção**: Método `getVersion()` robusto com múltiplas estratégias
 
-- **Mudança**: Inicializar Commander.js diretamente no construtor em vez de lazy initialization
-- **Motivo**: Garante que o Commander esteja sempre disponível quando `setupCommands()` for chamado
-- **Baseado em**: Commit `ed3f571` que funcionava anteriormente
+## Correções Aplicadas
+
+### 1. Inicialização do Commander
+```typescript
+constructor() {
+  // ... outros inicializações
+  this.program = new Command(); // ✅ Agora no construtor
+}
+```
+
+### 2. Leitura Robusta da Versão
+```typescript
+private getVersion(): string {
+  // 1. Tenta CWD (desenvolvimento)
+  // 2. Tenta relativo ao arquivo (instalado globalmente)
+  // 3. Fallback para versão hardcoded
+}
+```
 
 ## Como Testar no Windows
 
-### Opção 1: Teste Rápido (Recomendado)
-
-1. Clone/baixe o repositório atualizado
-2. Execute o script de teste:
-   ```bash
-   node test-windows-compatibility.js
-   ```
+### Opção 1: Teste Completo (Recomendado)
+```bash
+node test-windows-compatibility.js
+```
+**Testa**:
+- ✅ Comando help básico
+- ✅ Comando version
+- ✅ Setup de comandos (ponto de falha original)
+- ✅ Leitura robusta da versão (novo teste)
 
 ### Opção 2: Teste Manual
+```bash
+npm install -g trello-cli-unofficial-0.11.3.tgz
+tcu --version  # Deve mostrar 0.11.3
+tcu --help     # Deve mostrar ajuda completa
+tcu boards --help  # Deve funcionar sem erro
+```
 
-1. Instale o pacote globalmente:
-   ```bash
-   npm install -g trello-cli-unofficial-0.11.3.tgz
-   ```
+## Resultados Esperados
 
-2. Teste os comandos básicos:
-   ```bash
-   tcu --help
-   tcu --version
-   tcu boards --help
-   ```
+Se as correções funcionarem:
+- ✅ Nenhum erro `this.program is undefined`
+- ✅ Versão lida corretamente (formato x.y.z)
+- ✅ Todos os comandos funcionam
+- ✅ Compatibilidade cross-platform
 
-### Resultados Esperados
+## Se Ainda Falhar
 
-Se a correção funcionar, você deve ver:
-- ✅ Todos os comandos funcionam sem erro
-- ✅ Nenhuma mensagem de "this.program is undefined"
-- ✅ Help e version commands respondem corretamente
-
-### Se Ainda Falhar
-
-Se o problema persistir, pode indicar:
-- Problema específico de bundling do Bun no Windows
+Possíveis causas restantes:
+- Problemas específicos do Bun bundling no Windows
 - Diferenças na resolução de módulos entre plataformas
-- Problemas com paths do Windows
+- Problemas com paths do Windows (encoding, separators)
 
 ## Arquivos de Teste
 
-- `test-windows-compatibility.js`: Script automatizado de teste
+- `test-windows-compatibility.js`: Script de teste automatizado
+- `trello-cli-unofficial-0.11.3.tgz`: Pacote pronto para Windows
 - `dist/main.js`: Bundle criado pelo Bun
-- `trello-cli-unofficial-0.11.3.tgz`: Pacote npm pronto para instalação
 
-## Logs de Debug
+## Debug Adicional
 
-Para mais informações, execute com debug:
+Para mais informações no Windows:
 ```bash
-set DEBUG=* & tcu --help
-```
+# Verificar paths
+node -e "console.log(process.cwd())"
+node -e "console.log(require('path').join(process.cwd(), 'package.json'))"
+
+# Testar leitura do package.json
+node -e "console.log(JSON.parse(require('fs').readFileSync('package.json')).version)"
+```</content>
+<parameter name="filePath">/home/matheus/Desenvolvimento/personal/trello-cli-unofficial/WINDOWS_TEST_README.md
