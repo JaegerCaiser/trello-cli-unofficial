@@ -22,8 +22,8 @@ An unofficial Trello CLI using Power-Up authentication, built with Bun for maxim
 - 🛠️ **Traditional CLI**: Also works as a command-line tool
 - 🌍 **Internationalization**: Support for Portuguese (pt-BR) and English (en) with auto-detection
 - 🤖 **Automated CI/CD**: Semantic versioning and NPM publishing on every release
-- � **Quality Gates**: 95% test coverage threshold enforced in CI/CD
-- �🔒 **Secure Publishing**: NPM provenance with GitHub Actions OIDC
+- 🧪 **Quality Gates**: 95% test coverage threshold enforced in CI/CD
+- 🔐 **Secure Publishing**: NPM provenance with GitHub Actions OIDC
 
 ## 📦 Installation
 
@@ -161,7 +161,7 @@ changeLanguage("pt-BR");
 changeLanguage("en");
 ```
 
-## �🎮 Usage
+## 📖 Usage
 
 ### Interactive Mode (Recommended)
 
