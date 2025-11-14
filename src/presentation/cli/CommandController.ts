@@ -1,5 +1,6 @@
 import type { OutputFormat } from '@/shared';
 import { readFileSync } from 'node:fs';
+
 import { join } from 'node:path';
 
 import { AuthenticationService } from '@domain/services';
@@ -10,7 +11,7 @@ import {
 import { Command } from 'commander';
 
 import { t } from '@/i18n';
-import { ErrorHandler, OutputFormatter } from '@/shared';
+import { OutputFormatter } from '@/shared';
 import { AuthController, BoardController, CardController } from './index';
 
 export class CommandController {
@@ -130,7 +131,7 @@ export class CommandController {
           }
           await this.boardController.showBoards();
         } catch (error) {
-          ErrorHandler.handle(error, 'boards list');
+          console.error(t('commands.errors.genericError'), (error as Error).message);
         }
       });
 
@@ -146,7 +147,7 @@ export class CommandController {
           }
           await this.boardController.showBoardDetails(boardId);
         } catch (error) {
-          ErrorHandler.handle(error, 'boards show');
+          console.error(t('commands.errors.genericError'), (error as Error).message);
         }
       });
 
@@ -200,7 +201,7 @@ export class CommandController {
           }
           await this.boardController.showListsById(boardId);
         } catch (error) {
-          ErrorHandler.handle(error, 'lists list');
+          console.error(t('commands.errors.genericError'), (error as Error).message);
         }
       });
 
@@ -286,7 +287,7 @@ export class CommandController {
           }
           await this.boardController.showCardsByListId(listId);
         } catch (error) {
-          ErrorHandler.handle(error, 'cards list');
+          console.error(t('commands.errors.genericError'), (error as Error).message);
         }
       });
 
@@ -449,7 +450,6 @@ export class CommandController {
   }
 
   async run(): Promise<void> {
-    // Ensure program is initialized before parsing
     await this.initializeProgram();
     await this.setupCommands();
 
