@@ -26,8 +26,8 @@
   ],
   "module": "main.ts",
   "bin": {
-    "trello-cli-unofficial": "./dist/main.js",
-    "tcu": "./dist/main.js"
+    "trello-cli-unofficial": "./bin/cli.js",
+    "tcu": "./bin/cli.js"
   },
   "publishConfig": {
     "access": "public",
@@ -38,6 +38,7 @@
     "LICENSE",
     "PAT_SETUP.md",
     "README.md",
+    "bin",
     "bun.lock",
     "bunfig.toml",
     "dist",
@@ -112,3 +113,4 @@
     ]
   }
 }
+
