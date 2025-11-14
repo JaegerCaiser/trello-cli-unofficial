@@ -34,9 +34,14 @@ export class CommandController {
     }
 
     try {
+      console.log('🔧 Initializing Commander...');
+      console.log('🔧 Command imported:', typeof Command);
+
       // Use static import - Commander is already imported at the top
       this.program = new Command();
+      console.log('✅ Commander initialized successfully:', !!this.program);
     } catch (error) {
+      console.error('❌ Failed to initialize Commander:', error);
       console.error(t('menu.errors.commanderInitError'), error);
       throw new Error(t('menu.errors.commanderInitFailed'));
     }
@@ -64,10 +69,16 @@ export class CommandController {
   }
 
   private async setupCommands(): Promise<void> {
+    console.log('🔧 Setting up commands...');
+    console.log('🔧 Program initialized:', !!this.program);
+
     // Program should be initialized by now
     if (!this.program) {
+      console.error('❌ Program is not initialized!');
       throw new Error(t('errors.programNotInitialized'));
     }
+
+    console.log('✅ Program is ready, configuring commands...');
 
     // Get version from package.json
     const packageJsonPath = join(process.cwd(), 'package.json');
@@ -450,18 +461,32 @@ export class CommandController {
   }
 
   async run(): Promise<void> {
-    await this.initializeProgram();
-    await this.setupCommands();
+    console.log('🚀 Starting CommandController.run()...');
 
-    // Fallback to interactive mode if no command specified
-    if (process.argv.length === 2) {
-      const configRepository = new FileConfigRepository();
-      const cli = new (
-        await import('./TrelloCliController')
-      ).TrelloCliController(configRepository, this.outputFormatter);
-      await cli.run();
-    } else {
-      this.program!.parse();
+    try {
+      console.log('🔧 Calling initializeProgram()...');
+      await this.initializeProgram();
+
+      console.log('🔧 Calling setupCommands()...');
+      await this.setupCommands();
+
+      // Fallback to interactive mode if no command specified
+      if (process.argv.length === 2) {
+        console.log('📱 No arguments provided, starting interactive mode...');
+        const configRepository = new FileConfigRepository();
+        const cli = new (
+          await import('./TrelloCliController')
+        ).TrelloCliController(configRepository, this.outputFormatter);
+        await cli.run();
+      } else {
+        console.log('🔧 Parsing command arguments...');
+        this.program!.parse();
+      }
+
+      console.log('✅ CommandController.run() completed successfully');
+    } catch (error) {
+      console.error('❌ Error in CommandController.run():', error);
+      throw error;
     }
   }
 }
