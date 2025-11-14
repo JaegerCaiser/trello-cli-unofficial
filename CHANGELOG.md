@@ -1,3 +1,10 @@
+## [0.11.3](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.11.2...v0.11.3) (2025-11-14)
+
+
+### Bug Fixes
+
+* switch to dynamic Commander import for better Windows compatibility ([e1ea7c5](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/e1ea7c588a10a635365a14099e7d6902a8f0eacb))
+
 ## [0.11.2](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.11.1...v0.11.2) (2025-11-14)
 
 
