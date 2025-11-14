@@ -350,6 +350,119 @@ bun run typecheck
 bun run lint
 ```
 
+## 🧪 Cross-Platform Development Testing
+
+This project includes tools for testing cross-platform compatibility during development:
+
+### Quick Cross-Platform Test
+
+```bash
+# Run comprehensive cross-platform tests
+bun run test:cross-platform
+
+# This will test:
+# ✅ Build process
+# ✅ Installation process
+# ✅ CLI functionality (--version, --help)
+# ✅ File system operations
+# ✅ Environment variable handling
+# ✅ Platform-specific features
+```
+
+### Individual Test Commands
+
+```bash
+# Test build process only
+bun run test:build
+
+# Test installation process
+bun run test:install
+
+# Quick smoke tests
+bun run test:smoke
+```
+
+### Docker-Based Cross-Platform Testing
+
+For comprehensive testing across platforms, use Docker containers:
+
+```bash
+# Test on all platforms (Linux + Windows when available)
+npm run test:docker
+
+# Test specific platforms
+npm run test:docker:ubuntu    # Ubuntu Linux
+npm run test:docker:alpine    # Alpine Linux
+npm run test:docker:windows   # Windows (requires Windows host or WSL2)
+```
+
+**Platform Support:**
+- ✅ **Linux**: Ubuntu 22.04, Ubuntu 20.04, Alpine Linux
+- ✅ **Windows**: Windows Server Core 2022 (via Docker Desktop)
+- ✅ **macOS**: Tested via GitHub Actions CI/CD
+
+**Requirements:**
+- Docker Desktop installed
+- 4GB+ RAM allocated to Docker
+- For Windows containers: Windows 10/11 Pro+ or WSL2
+
+See [`WINDOWS_TESTING.md`](./WINDOWS_TESTING.md) for detailed Windows setup instructions.
+
+### Manual Windows Testing Checklist
+
+When testing on Windows, verify these scenarios:
+
+1. **Installation Methods:**
+   ```powershell
+   # Method 1: NPM global install
+   npm install -g trello-cli-unofficial
+
+   # Method 2: From source
+   bun install
+   bun link  # or bun run install-global
+   ```
+
+2. **Command Availability:**
+   ```powershell
+   # Test both command names
+   tcu --version
+   trello-cli-unofficial --version
+
+   # Test in different terminals
+   # - Command Prompt (cmd)
+   # - PowerShell
+   # - Windows Terminal
+   ```
+
+3. **PATH Configuration:**
+   ```powershell
+   # Check if commands are in PATH
+   where tcu
+   where trello-cli-unofficial
+
+   # Refresh environment (PowerShell)
+   $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+   ```
+
+4. **File System Operations:**
+   - Config directory creation: `%USERPROFILE%\.trello-cli-unofficial\`
+   - File read/write permissions
+   - Path separator handling (`\` vs `/`)
+
+5. **Environment Variables:**
+   - `TRELLO_TOKEN` handling
+   - Language detection (`LANG`, `LC_ALL`, etc.)
+   - Node.js/Bun path resolution
+
+### Common Windows Issues & Solutions
+
+| Issue | Symptom | Solution |
+|-------|---------|----------|
+| PATH not updated | `tcu command not found` | Restart terminal or run `refreshenv` |
+| Permission denied | Installation fails | Run as Administrator |
+| Antivirus blocking | Installation interrupted | Temporarily disable or whitelist |
+| Node version conflicts | Runtime errors | Use Node 18+ or Bun 1.0+ |
+
 ## 🔒 Security
 
 - Token saved locally in protected file (`~/.trello-cli-unofficial/config.json`)
@@ -438,6 +551,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - ⚡ Performance optimized with Bun
 - 🤖 Automated CI/CD with semantic versioning
 - 🔒 Secure publishing with NPM provenance
+
+---
 
 ---
 

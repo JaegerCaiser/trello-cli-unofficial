@@ -1,0 +1,41 @@
+# Alpine Linux - Minimal Environment Testing
+FROM alpine:3.19
+
+# Install system dependencies
+RUN apk add --no-cache \
+    curl \
+    wget \
+    git \
+    build-base \
+    ca-certificates \
+    bash
+
+# Install Node.js 20.x (LTS)
+RUN apk add --no-cache nodejs npm
+
+# Install Bun (latest) - Alpine compatible
+RUN curl -fsSL https://bun.sh/install | bash \
+    && mv /root/.bun /usr/local/bun \
+    && ln -s /usr/local/bun/bin/bun /usr/local/bin/bun
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files first for better caching
+COPY package.json bun.lock ./
+
+# Install dependencies (fallback to npm if bun fails)
+RUN bun install || npm install
+
+# Copy source code
+COPY . .
+
+# Build the project
+RUN bun run build || npm run build
+
+# Create test user (non-root)
+RUN adduser -D -s /bin/bash tester
+USER tester
+
+# Default command
+CMD ["bash"]

@@ -1,0 +1,41 @@
+# Windows Testing Environment
+# Note: This requires Windows containers and Windows host
+FROM mcr.microsoft.com/windows/servercore:ltsc2022
+
+# Install Chocolatey package manager
+RUN powershell -Command \
+    Set-ExecutionPolicy Bypass -Scope Process -Force; \
+    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; \
+    iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+
+# Install Node.js via Chocolatey
+RUN choco install nodejs-lts -y
+
+# Install Git
+RUN choco install git -y
+
+# Install Bun (if available via Chocolatey, otherwise fallback)
+RUN choco install bun -y || echo "Bun not available via Chocolatey, will use npm fallback"
+
+# Set working directory
+WORKDIR C:\\app
+
+# Copy package files
+COPY package.json bun.lock ./
+
+# Install dependencies (with fallback)
+RUN bun install || npm install
+
+# Copy source code
+COPY . .
+
+# Build the project (with fallback)
+RUN bun run build || npm run build
+
+# Create test user (Windows equivalent)
+RUN net user tester /add /passwordreq:no
+
+USER tester
+
+# Default command
+CMD ["cmd"]

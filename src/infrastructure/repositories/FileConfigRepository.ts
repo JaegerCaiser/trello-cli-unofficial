@@ -9,10 +9,9 @@ export class FileConfigRepository implements ConfigRepository {
   private readonly configFile: string;
 
   constructor() {
-    this.configDir = path.join(
-      process.env.HOME || '~',
-      '.trello-cli-unofficial',
-    );
+    // Cross-platform home directory detection
+    const homeDir = process.env.HOME || process.env.USERPROFILE || '~';
+    this.configDir = path.join(homeDir, '.trello-cli-unofficial');
     this.configFile = path.join(this.configDir, 'config.json');
   }
 
