@@ -1,3 +1,10 @@
+## [0.10.3](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.10.2...v0.10.3) (2025-11-14)
+
+
+### Bug Fixes
+
+* add Windows USERPROFILE support for config directory ([36f72ca](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/36f72ca4685236e5bb2f03a5966e81b14815ad9c))
+
 ## [0.10.2](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.10.1...v0.10.2) (2025-11-14)
 
 
