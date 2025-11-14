@@ -1,3 +1,10 @@
+## [0.9.6](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.9.5...v0.9.6) (2025-11-14)
+
+
+### Bug Fixes
+
+* remove intrusive postinstall script from npm package ([0b8d109](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/0b8d109be026d0723480d7bd1bd8d53691485de2))
+
 ## [0.9.5](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.9.4...v0.9.5) (2025-11-14)
 
 
