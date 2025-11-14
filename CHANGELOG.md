@@ -1,3 +1,11 @@
+## [0.11.4](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.11.3...v0.11.4) (2025-11-14)
+
+
+### Bug Fixes
+
+* Initialize Commander.js in constructor to fix Windows compatibility ([7762da8](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/7762da85b532e90e68be3717609639f838c88b45))
+* revert to synchronous Commander import for Windows compatibility ([badcea4](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/badcea41b971e8e5dbb1ba8993f9661cb01d7358))
+
 ## [0.11.3](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.11.2...v0.11.3) (2025-11-14)
 
 
