@@ -1,3 +1,12 @@
+## [0.11.6](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.11.5...v0.11.6) (2025-11-14)
+
+
+### Bug Fixes
+
+* Add debug logs to CommandController for Windows troubleshooting ([5c146a9](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/5c146a9801502747c9eb1dee3f6db38fa9ad20ab))
+* Implement lazy Commander initialization for Windows compatibility ([e08ca9f](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/e08ca9f298fb15d9b29e4e3daa98584c5d6321ad))
+* Improve Windows compatibility test script ([2b230d9](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/2b230d9b36e0b0b4f2fec52bbd9200fd424b4de9))
+
 ## [0.11.5](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.11.4...v0.11.5) (2025-11-14)
 
 
