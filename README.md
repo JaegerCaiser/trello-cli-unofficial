@@ -30,16 +30,16 @@ An unofficial Trello CLI using Power-Up authentication, built with Bun for maxim
 ### Prerequisites
 
 - **[Node.js 16+](https://nodejs.org/) (Required)**
-- **[Bun](https://bun.sh/) (Required - será instalado automaticamente se não estiver presente)**
+- **Bun incluído automaticamente** - Não é necessário instalar separadamente
 - Trello account with Power-Up enabled
 - **Supported Platforms:** Linux, macOS, Windows
 
 ### NPM Installation (Recommended)
 
-O instalador verifica automaticamente se o Bun está presente no sistema. Se não estiver, perguntará se deseja instalá-lo.
+O CLI inclui o Bun automaticamente. Basta instalar e usar imediatamente!
 
 ```bash
-# Installation with automatic Bun setup
+# Installation - Bun is included automatically
 npm install -g trello-cli-unofficial
 
 # Or with other package managers
@@ -48,41 +48,34 @@ yarn global add trello-cli-unofficial
 ```
 
 # Option 4: Using PNPM
+
 pnpm add -g trello-cli-unofficial
 
-# Verify installation
+# Ready to use immediately!
+
 tcu --version
-```
+
+````
 
 #### Windows Installation
 
-For Windows users, you can install using any package manager:
+Para usuários Windows, a instalação é simples com qualquer gerenciador de pacotes:
 
-**PowerShell (Recommended):**
 ```powershell
-# Using NPM (works with both Node.js and Bun)
+# Usando NPM (funciona com Node.js)
 npm install -g trello-cli-unofficial
 
-# Or using Bun (recommended for better performance)
+# Ou usando Bun (recomendado para melhor performance)
 bun add -g trello-cli-unofficial
 
-# Or using Yarn
+# Ou usando Yarn
 yarn global add trello-cli-unofficial
 
-# Verify installation
+# Pronto para usar!
 tcu --version
-```
+````
 
-**Command Prompt:**
-```cmd
-# Using NPM
-npm install -g trello-cli-unofficial
-
-# Verify installation
-tcu --version
-```
-
-**Note:** On Windows, you may need to restart your terminal or run `refreshenv` in PowerShell after installation to update your PATH.
+**Nota:** No Windows, você pode precisar reiniciar o terminal após a instalação para atualizar o PATH.
 
 ### Manual Installation (Development)
 

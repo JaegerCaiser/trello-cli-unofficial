@@ -44,19 +44,28 @@ const messages = {
 
 const msg = messages[lang];
 
-// Check if Bun is available
+// Check if Bun is available (local or global)
 function isBunAvailable() {
   try {
-    execSync('bun --version', { stdio: 'pipe' });
-    return true;
+    // First try local Bun
+    execSync('node_modules/.bin/bun --version', { stdio: 'pipe' });
+    return 'local';
   }
   catch {
-    return false;
+    try {
+      // Then try global Bun
+      execSync('bun --version', { stdio: 'pipe' });
+      return 'global';
+    }
+    catch {
+      return false;
+    }
   }
 }
 
 // Main execution
-if (!isBunAvailable()) {
+const bunType = isBunAvailable();
+if (!bunType) {
   console.log(msg.bunRequired);
   console.log(msg.bunNotFound);
   console.log('');
@@ -81,7 +90,12 @@ if (!isBunAvailable()) {
 const mainScript = path.join(__dirname, '..', 'dist', 'main.js');
 const args = process.argv.slice(2);
 
-const child = spawn('bun', [mainScript, ...args], {
+// Use local Bun if available, otherwise global
+const bunCommand = bunType === 'local'
+  ? path.join(__dirname, '..', 'node_modules', '.bin', 'bun')
+  : 'bun';
+
+const child = spawn(bunCommand, [mainScript, ...args], {
   stdio: 'inherit',
   cwd: process.cwd(),
 });
