@@ -62,6 +62,7 @@
     "test:coverage:threshold": "bun test --coverage --coverage-reporter=lcov && bun run scripts/check-coverage.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "lint:json": "node -e \"JSON.parse(require('fs').readFileSync(process.argv[1], 'utf8')); console.log('JSON is valid')\" --",
     "typecheck": "tsc --noEmit",
     "commitlint": "commitlint --edit",
     "validate": "bun run lint && bun run typecheck && bun run test:coverage:threshold",
@@ -103,6 +104,9 @@
   "lint-staged": {
     "*.{js,ts,tsx}": [
       "eslint --max-warnings 0"
+    ],
+    "*.json": [
+      "bun run lint:json"
     ]
   }
 }
