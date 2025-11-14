@@ -1,3 +1,10 @@
+## [0.10.2](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.10.1...v0.10.2) (2025-11-14)
+
+
+### Bug Fixes
+
+* resolve Commander.js undefined error by fixing build target ([1e3370d](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/1e3370de85ff3f3aefa22f42eac34361607947e1))
+
 ## [0.10.1](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.10.0...v0.10.1) (2025-11-14)
 
 
