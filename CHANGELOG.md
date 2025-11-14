@@ -1,3 +1,10 @@
+## [0.10.1](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.10.0...v0.10.1) (2025-11-14)
+
+
+### Bug Fixes
+
+* revert CommandController run() logic to fix Windows compatibility ([d9abffc](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/d9abffc87461d43aa51b3bd9215b9d7a6e6fce4b))
+
 # [0.10.0](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.9.6...v0.10.0) (2025-11-14)
 
 
