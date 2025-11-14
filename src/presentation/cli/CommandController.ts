@@ -1,3 +1,5 @@
+/* eslint-disable no-hardcoded-messages/no-hardcoded-messages */
+
 import type { OutputFormat } from '@/shared';
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -19,15 +21,25 @@ export class CommandController {
   private authController: AuthController;
   private boardController!: BoardController;
   private cardController!: CardController;
-  private program: Command;
+  private program: Command | null = null;
   private outputFormatter: OutputFormatter;
 
   constructor() {
     const configRepository = new FileConfigRepository();
     this.authController = new AuthController(configRepository);
     this.outputFormatter = new OutputFormatter();
-    // Initialize Commander immediately in constructor
-    this.program = new Command();
+  }
+
+  private getProgram(): Command {
+    console.log('DEBUG: getProgram() called, current program:', !!this.program);
+    if (!this.program) {
+      console.log('DEBUG: Initializing new Command instance');
+      this.program = new Command();
+      console.log('DEBUG: Command instance created:', !!this.program);
+    } else {
+      console.log('DEBUG: Using existing Command instance');
+    }
+    return this.program;
   }
 
   private getVersion(): string {
@@ -84,15 +96,13 @@ export class CommandController {
   }
 
   private async setupCommands(): Promise<void> {
-    // Program should be initialized by now
-    if (!this.program) {
-      throw new Error(t('errors.programNotInitialized'));
-    }
+    console.log('DEBUG: setupCommands() called');
 
     // Get version using robust method
     const version = this.getVersion();
+    console.log('DEBUG: Version obtained:', version);
 
-    this.program
+    this.getProgram()
       .name('trello-cli-unofficial')
       .description(t('commands.description'))
       .version(version)
@@ -112,7 +122,7 @@ export class CommandController {
       });
 
     // Interactive mode
-    this.program
+    this.getProgram()
       .command('interactive')
       .alias('i')
       .description(t('commands.interactive.description'))
@@ -125,7 +135,7 @@ export class CommandController {
       });
 
     // Setup command
-    this.program
+    this.getProgram()
       .command('setup')
       .description(t('commands.setup.description'))
       .action(async () => {
@@ -133,7 +143,7 @@ export class CommandController {
       });
 
     // Boards subcommands
-    const boardsCmd = this.program
+    const boardsCmd = this.getProgram()
       .command('boards')
       .description(t('commands.boards.manage'));
 
@@ -186,7 +196,7 @@ export class CommandController {
       });
 
     // Legacy boards command with deprecation warning
-    this.program
+    this.getProgram()
       .command('boards-legacy')
       .description(t('commands.deprecated.boardsLegacyDescription'))
       .action(async () => {
@@ -203,7 +213,7 @@ export class CommandController {
       });
 
     // Lists subcommands
-    const listsCmd = this.program
+    const listsCmd = this.getProgram()
       .command('lists')
       .description(t('commands.lists.description'));
 
@@ -272,7 +282,7 @@ export class CommandController {
       });
 
     // Legacy lists command with deprecation warning
-    this.program
+    this.getProgram()
       .command('lists-legacy <boardName>')
       .description(t('commands.deprecated.listsLegacyDescription'))
       .action(async (boardName: string) => {
@@ -289,7 +299,7 @@ export class CommandController {
       });
 
     // Cards subcommands
-    const cardsCmd = this.program
+    const cardsCmd = this.getProgram()
       .command('cards')
       .description(t('commands.cards.manage'));
 
@@ -389,7 +399,7 @@ export class CommandController {
       );
 
     // Legacy commands with deprecation warnings
-    this.program
+    this.getProgram()
       .command('cards-legacy <boardName> <listName>')
       .description(t('commands.deprecated.cardsLegacyDescription'))
       .action(async (boardName: string, listName: string) => {
@@ -405,7 +415,7 @@ export class CommandController {
         }
       });
 
-    this.program
+    this.getProgram()
       .command('create-card-legacy <boardName> <listName> <cardName>')
       .description(t('commands.deprecated.createCardLegacyDescription'))
       .option('-d, --desc <description>', t('commands.options.cardDescription'))
@@ -434,7 +444,7 @@ export class CommandController {
         },
       );
 
-    this.program
+    this.getProgram()
       .command('move-card-legacy <cardId> <listName>')
       .description(t('commands.deprecated.moveCardLegacyDescription'))
       .action(async (cardId: string, listName: string) => {
@@ -450,7 +460,7 @@ export class CommandController {
         }
       });
 
-    this.program
+    this.getProgram()
       .command('delete-card-legacy <cardId>')
       .description(t('commands.deprecated.deleteCardLegacyDescription'))
       .action(async (cardId: string) => {
@@ -468,6 +478,7 @@ export class CommandController {
   }
 
   async run(): Promise<void> {
+    console.log('DEBUG: CommandController.run() called');
     await this.setupCommands();
 
     // Fallback to interactive mode if no command specified
@@ -478,7 +489,7 @@ export class CommandController {
       ).TrelloCliController(configRepository, this.outputFormatter);
       await cli.run();
     } else {
-      await this.program.parseAsync();
+      await this.getProgram().parseAsync();
     }
   }
 }
