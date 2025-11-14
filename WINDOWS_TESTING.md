@@ -1,4 +1,23 @@
-# Windows Testing Setup
+## Known Windows Issues & Fixes
+
+### ✅ **RESOLVED: Config Directory Path Issue**
+
+**Problem**: On Windows, the config directory was not being created correctly because the code only checked `process.env.HOME`, which is undefined on Windows.
+
+**Solution**: Updated `FileConfigRepository.ts` to use cross-platform home directory detection:
+```typescript
+const homeDir = process.env.HOME || process.env.USERPROFILE || '~';
+```
+
+**Impact**: Config files now save correctly to `%USERPROFILE%\.trello-cli-unofficial\config.json` on Windows.
+
+### ✅ **RESOLVED: Commander.js Argument Parsing**
+
+**Problem**: Commands like `tcu -v` and `tcu --version` were failing with "undefined is not an object" errors.
+
+**Solution**: Reverted `CommandController.run()` logic to parse arguments only when necessary, maintaining proper Commander.js initialization order.
+
+**Impact**: All CLI commands now work correctly on Windows.
 
 This document explains how to set up and run tests on Windows for the Trello CLI Unofficial project.
 
