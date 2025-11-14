@@ -26,8 +26,8 @@
   ],
   "module": "main.ts",
   "bin": {
-    "trello-cli-unofficial": "./main.ts",
-    "tcu": "./main.ts"
+    "trello-cli-unofficial": "./dist/main.js",
+    "tcu": "./dist/main.js"
   },
   "publishConfig": {
     "access": "public",
@@ -47,7 +47,8 @@
     "src"
   ],
   "engines": {
-    "bun": ">=1.0.0"
+    "bun": ">=1.0.0",
+    "node": ">=16.0.0"
   },
   "scripts": {
     "start": "bun run main.ts",

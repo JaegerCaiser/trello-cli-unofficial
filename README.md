@@ -29,21 +29,62 @@ An unofficial Trello CLI using Power-Up authentication, built with Bun for maxim
 
 ### Prerequisites
 
-- [Bun](https://bun.sh/) or Node.js installed
+- **[Bun](https://bun.sh/) (Recommended)** or **Node.js 16+** installed
 - Trello account with Power-Up enabled
+- **Supported Platforms:** Linux, macOS, Windows
+
+**Note:** Bun provides better performance, but Node.js works perfectly fine.
 
 ### NPM Installation (Recommended)
 
+The CLI works with both Bun and Node.js. Choose the package manager you prefer:
+
 ```bash
-# Install globally via NPM
+# Option 1: Using NPM (works with both Bun and Node.js)
 npm install -g trello-cli-unofficial
 
-# Or using Bun
+# Option 2: Using Bun (recommended for better performance)
 bun add -g trello-cli-unofficial
+
+# Option 3: Using Yarn
+yarn global add trello-cli-unofficial
+
+# Option 4: Using PNPM
+pnpm add -g trello-cli-unofficial
 
 # Verify installation
 tcu --version
 ```
+
+#### Windows Installation
+
+For Windows users, you can install using any package manager:
+
+**PowerShell (Recommended):**
+```powershell
+# Using NPM (works with both Node.js and Bun)
+npm install -g trello-cli-unofficial
+
+# Or using Bun (recommended for better performance)
+bun add -g trello-cli-unofficial
+
+# Or using Yarn
+yarn global add trello-cli-unofficial
+
+# Verify installation
+tcu --version
+```
+
+**Command Prompt:**
+```cmd
+# Using NPM
+npm install -g trello-cli-unofficial
+
+# Verify installation
+tcu --version
+```
+
+**Note:** On Windows, you may need to restart your terminal or run `refreshenv` in PowerShell after installation to update your PATH.
 
 ### Manual Installation (Development)
 
@@ -352,9 +393,17 @@ bun run lint
 
 ### Installation Issues
 
-- Ensure Bun or Node.js is installed
-- Try `npm install -g trello-cli-unofficial` if Bun fails
-- Check that `tcu` command is in your PATH
+- **Runtime Required:** Ensure Bun or Node.js 16+ is installed
+- **Package Manager Fallback:** Try `npm install -g trello-cli-unofficial` if Bun fails
+- **PATH Issues:** Check that `tcu` command is in your PATH
+- **Permission Issues:** Try running as administrator/sudo
+
+#### Windows-specific Issues
+
+- **PATH not updated:** Restart your terminal or run `refreshenv` in PowerShell
+- **Permission errors:** Run PowerShell/Command Prompt as Administrator
+- **Node.js version:** Ensure you have Node.js 16+ or Bun 1.0+
+- **Antivirus blocking:** Some antivirus software may block global NPM installations
 
 ## 🤝 Contributing
 
