@@ -75,19 +75,46 @@ try {
     timeout: 3000,
   }).trim();
 
-  // Check if version looks valid (should be like "0.11.3")
+  // Extract just the version from the last line (ignore debug logs)
+  const lines = versionOutput.split('\n');
+  const lastLine = lines[lines.length - 1].trim();
+
+  // Check if version looks valid (should be like "0.11.4")
   const versionRegex = /^\d+\.\d+\.\d+$/;
-  if (versionRegex.test(versionOutput)) {
-    console.warn(`✅ Version reading works: ${versionOutput}`);
+  if (versionRegex.test(lastLine)) {
+    console.warn(`✅ Version reading works: ${lastLine}`);
   }
   else {
-    console.error(`❌ Version format unexpected: ${versionOutput}`);
-    console.error('Expected format: x.y.z (e.g., 0.11.3)');
+    console.error(`❌ Version format unexpected: ${lastLine}`);
+    console.error('Expected format: x.y.z (e.g., 0.11.4)');
   }
 }
 catch (error) {
   console.error('❌ Version reading failed:', error.message);
   console.error('This was the suspected issue - dynamic package.json reading on Windows');
+}
+
+// Test 5: Check debug logs (new feature)
+console.warn('5️⃣ Checking debug logs output...');
+try {
+  const debugOutput = execSync('tcu --version 2>&1', {
+    encoding: 'utf8',
+    timeout: 5000,
+  });
+
+  const hasDebugLogs = debugOutput.includes('DEBUG:');
+  const hasCommandInit = debugOutput.includes('Command instance created');
+
+  if (hasDebugLogs && hasCommandInit) {
+    console.warn('✅ Debug logs are working - Commander initialization visible');
+  }
+  else {
+    console.error('❌ Debug logs not found in output');
+    console.error('Expected to see DEBUG messages and "Command instance created"');
+  }
+}
+catch (error) {
+  console.error('❌ Debug log test failed:', error.message);
 }
 
 console.warn('🎉 All tests completed!');
