@@ -1,3 +1,10 @@
+## [0.11.2](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.11.1...v0.11.2) (2025-11-14)
+
+
+### Bug Fixes
+
+* resolve Commander.js initialization issues ([c6588e7](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/c6588e75a5c9ca173921e1719849a7f8bce99abf))
+
 ## [0.11.1](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.11.0...v0.11.1) (2025-11-14)
 
 
