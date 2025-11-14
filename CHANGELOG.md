@@ -1,3 +1,10 @@
+## [0.11.1](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.11.0...v0.11.1) (2025-11-14)
+
+
+### Bug Fixes
+
+* use static import for Commander to fix cross-platform compatibility ([9796c57](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/9796c57b2f24638a652b4bf989e798fccbc9ea76))
+
 # [0.11.0](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.10.8...v0.11.0) (2025-11-14)
 
 
