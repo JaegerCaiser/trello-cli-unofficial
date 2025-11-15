@@ -8,31 +8,33 @@ import {
   FileConfigRepository,
   TrelloApiRepository,
 } from '@infrastructure/repositories';
-
 import { Command } from 'commander';
+
 import { t } from '@/i18n';
 import { OutputFormatter } from '@/shared';
-
 import { AuthController, BoardController, CardController } from './index';
 
 export class CommandController {
   private authController: AuthController;
   private boardController!: BoardController;
   private cardController!: CardController;
-  private program: Command | null = null;
+  private program: Command;
   private outputFormatter: OutputFormatter;
 
   constructor() {
     const configRepository = new FileConfigRepository();
     this.authController = new AuthController(configRepository);
+    this.program = new Command();
     this.outputFormatter = new OutputFormatter();
+    this.initializeProgram();
+    this.setupCommands();
   }
 
-  private getProgram(): Command {
+  private initializeProgram(): void {
+    // Ensure program is properly initialized
     if (!this.program) {
       this.program = new Command();
     }
-    return this.program;
   }
 
   private getVersion(): string {
@@ -44,7 +46,8 @@ export class CommandController {
       try {
         const packageJson = JSON.parse(readFileSync(cwdPackageJson, 'utf-8'));
         return packageJson.version;
-      } catch {
+      }
+      catch {
         // Continue to next approach
       }
     }
@@ -53,18 +56,19 @@ export class CommandController {
     try {
       const currentFilePath = fileURLToPath(import.meta.url);
       const currentDir = dirname(currentFilePath);
-      const installedPackageJson = join(currentDir, '..', '..', 'package.json');
+      const installedPackageJson = join(currentDir, '..', '..', '..', '..', 'package.json');
 
       if (existsSync(installedPackageJson)) {
         const packageJson = JSON.parse(readFileSync(installedPackageJson, 'utf-8'));
         return packageJson.version;
       }
-    } catch {
+    }
+    catch {
       // Continue to fallback
     }
 
-    // 3. Fallback to hardcoded version from package.json
-    return '0.11.3';
+    // 3. Fallback to hardcoded version
+    return '0.11.10';
   }
 
   private async initializeTrelloControllers(): Promise<void> {
@@ -88,11 +92,16 @@ export class CommandController {
     );
   }
 
-  private async setupCommands(): Promise<void> {
+  private setupCommands(): void {
+    // Ensure program is initialized
+    if (!this.program) {
+      throw new Error(t('errors.programNotInitialized'));
+    }
+
     // Get version using robust method
     const version = this.getVersion();
 
-    this.getProgram()
+    this.program
       .name('trello-cli-unofficial')
       .description(t('commands.description'))
       .version(version)
@@ -112,7 +121,7 @@ export class CommandController {
       });
 
     // Interactive mode
-    this.getProgram()
+    this.program
       .command('interactive')
       .alias('i')
       .description(t('commands.interactive.description'))
@@ -125,7 +134,7 @@ export class CommandController {
       });
 
     // Setup command
-    this.getProgram()
+    this.program
       .command('setup')
       .description(t('commands.setup.description'))
       .action(async () => {
@@ -133,7 +142,7 @@ export class CommandController {
       });
 
     // Boards subcommands
-    const boardsCmd = this.getProgram()
+    const boardsCmd = this.program
       .command('boards')
       .description(t('commands.boards.manage'));
 
@@ -149,7 +158,10 @@ export class CommandController {
           }
           await this.boardController.showBoards();
         } catch (error) {
-          console.error(t('commands.errors.genericError'), (error as Error).message);
+          console.error(
+            t('commands.commandErrors.genericError'),
+            (error as Error).message,
+          );
         }
       });
 
@@ -165,7 +177,7 @@ export class CommandController {
           }
           await this.boardController.showBoardDetails(boardId);
         } catch (error) {
-          console.error(t('commands.errors.genericError'), (error as Error).message);
+          console.error(t('commands.commandErrors.genericError'), (error as Error).message);
         }
       });
 
@@ -186,7 +198,7 @@ export class CommandController {
       });
 
     // Legacy boards command with deprecation warning
-    this.getProgram()
+    this.program
       .command('boards-legacy')
       .description(t('commands.deprecated.boardsLegacyDescription'))
       .action(async () => {
@@ -203,7 +215,7 @@ export class CommandController {
       });
 
     // Lists subcommands
-    const listsCmd = this.getProgram()
+    const listsCmd = this.program
       .command('lists')
       .description(t('commands.lists.description'));
 
@@ -219,7 +231,7 @@ export class CommandController {
           }
           await this.boardController.showListsById(boardId);
         } catch (error) {
-          console.error(t('commands.errors.genericError'), (error as Error).message);
+          console.error(t('commands.commandErrors.genericError'), (error as Error).message);
         }
       });
 
@@ -272,7 +284,7 @@ export class CommandController {
       });
 
     // Legacy lists command with deprecation warning
-    this.getProgram()
+    this.program
       .command('lists-legacy <boardName>')
       .description(t('commands.deprecated.listsLegacyDescription'))
       .action(async (boardName: string) => {
@@ -289,7 +301,7 @@ export class CommandController {
       });
 
     // Cards subcommands
-    const cardsCmd = this.getProgram()
+    const cardsCmd = this.program
       .command('cards')
       .description(t('commands.cards.manage'));
 
@@ -305,7 +317,7 @@ export class CommandController {
           }
           await this.boardController.showCardsByListId(listId);
         } catch (error) {
-          console.error(t('commands.errors.genericError'), (error as Error).message);
+          console.error(t('commands.commandErrors.genericError'), (error as Error).message);
         }
       });
 
@@ -389,7 +401,7 @@ export class CommandController {
       );
 
     // Legacy commands with deprecation warnings
-    this.getProgram()
+    this.program
       .command('cards-legacy <boardName> <listName>')
       .description(t('commands.deprecated.cardsLegacyDescription'))
       .action(async (boardName: string, listName: string) => {
@@ -405,7 +417,7 @@ export class CommandController {
         }
       });
 
-    this.getProgram()
+    this.program
       .command('create-card-legacy <boardName> <listName> <cardName>')
       .description(t('commands.deprecated.createCardLegacyDescription'))
       .option('-d, --desc <description>', t('commands.options.cardDescription'))
@@ -434,7 +446,7 @@ export class CommandController {
         },
       );
 
-    this.getProgram()
+    this.program
       .command('move-card-legacy <cardId> <listName>')
       .description(t('commands.deprecated.moveCardLegacyDescription'))
       .action(async (cardId: string, listName: string) => {
@@ -450,7 +462,7 @@ export class CommandController {
         }
       });
 
-    this.getProgram()
+    this.program
       .command('delete-card-legacy <cardId>')
       .description(t('commands.deprecated.deleteCardLegacyDescription'))
       .action(async (cardId: string) => {
@@ -468,7 +480,11 @@ export class CommandController {
   }
 
   async run(): Promise<void> {
-    await this.setupCommands();
+    // Ensure program is initialized before parsing
+    if (!this.program) {
+      this.initializeProgram();
+      this.setupCommands();
+    }
 
     // Fallback to interactive mode if no command specified
     if (process.argv.length === 2) {
@@ -478,7 +494,7 @@ export class CommandController {
       ).TrelloCliController(configRepository, this.outputFormatter);
       await cli.run();
     } else {
-      await this.getProgram().parseAsync();
+      this.program.parse();
     }
   }
 }
