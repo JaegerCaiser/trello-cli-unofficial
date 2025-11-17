@@ -1,3 +1,10 @@
+# [0.12.0](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.11.6...v0.12.0) (2025-11-17)
+
+
+### Features
+
+* **cards:** add cards show command ([a98fa9f](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/a98fa9fe2244bbd8ba754e725b867ee22cfd4c33))
+
 ## [0.11.6](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.11.5...v0.11.6) (2025-11-14)
 
 
