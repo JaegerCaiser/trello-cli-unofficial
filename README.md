@@ -50,11 +50,9 @@ npm install -g trello-cli-unofficial
 tcu --version
 ```
 
-# Ready to use immediately!
+**Ready to use immediately!**
 
-tcu --version
-
-````
+`tcu --version`
 
 #### Windows Installation
 
