@@ -6,6 +6,7 @@ export * from './DeleteCardUseCase';
 export * from './GetBoardDetailsUseCase';
 export * from './GetBoardsUseCase';
 export * from './GetCardsUseCase';
+export * from './GetCardUseCase';
 export * from './GetListsUseCase';
 export * from './MoveCardUseCase';
 export * from './UpdateCardUseCase';

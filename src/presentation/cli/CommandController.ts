@@ -400,6 +400,25 @@ export class CommandController {
         },
       );
 
+    cardsCmd
+      .command('show <cardId>')
+      .description(t('commands.cards.show.description'))
+      .option('-f, --format <format>', t('commands.formatOption'), 'table')
+      .action(async (cardId: string, options: { format?: string }) => {
+        try {
+          await this.initializeTrelloControllers();
+          if (options.format) {
+            this.outputFormatter.setFormat(options.format as OutputFormat);
+          }
+          await this.cardController.showCard(cardId);
+        } catch (error) {
+          console.error(
+            t('commands.commandErrors.genericError'),
+            (error as Error).message,
+          );
+        }
+      });
+
     // Legacy commands with deprecation warnings
     this.program
       .command('cards-legacy <boardName> <listName>')

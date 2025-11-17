@@ -2,6 +2,7 @@ import {
   CreateCardUseCase,
   DeleteCardUseCase,
   GetCardsUseCase,
+  GetCardUseCase,
   UpdateCardUseCase,
 } from '@application/use-cases';
 import { MockTrelloRepository } from '@tests/mocks';
@@ -11,6 +12,7 @@ describe('Card Management Integration', () => {
   let mockTrelloRepo: MockTrelloRepository;
   let createCardUseCase: CreateCardUseCase;
   let getCardsUseCase: GetCardsUseCase;
+  let getCardUseCase: GetCardUseCase;
   let updateCardUseCase: UpdateCardUseCase;
   let deleteCardUseCase: DeleteCardUseCase;
 
@@ -22,6 +24,7 @@ describe('Card Management Integration', () => {
     getCardsUseCase = new GetCardsUseCase(mockTrelloRepo);
     updateCardUseCase = new UpdateCardUseCase(mockTrelloRepo);
     deleteCardUseCase = new DeleteCardUseCase(mockTrelloRepo);
+    getCardUseCase = new GetCardUseCase(mockTrelloRepo);
   });
 
   test('complete card lifecycle: create, read, update, delete', async () => {
@@ -108,5 +111,12 @@ describe('Card Management Integration', () => {
     expect(cards.find(c => c.id === card1.id)).toBeDefined();
     expect(cards.find(c => c.id === card2.id)).toBeDefined();
     expect(cards.find(c => c.id === card3.id)).toBeDefined();
+  });
+
+  test('get card by id', async () => {
+    const card = await getCardUseCase.execute('card1');
+    expect(card).toBeDefined();
+    expect(card.id).toBe('card1');
+    expect(card.name).toBe('Test Card 1');
   });
 });

@@ -127,6 +127,12 @@
       "delete": "🗑️  Deletar Card",
       "back": "⬅️  Voltar",
       "moveCard": "📦 Mover cartão"
+    },
+    "show": {
+      "labels": "🏷️ Labels:",
+      "members": "👥 Membros:",
+      "checklists": "✅ Checklists:",
+      "attachments": "📎 Anexos:"
     }
   },
   "errors": {
@@ -262,6 +268,9 @@
       },
       "update": {
         "description": "Atualiza um card existente"
+      },
+      "show": {
+        "description": "Mostra informações detalhadas sobre um card específico"
       },
       "delete": {
         "description": "Deleta um card"

@@ -68,6 +68,16 @@ export class MockTrelloRepository implements TrelloRepository {
     return Promise.resolve(this.cards.get(listId) || []);
   }
 
+  async getCard(cardId: string): Promise<CardEntity> {
+    for (const cards of this.cards.values()) {
+      const card = cards.find(c => c.id === cardId);
+      if (card) {
+        return Promise.resolve(card);
+      }
+    }
+    throw new Error('Card not found');
+  }
+
   async createCard(data: CreateCardData): Promise<CardEntity> {
     const newCard = new CardEntity(
       `card-${Date.now()}`,

@@ -4,6 +4,10 @@ export interface Card {
   desc?: string;
   idList: string;
   url?: string;
+  labels?: Array<{ id: string; name?: string; color?: string }>;
+  members?: Array<{ id: string; username?: string; fullName?: string }>;
+  checklists?: Array<Record<string, unknown>>;
+  attachments?: Array<Record<string, unknown>>;
 }
 
 export interface CreateCardData {
@@ -26,6 +30,10 @@ interface TrelloCardResponse {
   idList: string;
   pos: number;
   url?: string;
+  labels?: Array<{ id: string; name?: string; color?: string }>;
+  members?: Array<{ id: string; username?: string; fullName?: string }>;
+  checklists?: Array<Record<string, unknown>>;
+  attachments?: Array<Record<string, unknown>>;
   [key: string]: unknown;
 }
 
@@ -36,10 +44,24 @@ export class CardEntity implements Card {
     public readonly idList: string,
     public readonly desc?: string,
     public readonly url?: string,
+    public readonly labels?: Array<{ id: string; name?: string; color?: string }>,
+    public readonly members?: Array<{ id: string; username?: string; fullName?: string }>,
+    public readonly checklists?: Array<Record<string, unknown>>,
+    public readonly attachments?: Array<Record<string, unknown>>,
   ) {}
 
   static fromApiResponse(data: TrelloCardResponse): CardEntity {
-    return new CardEntity(data.id, data.name, data.idList, data.desc, data.url);
+    return new CardEntity(
+      data.id,
+      data.name,
+      data.idList,
+      data.desc,
+      data.url,
+      data.labels,
+      data.members,
+      data.checklists,
+      data.attachments,
+    );
   }
 
   static create(

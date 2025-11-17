@@ -40,7 +40,9 @@ export class TrelloApiRepository implements TrelloRepository {
     endpoint: string,
     options?: RequestInit,
   ): Promise<unknown> {
-    const url = `${this.baseUrl}${endpoint}?key=${this.apiKey}&token=${this.token}`;
+    // If the endpoint already contains query params, add key/token with & otherwise use ?
+    const separator = endpoint.includes('?') ? '&' : '?';
+    const url = `${this.baseUrl}${endpoint}${separator}key=${this.apiKey}&token=${this.token}`;
 
     const response = await fetch(url, options);
 
@@ -234,5 +236,12 @@ export class TrelloApiRepository implements TrelloRepository {
 
   async moveCard(cardId: string, targetListId: string): Promise<CardEntity> {
     return this.updateCard(cardId, { idList: targetListId });
+  }
+
+  async getCard(cardId: string): Promise<CardEntity> {
+    // Request the card with details: members, checklists and attachments
+    const endpoint = `/cards/${cardId}?checklists=all&members=true&attachments=true`;
+    const data = await this.request(endpoint);
+    return CardEntity.fromApiResponse(data as TrelloCardResponse);
   }
 }

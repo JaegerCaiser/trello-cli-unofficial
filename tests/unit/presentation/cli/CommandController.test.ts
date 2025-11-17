@@ -133,6 +133,19 @@ describe('CommandController', () => {
     });
   });
 
+  describe('cards show command', () => {
+    test('should parse cards show command with card id', async () => {
+      const originalArgv = process.argv;
+      process.argv = ['node', 'main.ts', 'cards', 'show', 'card123'];
+
+      expect(process.argv[2]).toBe('cards');
+      expect(process.argv[3]).toBe('show');
+      expect(process.argv[4]).toBe('card123');
+
+      process.argv = originalArgv;
+    });
+  });
+
   describe('delete-card command', () => {
     test('should parse delete-card command with card id', async () => {
       const originalArgv = process.argv;

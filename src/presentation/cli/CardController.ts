@@ -6,6 +6,7 @@ import type { OutputFormatter } from '@/shared';
 import {
   CreateCardUseCase,
   DeleteCardUseCase,
+  GetCardUseCase,
   MoveCardUseCase,
   UpdateCardUseCase,
 } from '@application/use-cases';
@@ -19,6 +20,7 @@ export class CardController {
   private updateCardUseCase: UpdateCardUseCase;
   private deleteCardUseCase: DeleteCardUseCase;
   private moveCardUseCase: MoveCardUseCase;
+  private getCardUseCase: GetCardUseCase;
 
   constructor(
     private trelloRepository: TrelloRepository,
@@ -29,6 +31,7 @@ export class CardController {
     this.updateCardUseCase = new UpdateCardUseCase(trelloRepository);
     this.deleteCardUseCase = new DeleteCardUseCase(trelloRepository);
     this.moveCardUseCase = new MoveCardUseCase(trelloRepository);
+    this.getCardUseCase = new GetCardUseCase(trelloRepository);
   }
 
   async createCardInteractive(): Promise<void> {
@@ -403,6 +406,56 @@ export class CardController {
     );
     console.log(t('card.updated'));
     console.log(t('card.cardName', { name: updatedCard.name }));
+  }
+
+  async showCard(cardId: string): Promise<void> {
+    // Get detailed card from the repository
+    const card = await this.getCardUseCase.execute(cardId);
+
+    // Try to find board and list names
+    const boards = await this.boardController.getBoards();
+    let boardName: string | undefined;
+    let listName: string | undefined;
+    for (const board of boards) {
+      const lists = await this.boardController.getLists(board.id);
+      const list = lists.find(l => l.id === card.idList);
+      if (list) {
+        boardName = board.name;
+        listName = list.name;
+        break;
+      }
+    }
+
+    this.outputFormatter.message(t('card.cardName', { name: card.name }));
+    if (card.desc) {
+      this.outputFormatter.message(t('card.cardDescription', { description: card.desc }));
+    }
+    this.outputFormatter.message(t('card.cardUrl', { url: card.url }));
+    this.outputFormatter.message(t('card.cardId', { id: card.id }));
+    if (boardName && listName) {
+      this.outputFormatter.message(`${t('board.boardName', { name: boardName })} / ${t('list.boardLists', { boardName: listName })}`);
+    }
+
+    // Show labels, members and checklists if present
+    if (card.labels && card.labels.length > 0) {
+      this.outputFormatter.message(t('card.show.labels'));
+      this.outputFormatter.output(card.labels);
+    }
+
+    if (card.members && card.members.length > 0) {
+      this.outputFormatter.message(t('card.show.members'));
+      this.outputFormatter.output(card.members);
+    }
+
+    if (card.checklists && card.checklists.length > 0) {
+      this.outputFormatter.message(t('card.show.checklists'));
+      this.outputFormatter.output(card.checklists);
+    }
+
+    if (card.attachments && card.attachments.length > 0) {
+      this.outputFormatter.message(t('card.show.attachments'));
+      this.outputFormatter.output(card.attachments);
+    }
   }
 
   async moveCardToList(cardId: string, targetListId: string): Promise<void> {
