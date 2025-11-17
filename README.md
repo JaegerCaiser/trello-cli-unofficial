@@ -252,6 +252,13 @@ tcu
 - **Delete**: Confirm before removing
 - **Move**: Select destination list
 
+### Show Card Details
+
+```bash
+# Show detailed information about a card, including checklists, members, labels and attachments
+tcu cards show <cardId>
+```
+
 ## 🤖 CI/CD & Automation
 
 This project uses automated CI/CD with semantic versioning based on **commit messages**:
