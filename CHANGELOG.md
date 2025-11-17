@@ -1,3 +1,10 @@
+## [0.12.1](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.12.0...v0.12.1) (2025-11-17)
+
+
+### Bug Fixes
+
+* **cli:** remove hardcoded version fallback in getVersion() ([72c04ef](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/72c04ef59966efada5ba095f7e2c5282540015f6))
+
 # [0.12.0](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.11.6...v0.12.0) (2025-11-17)
 
 
