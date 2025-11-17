@@ -38,37 +38,42 @@ export class CommandController {
   }
 
   private getVersion(): string {
-    // Try multiple approaches to find package.json (robust for different environments)
+    // CRITICAL: Always get version from the CLI's package.json, not from user's cwd
+    // This prevents showing wrong version when running inside other Node projects
 
-    // 1. Try relative to current working directory (development)
-    const cwdPackageJson = join(process.cwd(), 'package.json');
-    if (existsSync(cwdPackageJson)) {
-      try {
-        const packageJson = JSON.parse(readFileSync(cwdPackageJson, 'utf-8'));
-        return packageJson.version;
-      }
-      catch {
-        // Continue to next approach
-      }
-    }
-
-    // 2. Try relative to this file's directory (when installed globally)
+    // Try relative to this file's directory (when installed globally or locally)
     try {
       const currentFilePath = fileURLToPath(import.meta.url);
       const currentDir = dirname(currentFilePath);
-      const installedPackageJson = join(currentDir, '..', '..', '..', '..', 'package.json');
 
-      if (existsSync(installedPackageJson)) {
-        const packageJson = JSON.parse(readFileSync(installedPackageJson, 'utf-8'));
-        return packageJson.version;
+      // When bundled, dist/main.js is at root level, package.json is one level up
+      // When unbundled, we're in src/presentation/cli, package.json is three levels up
+      const possiblePaths = [
+        join(currentDir, '..', 'package.json'), // dist/main.js -> package.json
+        join(currentDir, '..', '..', '..', 'package.json'), // src/presentation/cli -> package.json
+      ];
+
+      for (const packagePath of possiblePaths) {
+        if (existsSync(packagePath)) {
+          const packageJson = JSON.parse(readFileSync(packagePath, 'utf-8'));
+
+          // Verify it's the right package.json by checking the name
+          if (packageJson.name === 'trello-cli-unofficial') {
+            return packageJson.version;
+          }
+        }
       }
     }
     catch {
       // Continue to fallback
     }
 
-    // 3. Fallback to hardcoded version
-    return '0.11.10';
+    // Could not determine package version from installed CLI package.json.
+    // Remove hardcoded fallback to avoid showing incorrect versions when
+    // the CLI is executed inside other Node projects. Return a neutral
+    // unknown version string so callers can handle it explicitly.
+    console.warn('⚠️  Could not determine trello-cli-unofficial version from package.json');
+    return '0.0.0';
   }
 
   private async initializeTrelloControllers(): Promise<void> {
