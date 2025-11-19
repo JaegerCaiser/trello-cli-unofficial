@@ -1,3 +1,15 @@
+# [0.13.0](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.12.1...v0.13.0) (2025-11-19)
+
+
+### Bug Fixes
+
+* make tests multilingual to support CI environment ([39db26a](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/39db26ae871eabf5fe43970182217e56b94189b7))
+
+
+### Features
+
+* implement card 1.12 - migration & backward compatibility ([adc668b](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/adc668b961f8ae8bed6244b4fad2f70b104dbb46))
+
 ## [0.12.1](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.12.0...v0.12.1) (2025-11-17)
 
 
