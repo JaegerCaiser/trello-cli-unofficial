@@ -1,5 +1,12 @@
 import { describe, expect, test } from 'bun:test';
+import { getCurrentLanguage } from '@/i18n';
 import { OutputFormatter } from '@/shared';
+
+// Helper function to get expected translation based on current language
+function getExpectedNoDataMessage(): string {
+  const language = getCurrentLanguage();
+  return language === 'pt-BR' ? 'Nenhum dado para exibir' : 'No data to display';
+}
 
 describe('OutputFormatter', () => {
   describe('constructor', () => {
@@ -111,7 +118,7 @@ describe('OutputFormatter', () => {
       console.log = (...args) => logs.push(args.join(' '));
       const data: any[] = [];
       (formatter as any).outputCsv(data);
-      expect(logs[0]).toBe('No data to display');
+      expect(logs[0]).toBe(getExpectedNoDataMessage());
       console.log = originalLog;
     });
 
@@ -189,7 +196,7 @@ describe('OutputFormatter', () => {
       console.log = (...args) => logs.push(args.join(' '));
       const data: any[] = [];
       (formatter as any).outputTable(data);
-      expect(logs[0]).toBe('No data to display');
+      expect(logs[0]).toBe(getExpectedNoDataMessage());
       console.log = originalLog;
     });
 

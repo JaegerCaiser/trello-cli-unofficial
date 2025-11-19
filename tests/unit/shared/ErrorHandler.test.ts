@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, spyOn, test } from 'bun:test';
+import { getCurrentLanguage } from '@/i18n';
 import {
   ApiError,
   AuthenticationError,
@@ -9,6 +10,14 @@ import {
   TrelloCliError,
   ValidationError,
 } from '@/shared';
+
+// Helper function to get expected internal server error message based on current language
+function getExpectedInternalServerErrorMessage(): string {
+  const language = getCurrentLanguage();
+  return language === 'pt-BR'
+    ? 'Erro interno do servidor. Tente novamente mais tarde.'
+    : 'Internal server error. Please try again later.';
+}
 
 describe('ErrorHandler', () => {
   let consoleErrorSpy: ReturnType<typeof spyOn>;
@@ -316,7 +325,7 @@ describe('ErrorHandler', () => {
       const error = ErrorHandler.fromApiResponse(response);
 
       expect(error).toBeInstanceOf(ApiError);
-      expect(error.message).toBe('Internal server error. Please try again later.');
+      expect(error.message).toBe(getExpectedInternalServerErrorMessage());
     });
 
     test('should use default message when no message provided', () => {
