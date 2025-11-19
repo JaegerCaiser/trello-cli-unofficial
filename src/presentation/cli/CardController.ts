@@ -412,10 +412,10 @@ export class CardController {
     // Get detailed card from the repository
     const card = await this.getCardUseCase.execute(cardId);
 
-    // Try to find board and list names
-    const boards = await this.boardController.getBoards();
+    // Find board and list names for context
     let boardName: string | undefined;
     let listName: string | undefined;
+    const boards = await this.boardController.getBoards();
     for (const board of boards) {
       const lists = await this.boardController.getLists(board.id);
       const list = lists.find(l => l.id === card.idList);
@@ -427,34 +427,53 @@ export class CardController {
     }
 
     this.outputFormatter.message(t('card.cardName', { name: card.name }));
+
+    // Show board and list context
+    if (boardName && listName) {
+      this.outputFormatter.message(`${t('card.show.location')} ${boardName} | ${t('card.show.list')} ${listName}`);
+    }
+
     if (card.desc) {
       this.outputFormatter.message(t('card.cardDescription', { description: card.desc }));
     }
     this.outputFormatter.message(t('card.cardUrl', { url: card.url }));
-    this.outputFormatter.message(t('card.cardId', { id: card.id }));
-    if (boardName && listName) {
-      this.outputFormatter.message(`${t('board.boardName', { name: boardName })} / ${t('list.boardLists', { boardName: listName })}`);
-    }
 
-    // Show labels, members and checklists if present
+    // Show labels in compact format
     if (card.labels && card.labels.length > 0) {
-      this.outputFormatter.message(t('card.show.labels'));
-      this.outputFormatter.output(card.labels);
+      const labelNames = card.labels
+        .filter(l => l.name) // Only show labels with names
+        .map(l => l.name);
+      if (labelNames.length > 0) {
+        const displayLabels = labelNames.length > 3
+          ? [...labelNames.slice(0, 3), `+${labelNames.length - 3} more`].join(', ')
+          : labelNames.join(', ');
+        this.outputFormatter.message(`${t('card.show.labels')} ${displayLabels}`);
+      }
     }
 
+    // Show members in compact format
     if (card.members && card.members.length > 0) {
-      this.outputFormatter.message(t('card.show.members'));
-      this.outputFormatter.output(card.members);
+      const memberNames = card.members.map(m => m.fullName);
+      const displayMembers = memberNames.length > 3
+        ? [...memberNames.slice(0, 3), `+${memberNames.length - 3} more`].join(', ')
+        : memberNames.join(', ');
+      this.outputFormatter.message(`${t('card.show.members')} ${displayMembers}`);
     }
 
+    // Show checklists in compact format
     if (card.checklists && card.checklists.length > 0) {
-      this.outputFormatter.message(t('card.show.checklists'));
-      this.outputFormatter.output(card.checklists);
+      const checklistSummary = card.checklists.map((cl) => {
+        const checkItems = Array.isArray(cl.checkItems) ? cl.checkItems : [];
+        const completed = checkItems.filter((item: { state: string }) => item.state === 'complete').length;
+        const total = checkItems.length;
+        return `${cl.name} (${completed}/${total})`;
+      }).join(', ');
+      this.outputFormatter.message(`${t('card.show.checklists')} ${checklistSummary}`);
     }
 
+    // Show attachments count if present
     if (card.attachments && card.attachments.length > 0) {
-      this.outputFormatter.message(t('card.show.attachments'));
-      this.outputFormatter.output(card.attachments);
+      this.outputFormatter.message(`${t('card.show.attachments')} ${card.attachments.length} file(s)`);
     }
   }
 
@@ -498,7 +517,7 @@ export class CardController {
     }
 
     if (!targetList) {
-      throw new Error(t('list.notFound', { listId: targetListId }));
+      throw new Error(t('list.notFoundById', { listId: targetListId }));
     }
 
     await this.moveCardUseCase.execute(cardId, targetListId);

@@ -28,6 +28,21 @@ interface TrelloCardResponse {
   [key: string]: unknown;
 }
 
+interface TrelloMemberResponse {
+  id: string;
+  fullName: string;
+  username: string;
+  initials: string;
+  [key: string]: unknown;
+}
+
+interface TrelloLabelResponse {
+  id: string;
+  name: string;
+  color: string;
+  [key: string]: unknown;
+}
+
 export class TrelloApiRepository implements TrelloRepository {
   private readonly baseUrl = 'https://api.trello.com/1';
 
@@ -93,6 +108,25 @@ export class TrelloApiRepository implements TrelloRepository {
     return data.map((board: TrelloBoardResponse) =>
       BoardEntity.fromApiResponse(board),
     );
+  }
+
+  async getBoardMembers(boardId: string): Promise<import('@domain/repositories').BoardMember[]> {
+    const data = await this.request(`/boards/${boardId}/members`);
+    return (data as TrelloMemberResponse[]).map((member: TrelloMemberResponse) => ({
+      id: member.id,
+      fullName: member.fullName,
+      username: member.username,
+      initials: member.initials,
+    }));
+  }
+
+  async getBoardLabels(boardId: string): Promise<import('@domain/repositories').BoardLabel[]> {
+    const data = await this.request(`/boards/${boardId}/labels`);
+    return (data as TrelloLabelResponse[]).map((label: TrelloLabelResponse) => ({
+      id: label.id,
+      name: label.name,
+      color: label.color,
+    }));
   }
 
   async createBoard(name: string, description?: string): Promise<BoardEntity> {

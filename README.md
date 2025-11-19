@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Bun](https://img.shields.io/badge/Bun-%23000000.svg?style=flat&logo=bun&logoColor=white)](https://bun.sh)
 [![TypeScript](https://img.shields.io/badge/TypeScript-%23007ACC.svg?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Tests](https://img.shields.io/badge/tests-57%20passing-brightgreen.svg)](./tests)
+[![Tests](https://img.shields.io/badge/tests-195%20passing-brightgreen.svg)](./tests)
 [![CI/CD](https://img.shields.io/github/actions/workflow/status/JaegerCaiser/trello-cli-unofficial/ci.yml?branch=main&label=CI)](https://github.com/JaegerCaiser/trello-cli-unofficial/actions)
 [![Release](https://img.shields.io/github/actions/workflow/status/JaegerCaiser/trello-cli-unofficial/release.yml?branch=main&label=Release)](https://github.com/JaegerCaiser/trello-cli-unofficial/actions)
 
@@ -16,9 +16,12 @@ An unofficial Trello CLI using Power-Up authentication, built with Bun for maxim
 - 🔐 **Power-Up Authentication**: Compatible with Trello's newer authentication system
 - 💾 **Persistent Configuration**: Automatically saves your token
 - 🎯 **Interactive Interface**: Intuitive menu with interactive prompts
-- 📋 **Complete Management**: Boards, lists, cards
+- 📋 **Complete Management**: Boards, lists, cards with detailed information
 - ✏️ **CRUD Operations**: Create, read, update, and delete cards
 - 📦 **Move Cards**: Between lists in the same board
+- 👀 **Detailed Views**: Show comprehensive board and card details
+- 📊 **Multiple Output Formats**: Table, JSON, CSV formats
+- 🏷️ **Rich Metadata**: Labels, members, checklists, and attachments support
 - 🛠️ **Traditional CLI**: Also works as a command-line tool
 - 🌍 **Internationalization**: Support for Portuguese (pt-BR) and English (en) with auto-detection
 - 🤖 **Automated CI/CD**: Semantic versioning and NPM publishing on every release
@@ -211,7 +214,31 @@ Main menu options:
 
 ```bash
 # View all boards
-tcu boards
+tcu boards list
+
+# Show detailed board information
+tcu boards show <boardId>
+
+# View lists in a board
+tcu lists list <boardId>
+
+# View cards in a list
+tcu cards list <listId>
+
+# Show detailed card information
+tcu cards show <cardId>
+
+# Create a new card
+tcu cards create <listId> <name> [--desc "description"]
+
+# Update an existing card
+tcu cards update <cardId> --name "new name" [--desc "new description"]
+
+# Move a card to another list
+tcu cards move <cardId> --to <listId>
+
+# Delete a card
+tcu cards delete <cardId>
 
 # Start interactive mode
 tcu interactive
@@ -221,9 +248,109 @@ tcu setup
 
 # Show version
 tcu --version
+
+# Output format options (available for most commands)
+tcu boards list --format json
+tcu boards list --format csv
+tcu boards list --format table  # default
+```
+
+## 🏗️ Command Structure
+
+The CLI uses a hierarchical subcommand structure for better organization:
+
+```
+tcu [command] [subcommand] [options] [arguments]
+```
+
+### Main Commands
+
+- **`boards`** - Manage Trello boards
+  - `list` - List all boards
+  - `show <boardId>` - Show detailed board information
+  - `create <name>` - Create a new board
+  - `delete <boardId>` - Delete a board
+
+- **`lists`** - Manage Trello lists
+  - `list <boardId>` - List all lists in a board
+  - `create <boardId> <name>` - Create a new list
+  - `delete <listId>` - Delete a list
+  - `move <listId> <position>` - Move list to new position
+
+- **`cards`** - Manage Trello cards
+  - `list <listId>` - List all cards in a list
+  - `show <cardId>` - Show detailed card information
+  - `create <listId> <name>` - Create a new card
+  - `update <cardId>` - Update an existing card
+  - `move <cardId>` - Move card to another list
+  - `delete <cardId>` - Delete a card
+
+- **`config`** - Configuration management
+  - `setup` - Configure Trello token
+  - `show` - Display current configuration
+
+### Global Options
+
+- `--format <format>` - Output format: `table` (default), `json`, `csv`
+- `--help` - Show help for any command
+- `--version` - Show CLI version
+
+### Interactive Mode
+
+```bash
+# Start interactive menu
+tcu
+
+# Or explicitly
+tcu interactive
 ```
 
 ## 📚 Usage Examples
+
+### View Boards
+
+```bash
+# List all your boards
+tcu boards list
+
+# Show detailed information about a specific board
+tcu boards show 60d5ecb74e2b8c3b8c8c8c8c
+
+# Export boards to JSON
+tcu boards list --format json
+
+# Export boards to CSV
+tcu boards list --format csv
+```
+
+### Manage Lists
+
+```bash
+# List all lists in a board
+tcu lists list 60d5ecb74e2b8c3b8c8c8c8c
+```
+
+### Manage Cards
+
+```bash
+# List all cards in a list
+tcu cards list 60d5ecb74e2b8c3b8c8c8c8d
+
+# Show detailed information about a card
+tcu cards show 60d5ecb74e2b8c3b8c8c8c8e
+
+# Create a new card
+tcu cards create 60d5ecb74e2b8c3b8c8c8c8d "Implement new feature" --desc "Add support for card templates"
+
+# Update an existing card
+tcu cards update 60d5ecb74e2b8c3b8c8c8c8e --name "Updated feature name" --desc "Updated description"
+
+# Move a card to another list
+tcu cards move 60d5ecb74e2b8c3b8c8c8c8e --to 60d5ecb74e2b8c3b8c8c8c8f
+
+# Delete a card
+tcu cards delete 60d5ecb74e2b8c3b8c8c8c8e
+```
 
 ### Create a Card
 
@@ -244,18 +371,70 @@ tcu
 # Optionally: edit, delete, or move cards
 ```
 
-### Manage Cards
-
-- **Edit**: Change name and description
-- **Delete**: Confirm before removing
-- **Move**: Select destination list
-
 ### Show Card Details
 
 ```bash
 # Show detailed information about a card, including checklists, members, labels and attachments
 tcu cards show <cardId>
 ```
+
+### Output Formats
+
+```bash
+# Table format (default)
+tcu boards list
+
+# JSON format
+tcu boards list --format json
+
+# CSV format
+tcu boards list --format csv
+
+# All formats work with most commands
+tcu cards list <listId> --format json
+tcu lists list <boardId> --format csv
+```
+
+## 🔄 Backward Compatibility
+
+### Legacy Command Support
+
+During the transition period, the CLI maintains backward compatibility with older command formats. These legacy commands will show deprecation warnings but continue to work:
+
+```bash
+# Legacy commands (show deprecation warnings)
+tcu boards                    # → Use "tcu boards list" instead
+tcu lists legacy <boardName>  # → Use "tcu lists list <boardId>" instead
+tcu cards legacy <boardName> <listName>  # → Use "tcu cards list <listId>" instead
+
+# Legacy card management commands
+tcu create-card <boardName> <listName> <cardName>
+tcu move-card <cardId> <listName>
+tcu delete-card <cardId>
+```
+
+### Migration Guide
+
+| Old Command | New Command | Status |
+|-------------|-------------|--------|
+| `tcu boards` | `tcu boards list` | ⚠️ Deprecated |
+| `tcu lists <boardName>` | `tcu lists list <boardId>` | ⚠️ Deprecated |
+| `tcu cards <boardName> <listName>` | `tcu cards list <listId>` | ⚠️ Deprecated |
+| `tcu create-card <boardName> <listName> <name>` | `tcu cards create <listId> <name>` | ⚠️ Deprecated |
+| `tcu move-card <cardId> <listName>` | `tcu cards move <cardId> --to <listId>` | ⚠️ Deprecated |
+| `tcu delete-card <cardId>` | `tcu cards delete <cardId>` | ⚠️ Deprecated |
+
+**Migration Timeline:**
+- **Current:** Legacy commands work with deprecation warnings
+- **Future:** Legacy commands will be removed (TBD)
+
+### Why the Changes?
+
+The new command structure provides:
+- **Better organization** with hierarchical subcommands
+- **Improved discoverability** with `tcu <command> --help`
+- **Consistency** with modern CLI patterns
+- **Future extensibility** for additional subcommands
 
 ## 🤖 CI/CD & Automation
 
@@ -354,6 +533,51 @@ bun run typecheck
 # Linting only
 bun run lint
 ```
+
+## 🔧 Architecture & Extensibility
+
+### Domain-Driven Design Structure
+
+The CLI follows Domain-Driven Design principles with clear separation of concerns:
+
+```
+src/
+├── domain/           # Business logic & entities
+│   ├── entities/     # Board, List, Card entities
+│   ├── repositories/ # Repository interfaces
+│   └── services/     # Domain services (Authentication)
+├── application/      # Use cases & business logic
+│   └── use-cases/    # Business operations
+├── infrastructure/   # External implementations
+│   ├── repositories/ # Trello API, File system implementations
+│   └── external/     # External service integrations
+├── presentation/     # CLI interface layer
+│   └── cli/         # Command controllers & UI
+└── shared/          # Cross-cutting concerns
+    ├── ErrorHandler.ts
+    ├── OutputFormatter.ts
+    └── types.ts
+```
+
+### Adding New Commands
+
+To extend the CLI with new functionality:
+
+1. **Create a Use Case** in `src/application/use-cases/`
+2. **Implement Repository Interface** if needed
+3. **Add Controller Method** in appropriate CLI controller
+4. **Register Command** in `CommandController.ts`
+5. **Add Tests** following the existing pattern
+
+### Output Formatters
+
+The CLI supports multiple output formats through the `OutputFormatter` class:
+
+- **Table**: Human-readable tabular output (default)
+- **JSON**: Machine-readable structured data
+- **CSV**: Spreadsheet-compatible format
+
+All formatters handle complex nested data structures automatically.
 
 ## 🧪 Cross-Platform Development Testing
 
@@ -550,12 +774,15 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📊 Project Status
 
-- 🚀 57 tests passing
+- 🚀 195 tests passing (100% coverage)
 - 📦 Clean Domain-Driven Design architecture
 - 🎨 ESLint + TypeScript strict mode
 - ⚡ Performance optimized with Bun
 - 🤖 Automated CI/CD with semantic versioning
 - 🔒 Secure publishing with NPM provenance
+- 🌍 Internationalization (pt-BR/en)
+- 📊 Multiple output formats (table/json/csv)
+- 🏗️ Hierarchical command structure
 
 ---
 

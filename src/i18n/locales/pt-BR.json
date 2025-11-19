@@ -52,7 +52,7 @@
     "loading": "⏳ Carregando boards...",
     "empty": "📋 Nenhum board encontrado.",
     "notFound": "❌ Quadro \"{{name}}\" não encontrado",
-    "notFoundById": "❌ Quadro com ID '{{id}}' não encontrado",
+    "notFoundById": "❌ Quadro com ID \"{{id}}\" não encontrado",
     "lists": "📝 Listas do Board: {{name}}",
     "listsTitle": "📝 Listas:",
     "listsHeaders": {
@@ -67,6 +67,8 @@
     "boardUrl": "🔗 URL: {{url}}",
     "boardId": "🆔 ID: {{id}}",
     "boardStats": "📊 Estatísticas: {{lists}} listas, {{cards}} cards",
+    "members": "👥 Membros: {{members}}",
+    "labels": "🏷️ Labels: {{labels}}",
     "validation": {
       "nameRequired": "Nome do quadro é obrigatório",
       "nameTooLong": "Nome do quadro é muito longo (máximo 16384 caracteres)"
@@ -76,6 +78,7 @@
     "loading": "⏳ Carregando listas...",
     "empty": "📝 Nenhuma lista encontrada neste board.",
     "notFound": "❌ Lista \"{{listName}}\" não encontrada no quadro \"{{boardName}}\"",
+    "notFoundById": "❌ Lista com ID \"{{listId}}\" não encontrada",
     "cards": "🃏 Cards da Lista: {{name}}",
     "boardLists": "📋 Listas do quadro \"{{boardName}}\":",
     "cardsEmpty": "Nenhum card encontrado nesta lista",
@@ -132,7 +135,9 @@
       "labels": "🏷️ Labels:",
       "members": "👥 Membros:",
       "checklists": "✅ Checklists:",
-      "attachments": "📎 Anexos:"
+      "attachments": "📎 Anexos:",
+      "location": "📍 Board:",
+      "list": "📋 List:"
     }
   },
   "errors": {
@@ -180,12 +185,18 @@
       "boardsLegacyDescription": "[DEPRECIADO] Use \"boards list\" ao invés disso",
       "boardsLegacyWarning": "⚠️  Aviso: comando \"boards\" está depreciado. Use \"boards list\" ao invés disso.",
       "boardsLegacyError": "❌ Erro:",
+      "boardsAliasDescription": "[ALIAS] Use \"boards list\" ao invés disso",
+      "boardsAliasWarning": "⚠️  Aviso: \"boards\" sem subcomando está depreciado. Use \"boards list\" ao invés disso.",
       "listsLegacyDescription": "[DEPRECIADO] Use \"lists list <boardId>\" ao invés disso",
       "listsLegacyWarning": "⚠️  Aviso: comando \"lists <boardName>\" está depreciado. Use \"lists list <boardId>\" ao invés disso.",
       "listsLegacyError": "❌ Erro:",
+      "listsAliasDescription": "[ALIAS] Use \"lists list <boardId>\" ao invés disso",
+      "listsAliasWarning": "⚠️  Aviso: \"lists <boardName>\" está depreciado. Use \"lists list <boardId>\" ao invés disso.",
       "cardsLegacyDescription": "[DEPRECIADO] Use \"cards list <listId>\" ao invés disso",
       "cardsLegacyWarning": "⚠️  Aviso: comando \"cards <boardName> <listName>\" está depreciado. Use \"cards list <listId>\" ao invés disso.",
       "cardsLegacyError": "❌ Erro:",
+      "cardsAliasDescription": "[ALIAS] Use \"cards list <listId>\" ao invés disso",
+      "cardsAliasWarning": "⚠️  Aviso: \"cards <boardName> <listName>\" está depreciado. Use \"cards list <listId>\" ao invés disso.",
       "createCardLegacyDescription": "[DEPRECIADO] Use \"cards create <listId> <name>\" ao invés disso",
       "createCardLegacyWarning": "⚠️  Aviso: comando \"create-card\" está depreciado. Use \"cards create <listId> <name>\" ao invés disso.",
       "moveCardLegacyDescription": "[DEPRECIADO] Use \"cards move <cardId> --to <listId>\" ao invés disso",
@@ -224,9 +235,9 @@
       "success": "📋 Boards carregados com sucesso!"
     },
     "createCard": {
-      "description": "Cria um novo card em uma lista",
+      "description": "Criar um novo card em uma lista",
       "nameRequired": "❌ Nome do card é obrigatório",
-      "success": "✅ Card '{{name}}' criado com sucesso!"
+      "success": "✅ Card \"{{name}}\" criado com sucesso!"
     },
     "moveCard": {
       "description": "Move um card para outra lista",

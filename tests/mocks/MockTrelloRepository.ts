@@ -42,6 +42,45 @@ export class MockTrelloRepository implements TrelloRepository {
     return Promise.resolve(this.boards);
   }
 
+  async getBoardMembers(_boardId: string): Promise<import('@domain/repositories').BoardMember[]> {
+    // Mock members data
+    return Promise.resolve([
+      {
+        id: 'member1',
+        fullName: 'John Doe',
+        username: 'johndoe',
+        initials: 'JD',
+      },
+      {
+        id: 'member2',
+        fullName: 'Jane Smith',
+        username: 'janesmith',
+        initials: 'JS',
+      },
+    ]);
+  }
+
+  async getBoardLabels(_boardId: string): Promise<import('@domain/repositories').BoardLabel[]> {
+    // Mock labels data
+    return Promise.resolve([
+      {
+        id: 'label1',
+        name: 'Bug',
+        color: 'red',
+      },
+      {
+        id: 'label2',
+        name: 'Feature',
+        color: 'green',
+      },
+      {
+        id: 'label3',
+        name: '',
+        color: 'blue',
+      },
+    ]);
+  }
+
   async createBoard(name: string, _description?: string): Promise<BoardEntity> {
     const newBoard = new BoardEntity(
       `board-${Date.now()}`,

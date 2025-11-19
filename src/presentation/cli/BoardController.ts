@@ -61,6 +61,19 @@ export class BoardController {
         cards: details.totalCards,
       }),
     );
+
+    // Display members in a compact format
+    if (details.members.length > 0) {
+      const memberNames = details.members.map(m => m.fullName).join(', ');
+      this.outputFormatter.message(t('board.members', { members: memberNames }));
+    }
+
+    // Display labels in a compact format
+    if (details.labels.length > 0) {
+      const labelNames = details.labels.map(l => l.name || l.color).join(', ');
+      this.outputFormatter.message(t('board.labels', { labels: labelNames }));
+    }
+
     this.outputFormatter.message('');
 
     if (details.lists.length > 0) {

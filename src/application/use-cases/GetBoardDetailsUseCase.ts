@@ -1,10 +1,12 @@
 import type { BoardEntity, ListEntity } from '@domain/entities';
-import type { TrelloRepository } from '@domain/repositories';
+import type { BoardLabel, BoardMember, TrelloRepository } from '@domain/repositories';
 import { t } from '@/i18n';
 
 export interface BoardDetails {
   board: BoardEntity;
   lists: ListEntity[];
+  members: BoardMember[];
+  labels: BoardLabel[];
   totalLists: number;
   totalCards: number;
 }
@@ -24,6 +26,12 @@ export class GetBoardDetailsUseCase {
     // Get lists for this board
     const lists = await this.trelloRepository.getLists(boardId);
 
+    // Get members for this board
+    const members = await this.trelloRepository.getBoardMembers(boardId);
+
+    // Get labels for this board
+    const labels = await this.trelloRepository.getBoardLabels(boardId);
+
     // Get cards for each list and count total
     let totalCards = 0;
     for (const list of lists) {
@@ -34,6 +42,8 @@ export class GetBoardDetailsUseCase {
     return {
       board,
       lists,
+      members,
+      labels,
       totalLists: lists.length,
       totalCards,
     };

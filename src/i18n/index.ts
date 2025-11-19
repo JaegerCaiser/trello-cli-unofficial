@@ -87,7 +87,9 @@ i18next.init({
     },
   },
   interpolation: {
-    escapeValue: false, // React já faz escape, não precisamos aqui
+    escapeValue: false,
+    prefix: '{{',
+    suffix: '}}',
   },
 });
 
@@ -97,6 +99,32 @@ i18next.init({
  * @param options - Opções de interpolação (ex: { name: 'João' })
  */
 export function t(key: string, options?: Record<string, unknown>): string {
+  // Garante que o i18next esteja inicializado
+  if (!i18next.isInitialized) {
+    // Tenta inicializar se não estiver pronto
+    try {
+      i18next.init({
+        lng: detectLanguage(),
+        fallbackLng: 'en',
+        resources: {
+          'pt-BR': {
+            translation: translations.ptBR,
+          },
+          'en': {
+            translation: translations.en,
+          },
+        },
+        interpolation: {
+          escapeValue: false,
+          prefix: '{{',
+          suffix: '}}',
+        },
+      });
+    } catch {
+      // Fallback para chave se houver erro na inicialização
+      return key;
+    }
+  }
   return i18next.t(key, options);
 }
 

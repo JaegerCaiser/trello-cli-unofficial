@@ -141,6 +141,172 @@ We use **@antfu/eslint-config**. Run `bun run lint:fix` to auto-fix issues.
 - No unused variables
 - Descriptive variable names
 
+## Merge Guidelines
+
+### Branch Strategy
+
+- **main**: Production-ready code, protected branch
+- **feature branches**: `feat/description` or `fix/description`
+- **hotfix branches**: `hotfix/description` (only for critical production issues)
+
+### Pull Request Process
+
+1. **Create a feature branch** from `main`:
+   ```bash
+   git checkout main
+   git pull origin main
+   git checkout -b feat/add-new-feature
+   ```
+
+2. **Make your changes** following the coding guidelines
+
+3. **Test thoroughly**:
+   ```bash
+   bun run validate    # Lint + TypeScript + Tests
+   bun test:coverage   # Check coverage (must be >95%)
+   ```
+
+4. **Update documentation** if needed:
+   - README.md for user-facing changes
+   - CHANGELOG.md for version history
+   - docs/ for detailed documentation
+
+5. **Create a PR** with:
+   - Clear title following conventional commits
+   - Detailed description of changes
+   - Screenshots/videos for UI changes
+   - Test results showing all checks pass
+
+### Code Review Requirements
+
+**Must be approved by at least 1 maintainer**
+
+**Required checks:**
+- ✅ All CI/CD pipelines pass
+- ✅ Test coverage > 95%
+- ✅ No linting errors
+- ✅ TypeScript compilation succeeds
+- ✅ Conventional commit message
+
+**Review focus areas:**
+- Code quality and maintainability
+- Test coverage and correctness
+- Documentation updates
+- Breaking changes clearly documented
+- Performance implications
+
+### Merge Strategy
+
+- **Squash merge** for feature branches
+- **Merge commit** for hotfixes
+- **Linear history** maintained
+- **Automatic versioning** based on commit messages
+
+## Testing Guidelines
+
+### Test Coverage Requirements
+
+- **Minimum 95% coverage** enforced in CI/CD
+- **All new features** must include tests
+- **All bug fixes** must include regression tests
+- **Critical paths** must have integration tests
+
+### Test Types
+
+#### Unit Tests (`tests/unit/`)
+- Test individual functions/classes in isolation
+- Use mocks for external dependencies
+- Fast execution (< 100ms per test)
+- Cover happy path and error cases
+
+#### Integration Tests (`tests/integration/`)
+- Test component interactions
+- Use real dependencies where possible
+- Test CLI commands end-to-end
+- Cover API integrations
+
+#### Test Structure
+```
+tests/
+├── unit/
+│   ├── domain/          # Entity and service tests
+│   ├── application/     # Use case tests with mocks
+│   ├── infrastructure/  # Repository implementation tests
+│   └── presentation/    # Controller and CLI tests
+├── integration/         # End-to-end CLI command tests
+├── mocks/              # Reusable mock implementations
+└── helpers/            # Test utilities and data factories
+```
+
+### Writing Tests
+
+```typescript
+import { describe, test, expect, beforeEach } from "bun:test";
+import { CreateCardUseCase } from "@application/use-cases";
+import { MockTrelloRepository } from "@tests/mocks";
+
+describe("CreateCardUseCase", () => {
+  let useCase: CreateCardUseCase;
+  let mockRepository: MockTrelloRepository;
+
+  beforeEach(() => {
+    mockRepository = new MockTrelloRepository();
+    useCase = new CreateCardUseCase(mockRepository);
+  });
+
+  test("should create card with valid data", async () => {
+    // Arrange
+    const input = { name: "Test Card", listId: "list-123" };
+
+    // Act
+    const result = await useCase.execute(input);
+
+    // Assert
+    expect(result.name).toBe("Test Card");
+    expect(result.id).toBeDefined();
+  });
+
+  test("should throw error for empty name", async () => {
+    const input = { name: "", listId: "list-123" };
+
+    await expect(useCase.execute(input)).rejects.toThrow("Name is required");
+  });
+});
+```
+
+### Running Tests
+
+```bash
+# Run all tests
+bun test
+
+# Run with coverage
+bun test:coverage
+
+# Run specific test file
+bun test tests/unit/domain/entities/Card.test.ts
+
+# Run tests in watch mode
+bun test --watch
+
+# Run only unit tests
+bun test tests/unit/
+
+# Run only integration tests
+bun test tests/integration/
+```
+
+### Test Data Management
+
+Use the `TestData` helper for consistent test data:
+
+```typescript
+import { TestData } from "@tests/helpers";
+
+const mockBoard = TestData.createMockBoard({ name: "Test Board" });
+const mockList = TestData.createMockList({ name: "Test List", boardId: mockBoard.id });
+```
+
 ## Testing Your Changes
 
 Before submitting a PR, ensure all checks pass:

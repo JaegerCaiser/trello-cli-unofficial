@@ -52,7 +52,7 @@
     "loading": "⏳ Loading boards...",
     "empty": "📋 No boards found.",
     "notFound": "❌ Board \"{{name}}\" not found",
-    "notFoundById": "❌ Board with ID '{{id}}' not found",
+    "notFoundById": "❌ Board with ID \"{{id}}\" not found",
     "lists": "📝 Lists of Board: {{name}}",
     "listsHeaders": {
       "name": "List Name",
@@ -67,6 +67,8 @@
     "boardUrl": "🔗 URL: {{url}}",
     "boardId": "🆔 ID: {{id}}",
     "boardStats": "📊 Statistics: {{lists}} lists, {{cards}} cards",
+    "members": "👥 Members: {{members}}",
+    "labels": "🏷️ Labels: {{labels}}",
     "validation": {
       "nameRequired": "Board name is required",
       "nameTooLong": "Board name is too long (max 16384 characters)"
@@ -76,6 +78,7 @@
     "loading": "⏳ Loading lists...",
     "empty": "📝 No lists found in this board.",
     "notFound": "❌ List \"{{listName}}\" not found in board \"{{boardName}}\"",
+    "notFoundById": "❌ List with ID \"{{listId}}\" not found",
     "cards": "🃏 Cards of List: {{name}}",
     "boardLists": "📋 Lists from board \"{{boardName}}\":",
     "cardsEmpty": "No cards found in this list",
@@ -132,7 +135,9 @@
       "labels": "🏷️ Labels:",
       "members": "👥 Members:",
       "checklists": "✅ Checklists:",
-      "attachments": "📎 Attachments:"
+      "attachments": "📎 Attachments:",
+      "location": "📍 Board:",
+      "list": "📋 List:"
     }
   },
   "errors": {
@@ -180,12 +185,18 @@
       "boardsLegacyDescription": "[DEPRECATED] Use \"boards list\" instead",
       "boardsLegacyWarning": "⚠️  Warning: \"boards\" command is deprecated. Use \"boards list\" instead.",
       "boardsLegacyError": "❌ Error:",
+      "boardsAliasDescription": "[ALIAS] Use \"boards list\" instead",
+      "boardsAliasWarning": "⚠️  Warning: \"boards\" without subcommand is deprecated. Use \"boards list\" instead.",
       "listsLegacyDescription": "[DEPRECATED] Use \"lists list <boardId>\" instead",
       "listsLegacyWarning": "⚠️  Warning: \"lists <boardName>\" command is deprecated. Use \"lists list <boardId>\" instead.",
       "listsLegacyError": "❌ Error:",
+      "listsAliasDescription": "[ALIAS] Use \"lists list <boardId>\" instead",
+      "listsAliasWarning": "⚠️  Warning: \"lists <boardName>\" is deprecated. Use \"lists list <boardId>\" instead.",
       "cardsLegacyDescription": "[DEPRECATED] Use \"cards list <listId>\" instead",
       "cardsLegacyWarning": "⚠️  Warning: \"cards <boardName> <listName>\" command is deprecated. Use \"cards list <listId>\" instead.",
       "cardsLegacyError": "❌ Error:",
+      "cardsAliasDescription": "[ALIAS] Use \"cards list <listId>\" instead",
+      "cardsAliasWarning": "⚠️  Warning: \"cards <boardName> <listName>\" is deprecated. Use \"cards list <listId>\" instead.",
       "createCardLegacyDescription": "[DEPRECATED] Use \"cards create <listId> <name>\" instead",
       "createCardLegacyWarning": "⚠️  Warning: \"create-card\" command is deprecated. Use \"cards create <listId> <name>\" instead.",
       "moveCardLegacyDescription": "[DEPRECATED] Use \"cards move <cardId> --to <listId>\" instead",
@@ -226,7 +237,7 @@
     "createCard": {
       "description": "Create a new card in a list",
       "nameRequired": "❌ Card name is required",
-      "success": "✅ Card '{{name}}' created successfully!"
+      "success": "✅ Card \"{{name}}\" created successfully!"
     },
     "moveCard": {
       "description": "Move a card to another list",

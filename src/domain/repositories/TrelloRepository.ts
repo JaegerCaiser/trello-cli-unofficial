@@ -6,9 +6,24 @@ import type {
   UpdateCardData,
 } from '@domain/entities';
 
+export interface BoardMember {
+  id: string;
+  fullName: string;
+  username: string;
+  initials: string;
+}
+
+export interface BoardLabel {
+  id: string;
+  name: string;
+  color: string;
+}
+
 export interface TrelloRepository {
   getBoards: () => Promise<BoardEntity[]>;
   createBoard: (name: string, description?: string) => Promise<BoardEntity>;
+  getBoardMembers: (boardId: string) => Promise<BoardMember[]>;
+  getBoardLabels: (boardId: string) => Promise<BoardLabel[]>;
   getLists: (boardId: string) => Promise<ListEntity[]>;
   createList: (boardId: string, name: string) => Promise<ListEntity>;
   deleteList: (listId: string) => Promise<void>;

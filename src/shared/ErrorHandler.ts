@@ -157,8 +157,13 @@ export class ErrorHandler {
         console.error(`❌ ${prefix}${error.message}`);
     }
 
-    // Exit with appropriate code for automation
-    process.exit(error.statusCode || 1);
+    // Exit with appropriate code for automation (skip in tests)
+    if (process.env.NODE_ENV !== 'test') {
+      process.exit(error.statusCode || 1);
+    } else {
+      // In tests, throw the error instead of exiting
+      throw error;
+    }
   }
 
   /**
@@ -172,7 +177,12 @@ export class ErrorHandler {
       console.error(t('errors.stackTrace'), error.stack);
     }
 
-    process.exit(1);
+    // In tests, throw the error instead of exiting
+    if (process.env.NODE_ENV !== 'test') {
+      process.exit(1);
+    } else {
+      throw error;
+    }
   }
 
   /**
@@ -180,7 +190,13 @@ export class ErrorHandler {
    */
   private static handleUnknownError(error: unknown, _context?: string): void {
     console.error(t('errors.unknownError'), error);
-    process.exit(1);
+
+    // In tests, throw the error instead of exiting
+    if (process.env.NODE_ENV !== 'test') {
+      process.exit(1);
+    } else {
+      throw error;
+    }
   }
 
   /**

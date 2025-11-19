@@ -11,7 +11,7 @@ import {
 import { Command } from 'commander';
 
 import { t } from '@/i18n';
-import { OutputFormatter } from '@/shared';
+import { ErrorHandler, OutputFormatter } from '@/shared';
 import { AuthController, BoardController, CardController } from './index';
 
 export class CommandController {
@@ -149,25 +149,29 @@ export class CommandController {
     // Boards subcommands
     const boardsCmd = this.program
       .command('boards')
-      .description(t('commands.boards.manage'));
+      .description(t('commands.boards.manage'))
+      .action(async () => {
+        // Backward compatibility: when 'boards' is called without subcommand,
+        // show deprecation warning and execute 'boards list'
+        console.warn(t('commands.deprecated.boardsAliasWarning'));
+        await ErrorHandler.withErrorHandling(async () => {
+          await this.initializeTrelloControllers();
+          await this.boardController.showBoards();
+        }, 'boards');
+      });
 
     boardsCmd
       .command('list')
       .description(t('commands.boards.description'))
       .option('-f, --format <format>', t('commands.formatOption'), 'table')
       .action(async (options: { format?: string }) => {
-        try {
+        await ErrorHandler.withErrorHandling(async () => {
           await this.initializeTrelloControllers();
           if (options.format) {
             this.outputFormatter.setFormat(options.format as OutputFormat);
           }
           await this.boardController.showBoards();
-        } catch (error) {
-          console.error(
-            t('commands.commandErrors.genericError'),
-            (error as Error).message,
-          );
-        }
+        }, 'boards list');
       });
 
     boardsCmd
@@ -175,15 +179,13 @@ export class CommandController {
       .description(t('commands.boards.show.description'))
       .option('-f, --format <format>', t('commands.formatOption'), 'table')
       .action(async (boardId: string, options: { format?: string }) => {
-        try {
+        await ErrorHandler.withErrorHandling(async () => {
           await this.initializeTrelloControllers();
           if (options.format) {
             this.outputFormatter.setFormat(options.format as OutputFormat);
           }
           await this.boardController.showBoardDetails(boardId);
-        } catch (error) {
-          console.error(t('commands.commandErrors.genericError'), (error as Error).message);
-        }
+        }, 'boards show');
       });
 
     boardsCmd
@@ -194,12 +196,10 @@ export class CommandController {
         t('commands.boards.create.descOption'),
       )
       .action(async (name: string, options: { desc?: string }) => {
-        try {
+        await ErrorHandler.withErrorHandling(async () => {
           await this.initializeTrelloControllers();
           await this.boardController.createBoard(name, options.desc);
-        } catch (error) {
-          console.error('❌ Erro:', (error as Error).message);
-        }
+        }, 'boards create');
       });
 
     // Legacy boards command with deprecation warning
@@ -208,15 +208,10 @@ export class CommandController {
       .description(t('commands.deprecated.boardsLegacyDescription'))
       .action(async () => {
         console.warn(t('commands.deprecated.boardsLegacyWarning'));
-        try {
+        await ErrorHandler.withErrorHandling(async () => {
           await this.initializeTrelloControllers();
           await this.boardController.showBoards();
-        } catch (error) {
-          console.error(
-            t('commands.deprecated.boardsLegacyError'),
-            (error as Error).message,
-          );
-        }
+        }, 'boards-legacy');
       });
 
     // Lists subcommands
@@ -229,63 +224,58 @@ export class CommandController {
       .description(t('commands.lists.list.description'))
       .option('-f, --format <format>', t('commands.formatOption'), 'table')
       .action(async (boardId: string, options: { format?: string }) => {
-        try {
+        await ErrorHandler.withErrorHandling(async () => {
           await this.initializeTrelloControllers();
           if (options.format) {
             this.outputFormatter.setFormat(options.format as OutputFormat);
           }
           await this.boardController.showListsById(boardId);
-        } catch (error) {
-          console.error(t('commands.commandErrors.genericError'), (error as Error).message);
-        }
+        }, 'lists list');
       });
 
     listsCmd
       .command('create <boardId> <name>')
       .description(t('commands.lists.create.description'))
       .action(async (boardId: string, name: string) => {
-        try {
+        await ErrorHandler.withErrorHandling(async () => {
           await this.initializeTrelloControllers();
           await this.boardController.createList(boardId, name);
-        } catch (error) {
-          console.error(
-            t('commands.commandErrors.genericError'),
-            (error as Error).message,
-          );
-        }
+        }, 'lists create');
       });
 
     listsCmd
       .command('delete <listId>')
       .description(t('commands.lists.delete.description'))
       .action(async (listId: string) => {
-        try {
+        await ErrorHandler.withErrorHandling(async () => {
           await this.initializeTrelloControllers();
           await this.boardController.deleteList(listId);
-        } catch (error) {
-          console.error(
-            t('commands.commandErrors.genericError'),
-            (error as Error).message,
-          );
-        }
+        }, 'lists delete');
       });
 
     listsCmd
       .command('move <listId> <position>')
       .description(t('commands.lists.move.description'))
       .action(async (listId: string, position: string) => {
-        try {
+        await ErrorHandler.withErrorHandling(async () => {
           await this.initializeTrelloControllers();
           await this.boardController.moveList(
             listId,
             Number.parseInt(position),
           );
-        } catch (error) {
-          console.error(
-            t('commands.commandErrors.genericError'),
-            (error as Error).message,
-          );
-        }
+        }, 'lists move');
+      });
+
+    // Backward compatibility subcommand for legacy behavior
+    listsCmd
+      .command('legacy <boardName>')
+      .description(t('commands.deprecated.listsAliasDescription'))
+      .action(async (boardName: string) => {
+        console.warn(t('commands.deprecated.listsAliasWarning'));
+        await ErrorHandler.withErrorHandling(async () => {
+          await this.initializeTrelloControllers();
+          await this.boardController.showLists(boardName);
+        }, 'lists legacy');
       });
 
     // Legacy lists command with deprecation warning
@@ -294,15 +284,10 @@ export class CommandController {
       .description(t('commands.deprecated.listsLegacyDescription'))
       .action(async (boardName: string) => {
         console.warn(t('commands.deprecated.listsLegacyWarning'));
-        try {
+        await ErrorHandler.withErrorHandling(async () => {
           await this.initializeTrelloControllers();
           await this.boardController.showLists(boardName);
-        } catch (error) {
-          console.error(
-            t('commands.deprecated.listsLegacyError'),
-            (error as Error).message,
-          );
-        }
+        }, 'lists-legacy');
       });
 
     // Cards subcommands
@@ -315,15 +300,13 @@ export class CommandController {
       .description(t('commands.cards.list.description'))
       .option('-f, --format <format>', t('commands.formatOption'), 'table')
       .action(async (listId: string, options: { format?: string }) => {
-        try {
+        await ErrorHandler.withErrorHandling(async () => {
           await this.initializeTrelloControllers();
           if (options.format) {
             this.outputFormatter.setFormat(options.format as OutputFormat);
           }
           await this.boardController.showCardsByListId(listId);
-        } catch (error) {
-          console.error(t('commands.commandErrors.genericError'), (error as Error).message);
-        }
+        }, 'cards list');
       });
 
     cardsCmd
@@ -332,19 +315,14 @@ export class CommandController {
       .option('-d, --desc <description>', t('commands.options.cardDescription'))
       .action(
         async (listId: string, name: string, options: { desc?: string }) => {
-          try {
+          await ErrorHandler.withErrorHandling(async () => {
             await this.initializeTrelloControllers();
             await this.cardController.createCardByListId(
               listId,
               name,
               options.desc,
             );
-          } catch (error) {
-            console.error(
-              t('commands.commandErrors.genericError'),
-              (error as Error).message,
-            );
-          }
+          }, 'cards create');
         },
       );
 
@@ -353,30 +331,20 @@ export class CommandController {
       .description(t('commands.cards.move.description'))
       .requiredOption('-t, --to <listId>', t('commands.options.targetListId'))
       .action(async (cardId: string, options: { to: string }) => {
-        try {
+        await ErrorHandler.withErrorHandling(async () => {
           await this.initializeTrelloControllers();
           await this.cardController.moveCardToList(cardId, options.to);
-        } catch (error) {
-          console.error(
-            t('commands.commandErrors.genericError'),
-            (error as Error).message,
-          );
-        }
+        }, 'cards move');
       });
 
     cardsCmd
       .command('delete <cardId>')
       .description(t('commands.cards.delete.description'))
       .action(async (cardId: string) => {
-        try {
+        await ErrorHandler.withErrorHandling(async () => {
           await this.initializeTrelloControllers();
           await this.cardController.deleteCard(cardId);
-        } catch (error) {
-          console.error(
-            t('commands.commandErrors.genericError'),
-            (error as Error).message,
-          );
-        }
+        }, 'cards delete');
       });
 
     cardsCmd
@@ -389,19 +357,14 @@ export class CommandController {
       )
       .action(
         async (cardId: string, options: { name?: string; desc?: string }) => {
-          try {
+          await ErrorHandler.withErrorHandling(async () => {
             await this.initializeTrelloControllers();
             await this.cardController.updateCard(
               cardId,
               options.name,
               options.desc,
             );
-          } catch (error) {
-            console.error(
-              t('commands.commandErrors.genericError'),
-              (error as Error).message,
-            );
-          }
+          }, 'cards update');
         },
       );
 
@@ -410,18 +373,25 @@ export class CommandController {
       .description(t('commands.cards.show.description'))
       .option('-f, --format <format>', t('commands.formatOption'), 'table')
       .action(async (cardId: string, options: { format?: string }) => {
-        try {
+        await ErrorHandler.withErrorHandling(async () => {
           await this.initializeTrelloControllers();
           if (options.format) {
             this.outputFormatter.setFormat(options.format as OutputFormat);
           }
           await this.cardController.showCard(cardId);
-        } catch (error) {
-          console.error(
-            t('commands.commandErrors.genericError'),
-            (error as Error).message,
-          );
-        }
+        }, 'cards show');
+      });
+
+    // Backward compatibility subcommand for legacy behavior
+    cardsCmd
+      .command('legacy <boardName> <listName>')
+      .description(t('commands.deprecated.cardsAliasDescription'))
+      .action(async (boardName: string, listName: string) => {
+        console.warn(t('commands.deprecated.cardsAliasWarning'));
+        await ErrorHandler.withErrorHandling(async () => {
+          await this.initializeTrelloControllers();
+          await this.boardController.showCards(boardName, listName);
+        }, 'cards legacy');
       });
 
     // Legacy commands with deprecation warnings
@@ -430,15 +400,10 @@ export class CommandController {
       .description(t('commands.deprecated.cardsLegacyDescription'))
       .action(async (boardName: string, listName: string) => {
         console.warn(t('commands.deprecated.cardsLegacyWarning'));
-        try {
+        await ErrorHandler.withErrorHandling(async () => {
           await this.initializeTrelloControllers();
           await this.boardController.showCards(boardName, listName);
-        } catch (error) {
-          console.error(
-            t('commands.deprecated.cardsLegacyError'),
-            (error as Error).message,
-          );
-        }
+        }, 'cards-legacy');
       });
 
     this.program
@@ -453,7 +418,7 @@ export class CommandController {
           options: { desc?: string },
         ) => {
           console.warn(t('commands.deprecated.createCardLegacyWarning'));
-          try {
+          await ErrorHandler.withErrorHandling(async () => {
             await this.initializeTrelloControllers();
             await this.cardController.createCard(
               boardName,
@@ -461,12 +426,7 @@ export class CommandController {
               cardName,
               options.desc,
             );
-          } catch (error) {
-            console.error(
-              t('commands.commandErrors.genericError'),
-              (error as Error).message,
-            );
-          }
+          }, 'create-card-legacy');
         },
       );
 
@@ -475,15 +435,10 @@ export class CommandController {
       .description(t('commands.deprecated.moveCardLegacyDescription'))
       .action(async (cardId: string, listName: string) => {
         console.warn(t('commands.deprecated.moveCardLegacyWarning'));
-        try {
+        await ErrorHandler.withErrorHandling(async () => {
           await this.initializeTrelloControllers();
           await this.cardController.moveCard(cardId, listName);
-        } catch (error) {
-          console.error(
-            t('commands.commandErrors.genericError'),
-            (error as Error).message,
-          );
-        }
+        }, 'move-card-legacy');
       });
 
     this.program
@@ -491,15 +446,10 @@ export class CommandController {
       .description(t('commands.deprecated.deleteCardLegacyDescription'))
       .action(async (cardId: string) => {
         console.warn(t('commands.deprecated.deleteCardLegacyWarning'));
-        try {
+        await ErrorHandler.withErrorHandling(async () => {
           await this.initializeTrelloControllers();
           await this.cardController.deleteCard(cardId);
-        } catch (error) {
-          console.error(
-            t('commands.commandErrors.genericError'),
-            (error as Error).message,
-          );
-        }
+        }, 'delete-card-legacy');
       });
   }
 

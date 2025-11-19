@@ -674,7 +674,35 @@ Este plano de ação transforma a Issue #9 em um roadmap executável com:
 
 ---
 
+## ✅ Progresso dos Cards Implementados
+
+### Card 1.9: Display mais limpo para detalhes de board/card (Concluído ✅)
+- **Implementado:** Exibição compacta de membros e labels no comando `boards show`
+- **Implementado:** Display mais limpo para detalhes de cards no comando `cards show`
+- **Status:** ✅ Concluído - 25 de novembro de 2025
+- **Testes:** 195/195 passando
+
+### Card 1.10: Atualizações na documentação (Concluído ✅)
+- **Implementado:** Guia de migração completo (`docs/migration-guide.md`)
+- **Implementado:** Guia de troubleshooting (`docs/troubleshooting.md`)
+- **Implementado:** Exemplos práticos de uso (`docs/examples/README.md`)
+- **Implementado:** Atualização do README.md com novos comandos e exemplos
+- **Implementado:** Atualização do CONTRIBUTING.md com diretrizes de merge e padrões de teste
+- **Status:** ✅ Concluído - 25 de novembro de 2025
+- **Testes:** 195/195 passando
+
+### Card 1.5: Atualizar Documentação (Concluído ✅)
+- **Implementado:** Badge de testes atualizado (57 → 195)
+- **Implementado:** Seção detalhada da estrutura de comandos subcommand
+- **Implementado:** Seção de arquitetura e extensibilidade
+- **Implementado:** Status do projeto atualizado com métricas corretas
+- **Implementado:** Documentação da API interna (DDD, extensibilidade)
+- **Status:** ✅ Concluído - 25 de novembro de 2025
+- **Testes:** 195/195 passando
+
+---
+
 **Documento criado em:** 10 de novembro de 2025  
-**Última atualização:** 10 de novembro de 2025  
+**Última atualização:** 25 de novembro de 2025  
 **Autor:** AI Agent (baseado em feedback da Issue #9)  
 **Revisão:** @JaegerCaiser
