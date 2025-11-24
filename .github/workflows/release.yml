@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      id-token: write # OBRIGATÓRIO
+      id-token: write # OBRIGATÓRIO PARA OIDC
       packages: write
       issues: write
       pull-requests: write
@@ -38,39 +38,39 @@ jobs:
       - name: Build package
         run: bun run build
 
+      # FASE DE AUTENTICAÇÃO OIDC
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: 'https://registry.npmjs.org' # Gera NODE_AUTH_TOKEN
 
-      # A CORREÇÃO ESTÁ AQUI: REMOVEMOS AS BARRAS INVERTIDAS (\)
-      # O shell vai substituir ${NODE_AUTH_TOKEN} pelo hash gigante do token
-      # ANTES de salvar no arquivo. O arquivo terá o token "hardcoded".
-      - name: Force .npmrc Config
+      # CRIAÇÃO DO .NPMRC (Sem barras invertidas, com token real expandido)
+      - name: Create .npmrc config
         run: |
-          echo "Injetando token REAL nos arquivos de configuração..."
-
-          # Configura User Config (Prioritário)
-          if [ -n "$NPM_CONFIG_USERCONFIG" ]; then
-            echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > "$NPM_CONFIG_USERCONFIG"
-            echo "registry=https://registry.npmjs.org/" >> "$NPM_CONFIG_USERCONFIG"
-          fi
-
-          # Configura Local Config (Redundância)
+          echo "Criando .npmrc com token OIDC autenticado..."
+          # Escreve o token expandido (o valor real) no arquivo
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
           echo "registry=https://registry.npmjs.org/" >> .npmrc
+
+          # Garante que o User Config também aponte para o certo
+          if [ -n "$NPM_CONFIG_USERCONFIG" ]; then
+             cp .npmrc "$NPM_CONFIG_USERCONFIG"
+          fi
+
+          # Debug para garantir que o arquivo foi criado (O token será mascarado ***)
+          cat .npmrc
 
       - name: Semantic Release
         uses: cycjimmy/semantic-release-action@v4
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
-          # NÃO passamos NPM_TOKEN para evitar dupla validação,
-          # mas garantimos que a variável exista caso o npm precise
-          NODE_AUTH_TOKEN: ${{ env.NODE_AUTH_TOKEN }}
+          # Mapeamos o token OIDC (que sabemos que funciona) para a variável que o plugin exige
+          NPM_TOKEN: ${{ env.NODE_AUTH_TOKEN }}
           npm_config_ignore_scripts: 'true'
         with:
           semantic_version: 23
+          # CORREÇÃO DA SINTAXE: Apenas strings aqui. A config vai no package.json
           extra_plugins: |
             @semantic-release/changelog
             @semantic-release/git
