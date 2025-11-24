@@ -58,6 +58,7 @@ jobs:
         uses: cycjimmy/semantic-release-action@v4
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+          NPM_TOKEN: ${{ env.NODE_AUTH_TOKEN }}
         with:
           semantic_version: 23
           extra_plugins: |
