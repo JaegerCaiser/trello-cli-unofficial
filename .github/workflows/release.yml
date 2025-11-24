@@ -10,12 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      id-token: write # OBRIGATÓRIO para gerar o token OIDC
+      id-token: write # OBRIGATÓRIO
       packages: write
       issues: write
       pull-requests: write
 
-    # Evita loop infinito se o commit for do próprio bot
     if: contains(github.event.head_commit.message, 'chore(release)') == false
 
     steps:
@@ -25,7 +24,6 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.PAT_TOKEN }}
 
-      # --- FASE 1: PREPARAÇÃO COM BUN ---
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
         with:
@@ -40,38 +38,37 @@ jobs:
       - name: Build package
         run: bun run build
 
-      # --- FASE 2: PUBLICAÇÃO COM NODE ---
-
-      # Setup Node configurado para OIDC
+      # Gera o token OIDC na variável NODE_AUTH_TOKEN
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          registry-url: 'https://registry.npmjs.org' # Isso gera a var NODE_AUTH_TOKEN
+          registry-url: 'https://registry.npmjs.org'
 
-      # A CORREÇÃO DEFINITIVA:
-      # Escreve a configuração de auth no arquivo exato que o sistema está priorizando
+      # Cria o arquivo de configuração apontando para a variável NODE_AUTH_TOKEN
       - name: Force .npmrc Config
         run: |
-          echo "Configurando autenticação no arquivo: $NPM_CONFIG_USERCONFIG"
-          echo "//registry.npmjs.org/:_authToken=\${NODE_AUTH_TOKEN}" > "$NPM_CONFIG_USERCONFIG"
-          echo "registry=https://registry.npmjs.org/" >> "$NPM_CONFIG_USERCONFIG"
-
-          # Por garantia, cria na raiz também
           echo "//registry.npmjs.org/:_authToken=\${NODE_AUTH_TOKEN}" > .npmrc
           echo "registry=https://registry.npmjs.org/" >> .npmrc
+
+          # Garante que o arquivo userconfig também tenha a config
+          if [ -n "$NPM_CONFIG_USERCONFIG" ]; then
+            echo "//registry.npmjs.org/:_authToken=\${NODE_AUTH_TOKEN}" > "$NPM_CONFIG_USERCONFIG"
+            echo "registry=https://registry.npmjs.org/" >> "$NPM_CONFIG_USERCONFIG"
+          fi
 
       - name: Semantic Release
         uses: cycjimmy/semantic-release-action@v4
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
-          # Mapeia o token OIDC gerado pelo setup-node para o NPM_TOKEN
-          NPM_TOKEN: ${{ env.NODE_AUTH_TOKEN }}
-          # IMPORTANTE: Impede que o npm tente rodar scripts do Bun na publicação
+          # 🚨 TRUQUE: NÃO definimos NPM_TOKEN aqui.
+          # Isso impede o plugin de tentar validar auth antes da hora.
+          # O npm publish vai ler o NODE_AUTH_TOKEN direto do .npmrc que criamos.
+          NODE_AUTH_TOKEN: ${{ env.NODE_AUTH_TOKEN }}
           npm_config_ignore_scripts: 'true'
         with:
           semantic_version: 23
           extra_plugins: |
             @semantic-release/changelog
             @semantic-release/git
-            @semantic-release/npm
+            [ "@semantic-release/npm", { "provenance": true } ]
