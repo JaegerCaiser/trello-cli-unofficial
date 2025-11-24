@@ -71,4 +71,4 @@ jobs:
           extra_plugins: |
             @semantic-release/changelog
             @semantic-release/git
-            [ "@semantic-release/npm", { "provenance": true } ]
+            @semantic-release/npm
