@@ -64,4 +64,4 @@ jobs:
             @semantic-release/git@10.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
-          NPM_TOKEN: "" # Ensure NPM_TOKEN is empty to skip verification (using OIDC)
+          NPM_TOKEN: '' # Ensure NPM_TOKEN is empty to skip verification (using OIDC)
