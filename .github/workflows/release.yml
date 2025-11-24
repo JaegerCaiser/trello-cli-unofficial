@@ -38,32 +38,35 @@ jobs:
       - name: Build package
         run: bun run build
 
-      # Gera o token OIDC na variável NODE_AUTH_TOKEN
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
 
-      # Cria o arquivo de configuração apontando para a variável NODE_AUTH_TOKEN
+      # A CORREÇÃO ESTÁ AQUI: REMOVEMOS AS BARRAS INVERTIDAS (\)
+      # O shell vai substituir ${NODE_AUTH_TOKEN} pelo hash gigante do token
+      # ANTES de salvar no arquivo. O arquivo terá o token "hardcoded".
       - name: Force .npmrc Config
         run: |
-          echo "//registry.npmjs.org/:_authToken=\${NODE_AUTH_TOKEN}" > .npmrc
-          echo "registry=https://registry.npmjs.org/" >> .npmrc
+          echo "Injetando token REAL nos arquivos de configuração..."
 
-          # Garante que o arquivo userconfig também tenha a config
+          # Configura User Config (Prioritário)
           if [ -n "$NPM_CONFIG_USERCONFIG" ]; then
-            echo "//registry.npmjs.org/:_authToken=\${NODE_AUTH_TOKEN}" > "$NPM_CONFIG_USERCONFIG"
+            echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > "$NPM_CONFIG_USERCONFIG"
             echo "registry=https://registry.npmjs.org/" >> "$NPM_CONFIG_USERCONFIG"
           fi
+
+          # Configura Local Config (Redundância)
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
+          echo "registry=https://registry.npmjs.org/" >> .npmrc
 
       - name: Semantic Release
         uses: cycjimmy/semantic-release-action@v4
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
-          # 🚨 TRUQUE: NÃO definimos NPM_TOKEN aqui.
-          # Isso impede o plugin de tentar validar auth antes da hora.
-          # O npm publish vai ler o NODE_AUTH_TOKEN direto do .npmrc que criamos.
+          # NÃO passamos NPM_TOKEN para evitar dupla validação,
+          # mas garantimos que a variável exista caso o npm precise
           NODE_AUTH_TOKEN: ${{ env.NODE_AUTH_TOKEN }}
           npm_config_ignore_scripts: 'true'
         with:
