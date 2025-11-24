@@ -29,21 +29,11 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.PAT_TOKEN }}
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          registry-url: 'https://registry.npmjs.org'
-
+      # 1. PREPARAÇÃO (BUN)
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
-
-      - name: Setup Git
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
@@ -54,11 +44,26 @@ jobs:
       - name: Build package
         run: bun run build
 
+      # 2. MOMENTO DO RELEASE (NODE + AUTH)
+      # Movemos o setup-node para cá para garantir que o .npmrc esteja "fresco"
+      # e não tenha sido tocado pelo Bun.
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: 'https://registry.npmjs.org'
+
+      # Passo de DEBUG (Opcional, mas recomendado se falhar de novo)
+      - name: Verify NPM Auth
+        run: npm whoami
+        env:
+          NODE_AUTH_TOKEN: ${{ env.NODE_AUTH_TOKEN }}
+
       - name: Semantic Release
         uses: cycjimmy/semantic-release-action@v4
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
-          NPM_TOKEN: ${{ env.NODE_AUTH_TOKEN }}
+          NPM_TOKEN: ${{ env.NODE_AUTH_TOKEN }} # Mantemos esse mapeamento explícito
         with:
           semantic_version: 23
           extra_plugins: |
