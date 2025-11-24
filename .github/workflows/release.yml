@@ -45,25 +45,31 @@ jobs:
         run: bun run build
 
       # 2. MOMENTO DO RELEASE (NODE + AUTH)
-      # Movemos o setup-node para cá para garantir que o .npmrc esteja "fresco"
-      # e não tenha sido tocado pelo Bun.
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: 'https://registry.npmjs.org' # <--- OBRIGATÓRIO PARA GERAR O TOKEN
 
-      # Passo de DEBUG (Opcional, mas recomendado se falhar de novo)
+      # 3. CRIAÇÃO MANUAL DO .NPMRC (FORÇA BRUTA)
+      # Escrevemos a config para garantir que ele use a variável de ambiente correta
+      - name: Create .npmrc
+        run: |
+          echo "//registry.npmjs.org/:_authToken=\${NODE_AUTH_TOKEN}" > .npmrc
+
+      # 4. DEBUG (Opcional)
       - name: Verify NPM Auth
         run: npm whoami
         env:
-          NODE_AUTH_TOKEN: ${{ env.NODE_AUTH_TOKEN }}
+          # Garantimos que o NPM ignore scripts aqui também para não tentar rodar o Bun
+          npm_config_ignore_scripts: "true"
 
       - name: Semantic Release
         uses: cycjimmy/semantic-release-action@v4
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
-          NPM_TOKEN: ${{ env.NODE_AUTH_TOKEN }} # Mantemos esse mapeamento explícito
+          NPM_TOKEN: ${{ env.NODE_AUTH_TOKEN }}
+          npm_config_ignore_scripts: "true" # <--- IMPEDE QUE O PREPUBLISHONLY RODE O BUN
         with:
           semantic_version: 23
           extra_plugins: |
