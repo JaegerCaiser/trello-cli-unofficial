@@ -1,0 +1,75 @@
+name: Debug NPM Connection
+
+on: [push, workflow_dispatch]
+
+permissions:
+  id-token: write # Obrigatório para gerar o token
+  contents: read
+
+jobs:
+  investigate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Vamos usar o setup-node padrão para ver o que ele cria
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: 🔍 CSI - Investigação Profunda
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const exec = require('child_process').execSync;
+
+            // 1. Pegar o Token OIDC diretamente do GitHub para comparar
+            console.log('--- 1. Gerando Token OIDC Fresco ---');
+            const token = await core.getIDToken('https://registry.npmjs.org');
+            console.log(`Token gerado (primeiros 10 chars): ${token.substring(0, 10)}...`);
+
+            // 2. Ler o arquivo .npmrc gerado pelo setup-node
+            console.log('\n--- 2. Conteúdo do .npmrc ---');
+            try {
+              // O setup-node geralmente cria o .npmrc na home ou no workspace
+              // Vamos procurar nos dois lugares
+              const localNpmrc = path.resolve(process.env.GITHUB_WORKSPACE, '.npmrc');
+              const homeNpmrc = path.resolve(process.env.HOME, '.npmrc');
+
+              if (fs.existsSync(localNpmrc)) {
+                 console.log(`[LOCAL] .npmrc encontrado em: ${localNpmrc}`);
+                 console.log(fs.readFileSync(localNpmrc, 'utf8'));
+              } else if (fs.existsSync(homeNpmrc)) {
+                 console.log(`[HOME] .npmrc encontrado em: ${homeNpmrc}`);
+                 console.log(fs.readFileSync(homeNpmrc, 'utf8'));
+              } else {
+                 console.log('❌ NENHUM .npmrc ENCONTRADO!');
+              }
+            } catch (e) {
+              console.log('Erro ao ler .npmrc:', e);
+            }
+
+            // 3. Teste de Conexão via CURL (Sem usar npm CLI)
+            console.log('\n--- 3. Teste Direto via CURL (Bypass NPM CLI) ---');
+            // Vamos tentar bater no endpoint 'whoami' usando o token OIDC como Bearer
+            try {
+              // Monta o comando curl. Nota: O endpoint correto para token bearer é registry.npmjs.org/-/whoami
+              // O token precisa ser passado no header Authorization
+              const cmd = `curl -v -H "Authorization: Bearer ${token}" https://registry.npmjs.org/-/whoami`;
+
+              console.log('Executando curl...');
+              const output = exec(cmd, { encoding: 'utf8', stdio: 'pipe' });
+              console.log('✅ SUCESSO! Resposta do NPM:');
+              console.log(output);
+            } catch (error) {
+              console.log('❌ FALHA NO CURL (401 confirmado aqui?):');
+              // O curl joga o erro no stdout/stderr se falhar
+              console.log(error.message);
+              console.log(error.stdout ? error.stdout.toString() : '');
+              console.log(error.stderr ? error.stderr.toString() : '');
+            }
