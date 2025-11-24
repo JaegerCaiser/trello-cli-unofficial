@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      id-token: write
+      id-token: write # OBRIGATÓRIO PARA OIDC
       packages: write
       issues: write
       pull-requests: write
@@ -24,6 +24,7 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.PAT_TOKEN }}
 
+      # --- 1. PREPARAÇÃO (BUN) ---
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
         with:
@@ -38,17 +39,33 @@ jobs:
       - name: Build package
         run: bun run build
 
-      # Setup Node para OIDC
+      # --- 2. LIMPEZA (Crucial para não dar conflito) ---
+      - name: Cleanup Bun artifacts
+        run: rm -rf node_modules bun.lockb package-lock.json
+
+      # --- 3. AMBIENTE NODE (OIDC) ---
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
 
-      # Cria o .npmrc forçado (Isso aqui é o que garante o OIDC no final)
-      - name: Force .npmrc Config
+      # --- 4. INSTALAÇÃO MANUAL DAS FERRAMENTAS ---
+      # Instalamos aqui para ver o log se falhar. Sem segredos, sem action escondendo erro.
+      - name: Install Semantic Release & Plugins
         run: |
-          echo "Injetando token OIDC..."
+          npm install --no-save \
+            semantic-release \
+            @semantic-release/changelog \
+            @semantic-release/git \
+            @semantic-release/exec \
+            @semantic-release/npm
+
+      # --- 5. CONFIGURAÇÃO DE AUTH (OIDC) ---
+      - name: Configure NPM Auth
+        run: |
+          echo "Configurando token OIDC..."
+          # Configura tanto no local quanto na variável de ambiente global do NPM
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
           echo "registry=https://registry.npmjs.org/" >> .npmrc
 
@@ -56,13 +73,11 @@ jobs:
             cp .npmrc "$NPM_CONFIG_USERCONFIG"
           fi
 
-      - name: Semantic Release
-        uses: cycjimmy/semantic-release-action@v4
+      # --- 6. EXECUÇÃO (SEMANTIC RELEASE) ---
+      - name: Run Semantic Release
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
-          NPM_TOKEN: ${{ env.NODE_AUTH_TOKEN }}
-          # Removi o ignore_scripts para garantir que a instalação dos plugins não quebre
-        with:
-          semantic_version: 23
-          # Correção: Plugins em uma única linha para evitar erros de parser
-          extra_plugins: '@semantic-release/changelog @semantic-release/git @semantic-release/exec @semantic-release/npm'
+          NPM_TOKEN: ${{ env.NODE_AUTH_TOKEN }} # Passa o token OIDC
+          # Ignoramos scripts apenas na execução final para segurança
+          npm_config_ignore_scripts: 'true'
+        run: npx semantic-release
