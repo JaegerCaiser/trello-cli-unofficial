@@ -1,3 +1,40 @@
+## [0.13.1](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.13.0...v0.13.1) (2025-11-24)
+
+
+### Bug Fixes
+
+* attempt 10 to publish with OIDC ([c24ef45](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/c24ef45562e729848a18f570d9a6ca4d238553e0))
+* attempt 10 to publish with OIDC ([ca4dc2a](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/ca4dc2a26c93d5c57fb845e4ac94fc0c00e77926))
+* attempt 5 to publish with OIDC ([8dcf722](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/8dcf72288cc27fb33ffd19c7583d48bf3a16f5c0))
+* attempt 6 to publish with OIDC ([05e37f2](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/05e37f2b460252019a3a761476e23deb07e1671a))
+* attempt 7 to publish with OIDC ([1d74aac](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/1d74aac30902ef81f2ac7122e44a3aca7faf5d7a))
+* attempt 8 to publish with OIDC ([3e88f2c](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/3e88f2c89d9f8a4f599d0e97489dbc299c7a08d8))
+* attempt 8 to publish with OIDC ([6939975](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/69399754cdec285383fb3082bc3bfb4467c47c74))
+* attempt 9 to publish with OIDC ([cf6191e](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/cf6191ee93e77f2da388bd6cca67e4445a3b0ba7))
+* connection debug ([607a07a](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/607a07a13b5d445f5e2e4767c0b7a46df56d3c68))
+* connection debug 2 ([2da5c89](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/2da5c89804c16a14477a31c156c921571ca56966))
+* debug oidc ([7cca10d](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/7cca10d39b2a351d6c1a7bc018f563f1e50cbf33))
+* debug oidc 2 ([29ac283](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/29ac283da5556f0276294255861b25d055493570))
+* empty commit ([b968807](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/b968807120c2a87f4f5459d7b4a22ebba89b3145))
+* now its going works ([d3faea3](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/d3faea36197422ae90de9ee6a77d136760497740))
+* now its going works 10 ([841949c](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/841949cd92c13b0c532f8eef64c5893ef5db8cb9))
+* now its going works 11 ([af43ff8](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/af43ff841c778777394ff3a02e34bc4e27d35557))
+* now its going works 12 ([d681336](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/d681336f3a76c38c4d7ca20de2ca479a939c5b6a))
+* now its going works 13 ([b70a7d8](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/b70a7d8e49784a04b9146fa96fbd778bc48fbd4c))
+* now its going works 2 ([ffc1f78](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/ffc1f78b4ef74f83260f77e69d1dd730cedb3077))
+* now its going works 3 ([567105b](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/567105b8cb0106ec43aaadbd614d063f0e360e1d))
+* now its going works 4 ([fb6a98f](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/fb6a98f9df60779d3c33bd5ac2c3c09f664b06fe))
+* now its going works 5 ([e7c444a](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/e7c444a7f46bdef8abc858fd27ca2ba06da58aa0))
+* now its going works 6 ([4db4220](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/4db422042b0fde77fde998113fee8776dbc192d0))
+* now its going works 7 ([2a6522f](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/2a6522f63ba5fc57eff08228e8402dbf1ec6e43c))
+* now its going works 8 ([99451bc](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/99451bcbfb003f005455109958fbc1b30a9a2a96))
+* now its going works 9 ([408e4da](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/408e4da53bb3799d8e9789b13127b46ad397e2f2))
+* release workflow must work it with publisher token ([6a4e894](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/6a4e894529148fa9dd015252359cd599f1d33078))
+* removing debug ([9a1a2d0](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/9a1a2d0e496847a97a9cae68af88aafbff3c3bff))
+* removing NPM_TOKEN expecting that use the publisher token ([0933afa](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/0933afa873fdabbf0d85a1d394a307e1726c0010))
+* set empty token to skip ([f161747](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/f161747b78bd0046040ebedb0f6a05ad6fff8f9d))
+* set empty token to skip ([66189a0](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/66189a04ec4d6e0ea29ace6a62f5b46d7d8e6f63))
+
 # [0.13.0](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.12.1...v0.13.0) (2025-11-19)
 
 
