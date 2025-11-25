@@ -21,10 +21,7 @@
     [
       "@semantic-release/npm",
       {
-        "provenance": true,
-        "npmPublishOptions": {
-          "ignore-scripts": true
-        }
+        "provenance": true
       }
     ],
     "@semantic-release/github"
