@@ -53,8 +53,8 @@ jobs:
           extra_plugins: |
             @semantic-release/exec
         env:
-          # Desabilita o husky para evitar falhas de hook no commit do release
-          HUSKY: 0
+          # Impede que o npm execute scripts como 'prepare', resolvendo o conflito com husky/bun
+          npm_config_ignore_scripts: true
           # O token é pego automaticamente do .npmrc criado pelo setup-node
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
           # IMPORTANTE: NÃO defina NPM_TOKEN aqui.
