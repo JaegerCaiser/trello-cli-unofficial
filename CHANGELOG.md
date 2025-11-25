@@ -1,3 +1,10 @@
+## [0.13.4](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.13.3...v0.13.4) (2025-11-25)
+
+
+### Bug Fixes
+
+* now its going works 17 ([fc1417c](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/fc1417ce502a390a6a00860536a339764f4c0da6))
+
 ## [0.13.3](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.13.2...v0.13.3) (2025-11-25)
 
 
