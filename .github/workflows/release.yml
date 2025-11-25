@@ -48,7 +48,7 @@ jobs:
 
       # --- 4. EXECUÇÃO COM A ACTION ---
       - name: Semantic Release Action
-        uses: cycjimmy/semantic-release-action@v6
+        uses: JaegerCaiser/semantic-release-action@main
         with:
           extra_plugins: |
             @semantic-release/exec
