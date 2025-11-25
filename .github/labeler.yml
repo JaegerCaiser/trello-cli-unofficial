@@ -1,36 +1,36 @@
-'feature':
+feature:
   - head-branch:
-    - 'feature/*'
-'enhancement':
+      - 'feature/*'
+enhancement:
   - head-branch:
-    - 'feature/*'
-'bug':
+      - 'feature/*'
+bug:
   - head-branch:
-    - 'fix/*'
-'fix':
+      - 'fix/*'
+fix:
   - head-branch:
-    - 'fix/*'
-'hotfix':
+      - 'fix/*'
+hotfix:
   - head-branch:
-    - 'hotfix/*'
-'urgent':
+      - 'hotfix/*'
+urgent:
   - head-branch:
-    - 'hotfix/*'
+      - 'hotfix/*'
 'priority:high':
   - head-branch:
-    - 'hotfix/*'
-'release':
+      - 'hotfix/*'
+release:
   - head-branch:
-    - 'release/*'
-'documentation':
+      - 'release/*'
+documentation:
   - head-branch:
-    - 'docs/*'
-'maintenance':
+      - 'docs/*'
+maintenance:
   - head-branch:
-    - 'chore/*'
-'dependencies':
+      - 'chore/*'
+dependencies:
   - head-branch:
-    - 'chore/*'
-'testing':
+      - 'chore/*'
+testing:
   - head-branch:
-    - 'test/*'
+      - 'test/*'
