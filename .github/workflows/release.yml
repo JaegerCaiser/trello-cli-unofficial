@@ -54,3 +54,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
           # IMPORTANTE: NÃO defina NPM_TOKEN aqui.
           # A action irá ler o .npmrc gerado pelo passo anterior.
+          npm_config_ignore_scripts: 'true'
