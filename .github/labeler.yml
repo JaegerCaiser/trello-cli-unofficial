@@ -1,25 +1,35 @@
-feature/*:
-  - feature
-  - enhancement
+feature:
+  - 'feature/*'
 
-fix/*:
-  - bug
-  - fix
+enhancement:
+  - 'feature/*'
 
-hotfix/*:
-  - hotfix
-  - urgent
-  - priority:high
+bug:
+  - 'fix/*'
 
-release/*:
-  - release
+fix:
+  - 'fix/*'
 
-docs/*:
-  - documentation
+hotfix:
+  - 'hotfix/*'
 
-chore/*:
-  - maintenance
-  - dependencies
+urgent:
+  - 'hotfix/*'
 
-test/*:
-  - testing
+'priority:high':
+  - 'hotfix/*'
+
+release:
+  - 'release/*'
+
+documentation:
+  - 'docs/*'
+
+maintenance:
+  - 'chore/*'
+
+dependencies:
+  - 'chore/*'
+
+testing:
+  - 'test/*'
