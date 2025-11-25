@@ -1,7 +1,7 @@
 {
   "name": "trello-cli-unofficial",
   "type": "module",
-  "version": "0.13.8",
+  "version": "0.13.9",
   "private": false,
   "description": "Unofficial Trello CLI using Power-Up authentication, built with Bun for maximum performance",
   "author": "Matheus Caiser <matheus.kaiser@gmail.com> (https://www.mrdeveloper.com.br/)",
@@ -78,8 +78,7 @@
     "validate": "bun run lint && bun run typecheck && bun run test:coverage:threshold",
     "version:patch": "bun version patch && git push --follow-tags",
     "version:minor": "bun version minor && git push --follow-tags",
-    "version:major": "bun version major && git push --follow-tags",
-    "prepare": "husky"
+    "version:major": "bun version major && git push --follow-tags"
   },
   "peerDependencies": {
     "typescript": "^5"

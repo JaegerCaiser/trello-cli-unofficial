@@ -1,3 +1,12 @@
+## [0.13.9](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.13.8...v0.13.9) (2025-11-25)
+
+
+### Bug Fixes
+
+* **ci:** apply correct labeler syntax from documentation ([7fec72b](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/7fec72b3303ba6b81ad94fa60c9fb6de8952fdd6))
+* **ci:** correct labeler syntax ([09f3a20](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/09f3a209bcc2eaa9db53813103777b3441e69c8b))
+* **ci:** update labeler syntax for v6 ([caba985](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/caba985daf29ff75550417759b371488ddf2ae10))
+
 ## [0.13.8](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.13.7...v0.13.8) (2025-11-25)
 
 
