@@ -1,3 +1,15 @@
+## [0.13.10](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.13.9...v0.13.10) (2025-11-25)
+
+
+### Bug Fixes
+
+* I'm surrender ([91fa3cc](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/91fa3cc3a31bdd17b20f4046d63290e487ffe804))
+
+
+### Reverts
+
+* Revert "fix: now its going works 13" ([69eeaed](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/69eeaed6e4e09c28ad694c5451496b58fd0c3ed6))
+
 ## [0.13.9](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.13.8...v0.13.9) (2025-11-25)
 
 
