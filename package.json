@@ -79,7 +79,7 @@
     "version:patch": "bun version patch && git push --follow-tags",
     "version:minor": "bun version minor && git push --follow-tags",
     "version:major": "bun version major && git push --follow-tags",
-    "prepare": "test -z \"$CI\" && husky"
+    "prepare": "if [ -z \"$CI\" ]; then husky; fi"
   },
   "peerDependencies": {
     "typescript": "^5"
