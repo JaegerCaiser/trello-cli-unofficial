@@ -39,6 +39,6 @@ jobs:
             doesn't start with an uppercase character.
 
       - name: Label PR
-        uses: actions/labeler@v4
+        uses: actions/labeler@v6
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}

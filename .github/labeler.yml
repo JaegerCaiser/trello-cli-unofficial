@@ -1,25 +1,36 @@
-feature/*:
-  - feature
-  - enhancement
-
-fix/*:
-  - bug
-  - fix
-
-hotfix/*:
-  - hotfix
-  - urgent
-  - priority:high
-
-release/*:
-  - release
-
-docs/*:
-  - documentation
-
-chore/*:
-  - maintenance
-  - dependencies
-
-test/*:
-  - testing
+feature:
+  - head-branch:
+      - 'feature/*'
+enhancement:
+  - head-branch:
+      - 'feature/*'
+bug:
+  - head-branch:
+      - 'fix/*'
+fix:
+  - head-branch:
+      - 'fix/*'
+hotfix:
+  - head-branch:
+      - 'hotfix/*'
+urgent:
+  - head-branch:
+      - 'hotfix/*'
+'priority:high':
+  - head-branch:
+      - 'hotfix/*'
+release:
+  - head-branch:
+      - 'release/*'
+documentation:
+  - head-branch:
+      - 'docs/*'
+maintenance:
+  - head-branch:
+      - 'chore/*'
+dependencies:
+  - head-branch:
+      - 'chore/*'
+testing:
+  - head-branch:
+      - 'test/*'
