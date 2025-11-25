@@ -35,15 +35,18 @@ jobs:
           bun run validate
           bun run build
 
-      # --- 2. SETUP NODE E AUTENTICAÇÃO OIDC ---
-      # Este é o passo que falta no seu workflow com a action
+      # --- 2. LIMPEZA (Crucial para não dar conflito) ---
+      - name: Cleanup Bun artifacts
+        run: rm -rf node_modules bun.lockb
+
+      # --- 3. SETUP NODE E AUTENTICAÇÃO OIDC ---
       - name: Setup Node.js for OIDC Auth
         uses: actions/setup-node@v4
         with:
           node-version: 22 # Ou a versão que a action usa (24)
           registry-url: 'https://registry.npmjs.org'
 
-      # --- 3. EXECUÇÃO COM A ACTION ---
+      # --- 4. EXECUÇÃO COM A ACTION ---
       - name: Semantic Release Action
         uses: cycjimmy/semantic-release-action@v6
         with:
@@ -54,4 +57,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
           # IMPORTANTE: NÃO defina NPM_TOKEN aqui.
           # A action irá ler o .npmrc gerado pelo passo anterior.
-          npm_config_ignore_scripts: 'true'
