@@ -93,7 +93,7 @@
     "inquirer": "^13.0.1"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^6.2.0",
+    "@antfu/eslint-config": "^7.4.3",
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
     "@types/bun": "latest",
