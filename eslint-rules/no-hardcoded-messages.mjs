@@ -1,3 +1,5 @@
+const CONSTANTS_REGEX = /^[A-Z_]+$/;
+
 export default {
   create(context) {
     return {
@@ -17,7 +19,7 @@ export default {
           ) {
             const value = args[0].value.trim();
 
-            if (value.length === 0 || /^[A-Z_]+$/.test(value)) {
+            if (value.length === 0 || CONSTANTS_REGEX.test(value)) {
               return;
             }
 
