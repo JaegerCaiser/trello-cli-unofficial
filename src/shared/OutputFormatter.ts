@@ -1,5 +1,7 @@
 import { t } from '@/i18n';
 
+const CSV_QUOTE_REGEX = /"/g;
+
 export type OutputFormat = 'table' | 'json' | 'csv';
 
 export interface OutputFormatterOptions {
@@ -84,7 +86,7 @@ export class OutputFormatter {
           || stringValue.includes('"')
           || stringValue.includes('\n')
         ) {
-          return `"${stringValue.replace(/"/g, '""')}"`;
+          return `"${stringValue.replace(CSV_QUOTE_REGEX, '""')}"`;
         }
         return stringValue;
       });
