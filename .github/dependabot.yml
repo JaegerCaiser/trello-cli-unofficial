@@ -31,6 +31,36 @@ updates:
           - minor
           - patch
 
+  # Enable version updates for bun.lock
+  - package-ecosystem: bun
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    reviewers:
+      - JaegerCaiser
+    assignees:
+      - JaegerCaiser
+    labels:
+      - dependencies
+      - automated
+    commit-message:
+      prefix: chore
+      prefix-development: chore
+      include: scope
+    groups:
+      development-dependencies:
+        dependency-type: development
+        update-types:
+          - minor
+          - patch
+      production-dependencies:
+        dependency-type: production
+        update-types:
+          - minor
+          - patch
+
   # Enable version updates for GitHub Actions
   - package-ecosystem: github-actions
     directory: /
