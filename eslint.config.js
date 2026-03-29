@@ -1,5 +1,18 @@
 import antfu from '@antfu/eslint-config';
 
+const CONSTANTS_REGEX = /^[A-Z_]+$/;
+const API_FIELD_REGEX = /^[a-z]+\.[a-z]+$/i;
+const NUMBERS_REGEX = /^\d+$/;
+const URLS_REGEX = /^https?:\/\//;
+const API_KEYS_REGEX = /^[a-f0-9]{32}$/i;
+const CLI_NAMES_REGEX = /^[a-z-]+$/i;
+const VERSION_REGEX = /^\d+\.\d+\.\d+$/;
+const COMMAND_IDS_REGEX = /^[a-z ]+$/i;
+const TRANSLATION_KEYS_REGEX = /^[a-z][a-zA-Z0-9.]*$/;
+const EMOJI_REGEX = /\p{Emoji}/u;
+const UI_KEYWORDS_REGEX = /\b(?:board|list|card|command|error|success|failed|found|created|updated|deleted)\b/i;
+const PORTUGUESE_CHARS_REGEX = /[a-záéíóúãõâêôç]/i;
+
 export default antfu(
   {
     type: 'lib',
@@ -34,34 +47,34 @@ export default antfu(
                 // Skip empty strings, constants, or technical strings
                 if (
                   trimmedValue.length === 0
-                  || /^[A-Z_]+$/.test(trimmedValue)
-                  || /^[a-z]+\.[a-z]+$/i.test(trimmedValue) // API field names like 'name', 'id'
-                  || /^\d+$/.test(trimmedValue) // Numbers as strings
-                  || /^https?:\/\//.test(trimmedValue) // URLs
+                  || CONSTANTS_REGEX.test(trimmedValue)
+                  || API_FIELD_REGEX.test(trimmedValue) // API field names like 'name', 'id'
+                  || NUMBERS_REGEX.test(trimmedValue) // Numbers as strings
+                  || URLS_REGEX.test(trimmedValue) // URLs
                   || trimmedValue.startsWith('--') // CLI flags
                   || (trimmedValue.includes('<') && trimmedValue.includes('>')) // Command patterns like 'create <name>'
                   || trimmedValue === 'table' // Output format
                   || trimmedValue === 'json' // Output format
                   || trimmedValue === 'csv' // Output format
                   || trimmedValue.length <= 10 // Short technical strings
-                  || /^[a-f0-9]{32}$/i.test(trimmedValue) // API keys like Trello API key
-                  || (/^[a-z-]+$/i.test(trimmedValue) && trimmedValue.includes('-')) // CLI command names like 'trello-cli-unofficial'
-                  || /^\d+\.\d+\.\d+$/.test(trimmedValue) // Version numbers like '1.0.0'
-                  || (/^[a-z ]+$/i.test(trimmedValue) && trimmedValue.split(' ').length === 2) // Command identifiers like 'boards list', 'boards show'
+                  || API_KEYS_REGEX.test(trimmedValue) // API keys like Trello API key
+                  || (CLI_NAMES_REGEX.test(trimmedValue) && trimmedValue.includes('-')) // CLI command names like 'trello-cli-unofficial'
+                  || VERSION_REGEX.test(trimmedValue) // Version numbers like '1.0.0'
+                  || (COMMAND_IDS_REGEX.test(trimmedValue) && trimmedValue.split(' ').length === 2) // Command identifiers like 'boards list', 'boards show'
                   || trimmedValue.includes('cli') // CLI-related technical strings
                 ) {
                   return;
                 }
 
                 // Skip translation keys (lowercase with dots, typical i18n pattern)
-                if (/^[a-z][a-zA-Z0-9.]*$/.test(trimmedValue) && trimmedValue.includes('.')) {
+                if (TRANSLATION_KEYS_REGEX.test(trimmedValue) && trimmedValue.includes('.')) {
                   return;
                 }
 
                 // Check if it's a user-facing message (contains emoji or seems like a user message)
-                const emojiRegex = /\p{Emoji}/u.test(trimmedValue);
-                const uiKeywords = trimmedValue.length > 10 && /\b(?:board|list|card|command|error|success|failed|found|created|updated|deleted)\b/i.test(trimmedValue);
-                const portuguese = trimmedValue.includes(' ') && /[a-záéíóúãõâêôç]/i.test(trimmedValue) && trimmedValue.split(' ').length > 1;
+                const emojiRegex = EMOJI_REGEX.test(trimmedValue);
+                const uiKeywords = trimmedValue.length > 10 && UI_KEYWORDS_REGEX.test(trimmedValue);
+                const portuguese = trimmedValue.includes(' ') && PORTUGUESE_CHARS_REGEX.test(trimmedValue) && trimmedValue.split(' ').length > 1;
                 const isUserMessage = emojiRegex || uiKeywords || portuguese;
 
                 if (isUserMessage) {

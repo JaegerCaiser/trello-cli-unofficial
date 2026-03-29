@@ -55,7 +55,7 @@ describe('MockTrelloRepository', () => {
 
       const updatedCards = await repo.getCards('list2');
       expect(updatedCards).toHaveLength(initialCount + 1);
-      expect(updatedCards[updatedCards.length - 1]?.name).toBe('Card for list2');
+      expect(updatedCards.at(-1)?.name).toBe('Card for list2');
     });
   });
 

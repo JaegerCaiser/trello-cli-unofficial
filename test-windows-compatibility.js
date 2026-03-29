@@ -77,7 +77,7 @@ try {
 
   // Extract just the version from the last line (ignore debug logs)
   const lines = versionOutput.split('\n');
-  const lastLine = lines[lines.length - 1].trim();
+  const lastLine = lines.at(-1).trim();
 
   // Check if version looks valid (should be like "0.11.4")
   const versionRegex = /^\d+\.\d+\.\d+$/;
