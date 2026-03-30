@@ -1,3 +1,10 @@
+## [0.13.11](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.13.10...v0.13.11) (2026-03-30)
+
+
+### Bug Fixes
+
+* **eslint:** atualizar @antfu/eslint-config para eslint10 ([567eb43](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/567eb43fef45e5bdf469090de772cc7b01f07236))
+
 ## [0.13.10](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.13.9...v0.13.10) (2025-11-25)
 
 
