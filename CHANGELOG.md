@@ -1,3 +1,10 @@
+## [0.13.13](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.13.12...v0.13.13) (2026-04-04)
+
+
+### Bug Fixes
+
+* quiet dotenv ([1ab1f66](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/1ab1f66a8a0a2785ba205c69ef602552609658c4))
+
 ## [0.13.12](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.13.11...v0.13.12) (2026-04-04)
 
 
