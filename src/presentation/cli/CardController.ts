@@ -460,15 +460,31 @@ export class CardController {
       this.outputFormatter.message(`${t('card.show.members')} ${displayMembers}`);
     }
 
-    // Show checklists in compact format
+    // Show checklists with detailed view
     if (card.checklists && card.checklists.length > 0) {
-      const checklistSummary = card.checklists.map((cl) => {
+      this.outputFormatter.message('');
+      this.outputFormatter.message(t('card.show.checklists'));
+      for (const cl of card.checklists) {
         const checkItems = Array.isArray(cl.checkItems) ? cl.checkItems : [];
-        const completed = checkItems.filter((item: { state: string }) => item.state === 'complete').length;
+        const done = checkItems.filter((item: { state: string }) => item.state === 'complete').length;
         const total = checkItems.length;
-        return `${cl.name} (${completed}/${total})`;
-      }).join(', ');
-      this.outputFormatter.message(`${t('card.show.checklists')} ${checklistSummary}`);
+        const filledCount = total > 0 ? Math.round((done / total) * 10) : 0;
+        const bar = '█'.repeat(filledCount) + '░'.repeat(10 - filledCount);
+        const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+        const title = t('card.show.checklistTitle', { name: String(cl.name) });
+        const progress = t('card.show.checklistProgress', { done, total });
+        this.outputFormatter.message(`  ${title}${progress}  ${bar}  ${pct}%`);
+        for (const item of checkItems) {
+          const checkItem = item as { name: string; state: string };
+          if (checkItem.state === 'complete') {
+            this.outputFormatter.message(t('card.show.checklistItemDone', { name: checkItem.name }));
+          }
+          else {
+            this.outputFormatter.message(t('card.show.checklistItemPending', { name: checkItem.name }));
+          }
+        }
+        this.outputFormatter.message('');
+      }
     }
 
     // Show attachments count if present

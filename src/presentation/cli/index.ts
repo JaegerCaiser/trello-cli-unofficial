@@ -1,6 +1,7 @@
 export * from './AuthController';
 export * from './BoardController';
 export * from './CardController';
+export * from './ChecklistController';
 export * from './CommandController';
 export * from './ConfigController';
 export * from './MainMenuController';

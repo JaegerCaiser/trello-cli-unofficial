@@ -1,6 +1,6 @@
 import type { CreateCardData, UpdateCardData } from '@domain/entities';
 import type { TrelloRepository } from '@domain/repositories';
-import { BoardEntity, CardEntity, ListEntity } from '@domain/entities';
+import { BoardEntity, CardEntity, ChecklistEntity, ChecklistItemEntity, ListEntity } from '@domain/entities';
 
 export class MockTrelloRepository implements TrelloRepository {
   private boards: BoardEntity[] = [];
@@ -229,6 +229,26 @@ export class MockTrelloRepository implements TrelloRepository {
       }
     }
     throw new Error(`List with id ${listId} not found`);
+  }
+
+  async createChecklist(cardId: string, name: string): Promise<ChecklistEntity> {
+    const checklist = new ChecklistEntity(
+      `checklist-${Date.now()}`,
+      name,
+      cardId,
+      [],
+    );
+    return Promise.resolve(checklist);
+  }
+
+  async addChecklistItem(checklistId: string, name: string): Promise<ChecklistItemEntity> {
+    const item = new ChecklistItemEntity(
+      `item-${Date.now()}`,
+      name,
+      'incomplete',
+      checklistId,
+    );
+    return Promise.resolve(item);
   }
 
   // Helper methods for testing

@@ -1,6 +1,8 @@
 import type {
   BoardEntity,
   CardEntity,
+  ChecklistEntity,
+  ChecklistItemEntity,
   CreateCardData,
   ListEntity,
   UpdateCardData,
@@ -34,4 +36,6 @@ export interface TrelloRepository {
   updateCard: (cardId: string, data: UpdateCardData) => Promise<CardEntity>;
   deleteCard: (cardId: string) => Promise<void>;
   moveCard: (cardId: string, targetListId: string) => Promise<CardEntity>;
+  createChecklist: (cardId: string, name: string) => Promise<ChecklistEntity>;
+  addChecklistItem: (checklistId: string, name: string) => Promise<ChecklistItemEntity>;
 }

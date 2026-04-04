@@ -12,12 +12,13 @@ import { Command } from 'commander';
 
 import { t } from '@/i18n';
 import { ErrorHandler, OutputFormatter } from '@/shared';
-import { AuthController, BoardController, CardController } from './index';
+import { AuthController, BoardController, CardController, ChecklistController } from './index';
 
 export class CommandController {
   private authController: AuthController;
   private boardController!: BoardController;
   private cardController!: CardController;
+  private checklistController!: ChecklistController;
   private program: Command;
   private outputFormatter: OutputFormatter;
 
@@ -93,6 +94,10 @@ export class CommandController {
     this.cardController = new CardController(
       trelloRepository,
       this.boardController,
+      this.outputFormatter,
+    );
+    this.checklistController = new ChecklistController(
+      trelloRepository,
       this.outputFormatter,
     );
   }
@@ -450,6 +455,45 @@ export class CommandController {
           await this.initializeTrelloControllers();
           await this.cardController.deleteCard(cardId);
         }, 'delete-card-legacy');
+      });
+
+    // Checklists subcommands
+    const checklistsCmd = this.program
+      .command('checklists')
+      .description(t('commands.checklists.description'));
+
+    checklistsCmd
+      .command('create <cardId>')
+      .description(t('commands.checklists.create.description'))
+      .requiredOption('-n, --name <name>', t('commands.checklists.create.nameOption'))
+      .option('-f, --format <format>', t('commands.formatOption'), 'table')
+      .action(async (cardId: string, options: { name: string; format?: string }) => {
+        await ErrorHandler.withErrorHandling(async () => {
+          await this.initializeTrelloControllers();
+          if (options.format) {
+            this.outputFormatter.setFormat(options.format as import('@/shared').OutputFormat);
+          }
+          await this.checklistController.createChecklist(cardId, options.name);
+        }, 'checklists create');
+      });
+
+    const checklistItemCmd = checklistsCmd
+      .command('item')
+      .description(t('commands.checklists.item.description'));
+
+    checklistItemCmd
+      .command('add <checklistId>')
+      .description(t('commands.checklists.item.add.description'))
+      .requiredOption('-n, --name <name>', t('commands.checklists.item.add.nameOption'))
+      .option('-f, --format <format>', t('commands.formatOption'), 'table')
+      .action(async (checklistId: string, options: { name: string; format?: string }) => {
+        await ErrorHandler.withErrorHandling(async () => {
+          await this.initializeTrelloControllers();
+          if (options.format) {
+            this.outputFormatter.setFormat(options.format as import('@/shared').OutputFormat);
+          }
+          await this.checklistController.addChecklistItem(checklistId, options.name);
+        }, 'checklists-item-add');
       });
   }
 

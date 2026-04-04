@@ -137,7 +137,23 @@
       "checklists": "✅ Checklists:",
       "attachments": "📎 Anexos:",
       "location": "📍 Board:",
-      "list": "📋 List:"
+      "list": "📋 List:",
+      "checklistTitle": "📋 {{name}}",
+      "checklistProgress": " [{{done}}/{{total}}]",
+      "checklistItemDone": "      ☑  {{name}}",
+      "checklistItemPending": "      ☐  {{name}}"
+    }
+  },
+  "checklist": {
+    "created": "✅ Checklist \"{{name}}\" criado com sucesso!",
+    "checklistId": "🆔 ID: {{id}}",
+    "checklistCard": "📋 ID do Card: {{idCard}}",
+    "itemAdded": "✅ Item \"{{name}}\" adicionado ao checklist com sucesso!",
+    "itemId": "🆔 ID: {{id}}",
+    "itemState": "📌 Estado: {{state}}",
+    "validation": {
+      "requiredName": "Nome do checklist é obrigatório",
+      "requiredItemName": "Nome do item é obrigatório"
     }
   },
   "errors": {
@@ -285,6 +301,20 @@
       },
       "delete": {
         "description": "Deleta um card"
+      }
+    },
+    "checklists": {
+      "description": "Gerencia checklists nos cards do Trello",
+      "create": {
+        "description": "Cria um checklist em um card",
+        "nameOption": "Nome do checklist"
+      },
+      "item": {
+        "description": "Gerencia itens de checklist",
+        "add": {
+          "description": "Adiciona um item a um checklist",
+          "nameOption": "Nome do item"
+        }
       }
     }
   }

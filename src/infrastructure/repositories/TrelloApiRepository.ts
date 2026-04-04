@@ -1,6 +1,6 @@
 import type { CreateCardData, UpdateCardData } from '@domain/entities';
 import type { TrelloRepository } from '@domain/repositories';
-import { BoardEntity, CardEntity, ListEntity } from '@domain/entities';
+import { BoardEntity, CardEntity, ChecklistEntity, ChecklistItemEntity, ListEntity } from '@domain/entities';
 import { t } from '@/i18n';
 
 // API Response types
@@ -40,6 +40,22 @@ interface TrelloLabelResponse {
   id: string;
   name: string;
   color: string;
+  [key: string]: unknown;
+}
+
+interface TrelloChecklistItemResponse {
+  id: string;
+  name: string;
+  state: string;
+  idChecklist: string;
+  [key: string]: unknown;
+}
+
+interface TrelloChecklistResponse {
+  id: string;
+  name: string;
+  idCard: string;
+  checkItems: TrelloChecklistItemResponse[];
   [key: string]: unknown;
 }
 
@@ -277,5 +293,41 @@ export class TrelloApiRepository implements TrelloRepository {
     const endpoint = `/cards/${cardId}?checklists=all&members=true&attachments=true`;
     const data = await this.request(endpoint);
     return CardEntity.fromApiResponse(data as TrelloCardResponse);
+  }
+
+  async createChecklist(cardId: string, name: string): Promise<ChecklistEntity> {
+    const body = new URLSearchParams({
+      name,
+      key: this.apiKey,
+      token: this.token,
+    });
+
+    const data = await this.request(`/cards/${cardId}/checklists`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: body.toString(),
+    });
+
+    return ChecklistEntity.fromApiResponse(data as TrelloChecklistResponse);
+  }
+
+  async addChecklistItem(checklistId: string, name: string): Promise<ChecklistItemEntity> {
+    const body = new URLSearchParams({
+      name,
+      key: this.apiKey,
+      token: this.token,
+    });
+
+    const data = await this.request(`/checklists/${checklistId}/checkItems`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: body.toString(),
+    });
+
+    return ChecklistItemEntity.fromApiResponse(data as TrelloChecklistItemResponse);
   }
 }
