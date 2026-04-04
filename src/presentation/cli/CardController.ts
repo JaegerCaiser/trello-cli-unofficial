@@ -39,7 +39,7 @@ export class CardController {
 
     const { selectedBoard } = await inquirer.prompt([
       {
-        type: 'list',
+        type: 'select',
         name: 'selectedBoard',
         message: t('card.selectBoard'),
         choices: boards.map((board: BoardEntity) => ({
@@ -53,7 +53,7 @@ export class CardController {
 
     const { selectedList } = await inquirer.prompt([
       {
-        type: 'list',
+        type: 'select',
         name: 'selectedList',
         message: t('card.selectList'),
         choices: lists.map((list: ListEntity) => ({
@@ -92,7 +92,7 @@ export class CardController {
   async exploreCards(boardId: string, lists: ListEntity[]): Promise<void> {
     const { selectedList } = await inquirer.prompt([
       {
-        type: 'list',
+        type: 'select',
         name: 'selectedList',
         message: t('card.selectList'),
         choices: lists.map(list => ({ name: list.name, value: list.id })),
@@ -126,7 +126,7 @@ export class CardController {
     // Opções adicionais
     const { nextAction } = await inquirer.prompt([
       {
-        type: 'list',
+        type: 'select',
         name: 'nextAction',
         message: t('card.whatToDo'),
         choices: [
@@ -141,7 +141,7 @@ export class CardController {
     if (nextAction !== CARD_ACTIONS.BACK) {
       const { selectedCard } = await inquirer.prompt([
         {
-          type: 'list',
+          type: 'select',
           name: 'selectedCard',
           message: t('card.selectCard'),
           choices: cards.map((card: CardEntity) => ({
@@ -217,7 +217,7 @@ export class CardController {
   ): Promise<void> {
     const { targetList } = await inquirer.prompt([
       {
-        type: 'list',
+        type: 'select',
         name: 'targetList',
         message: t('card.moveToWhichList'),
         choices: lists.map(list => ({ name: list.name, value: list.id })),

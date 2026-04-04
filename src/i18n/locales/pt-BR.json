@@ -18,7 +18,7 @@
     "authenticated": "✅ Você já está autenticado!"
   },
   "menu": {
-    "title": "� Menu Principal - Trello CLI Unofficial",
+    "title": "🧭 Menu Principal - Trello CLI Unofficial",
     "boards": "📋 Ver meus quadros",
     "explore": "📝 Explorar quadro",
     "create": "➕ Criar cartão",
@@ -27,11 +27,11 @@
     "goodbye": "👋 Até logo!",
     "exploreInDevelopment": "🚧 Explorar quadro - Em desenvolvimento",
     "configTitle": "⚙️ Configurações",
-    "configToken": "� Configurar token",
+    "configToken": "🔑 Configurar token",
     "configView": "👀 Ver configuração atual",
     "configReset": "🔄 Resetar configuração",
     "configBack": "⬅️  Voltar",
-    "currentConfig": "� Configuração atual:",
+    "currentConfig": "🧰 Configuração atual:",
     "tokenConfigured": "Token configurado:",
     "apiKey": "Chave da API:",
     "configFile": "Arquivo de config: ~/.trello-cli-unofficial/config.json",
