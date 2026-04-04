@@ -1,3 +1,10 @@
+## [0.13.12](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.13.11...v0.13.12) (2026-04-04)
+
+
+### Bug Fixes
+
+* repair interactive mode prompt and i18n emoji rendering ([d50e1a8](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/d50e1a81adb2e849b039c503f72ecf2162e3ef80))
+
 ## [0.13.11](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.13.10...v0.13.11) (2026-03-30)
 
 
