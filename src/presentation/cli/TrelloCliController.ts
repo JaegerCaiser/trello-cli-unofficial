@@ -20,9 +20,7 @@ export class TrelloCliController {
   constructor(
     private configRepository: ConfigRepository,
     private outputFormatter: OutputFormatter,
-  ) {
-    this.initializeControllers();
-  }
+  ) {}
 
   private async initializeControllers(): Promise<void> {
     this.authController = new AuthController(this.configRepository);
