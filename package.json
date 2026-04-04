@@ -22,7 +22,12 @@
     "bun",
     "typescript",
     "i18n",
-    "internationalization"
+    "internationalization",
+    "trello-cli",
+    "trello-command-line",
+    "trello-tool",
+    "trello-utility",
+    "trello-helper"
   ],
   "module": "main.ts",
   "bin": {
