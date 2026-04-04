@@ -3,7 +3,7 @@ import { config } from 'dotenv';
 import { t } from './src/i18n';
 import { CommandController } from './src/presentation';
 
-config();
+config({ debug: false, quiet: true });
 
 async function main() {
   try {
