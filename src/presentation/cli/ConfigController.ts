@@ -11,7 +11,7 @@ export class ConfigController {
     while (true) {
       const { configAction } = await inquirer.prompt([
         {
-          type: 'list',
+          type: 'select',
           name: 'configAction',
           message: t('menu.configTitle'),
           choices: [

@@ -19,7 +19,7 @@ export class MainMenuController {
     while (true) {
       const { action } = await inquirer.prompt([
         {
-          type: 'list',
+          type: 'select',
           name: 'action',
           message: t('menu.title'),
           choices: [
