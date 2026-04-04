@@ -1,3 +1,10 @@
+## [0.13.14](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.13.13...v0.13.14) (2026-04-04)
+
+
+### Bug Fixes
+
+* call double controller fixed ([6851d8b](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/6851d8bab452c1bf7eab47f33535de5e5660df16))
+
 ## [0.13.13](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.13.12...v0.13.13) (2026-04-04)
 
 
