@@ -1,3 +1,10 @@
+# [0.14.0](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.13.14...v0.14.0) (2026-04-04)
+
+
+### Features
+
+* **cli:** add checklist support (create/add items) ([ba0a3eb](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/ba0a3eb1f399d1cfcd9394e0f9836428d9de0672))
+
 ## [0.13.14](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.13.13...v0.13.14) (2026-04-04)
 
 
