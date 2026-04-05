@@ -1,3 +1,10 @@
+# [0.15.0](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.14.0...v0.15.0) (2026-04-05)
+
+
+### Features
+
+* inclui comandos faltantes de checklist ([5479ea0](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/5479ea09d7349a76df5826414b9ba12a5ec3c40f))
+
 # [0.14.0](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.13.14...v0.14.0) (2026-04-04)
 
 
