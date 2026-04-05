@@ -251,6 +251,26 @@ export class MockTrelloRepository implements TrelloRepository {
     return Promise.resolve(item);
   }
 
+  async deleteChecklist(_checklistId: string): Promise<void> {
+    return Promise.resolve();
+  }
+
+  async renameChecklist(checklistId: string, name: string): Promise<ChecklistEntity> {
+    return Promise.resolve(new ChecklistEntity(checklistId, name, 'card1', []));
+  }
+
+  async deleteChecklistItem(_checklistId: string, _itemId: string): Promise<void> {
+    return Promise.resolve();
+  }
+
+  async renameChecklistItem(cardId: string, itemId: string, name: string): Promise<ChecklistItemEntity> {
+    return Promise.resolve(new ChecklistItemEntity(itemId, name, 'incomplete', `checklist-of-${cardId}`));
+  }
+
+  async updateChecklistItemState(cardId: string, itemId: string, state: 'complete' | 'incomplete'): Promise<ChecklistItemEntity> {
+    return Promise.resolve(new ChecklistItemEntity(itemId, `item-${itemId}`, state, `checklist-of-${cardId}`));
+  }
+
   // Helper methods for testing
   reset(): void {
     this.boards = [];

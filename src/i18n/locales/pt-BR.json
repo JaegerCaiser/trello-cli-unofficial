@@ -148,12 +148,20 @@
     "created": "✅ Checklist \"{{name}}\" criado com sucesso!",
     "checklistId": "🆔 ID: {{id}}",
     "checklistCard": "📋 ID do Card: {{idCard}}",
+    "deleted": "✅ Checklist deletado com sucesso!",
+    "renamed": "✅ Checklist renomeado para \"{{name}}\" com sucesso!",
     "itemAdded": "✅ Item \"{{name}}\" adicionado ao checklist com sucesso!",
+    "itemDeleted": "✅ Item do checklist deletado com sucesso!",
+    "itemRenamed": "✅ Item renomeado para \"{{name}}\" com sucesso!",
+    "itemChecked": "✅ Item \"{{name}}\" marcado como concluído!",
+    "itemUnchecked": "✅ Item \"{{name}}\" marcado como incompleto!",
     "itemId": "🆔 ID: {{id}}",
     "itemState": "📌 Estado: {{state}}",
+    "forceRequired": "⚠️  Esta operação é destrutiva. Adicione --force para confirmar.",
     "validation": {
       "requiredName": "Nome do checklist é obrigatório",
-      "requiredItemName": "Nome do item é obrigatório"
+      "requiredItemName": "Nome do item é obrigatório",
+      "requiredItemId": "ID do item é obrigatório"
     }
   },
   "errors": {
@@ -309,11 +317,37 @@
         "description": "Cria um checklist em um card",
         "nameOption": "Nome do checklist"
       },
+      "delete": {
+        "description": "Deleta um checklist",
+        "forceOption": "Pular confirmação"
+      },
+      "rename": {
+        "description": "Renomeia um checklist",
+        "nameOption": "Novo nome do checklist"
+      },
       "item": {
         "description": "Gerencia itens de checklist",
         "add": {
           "description": "Adiciona um item a um checklist",
           "nameOption": "Nome do item"
+        },
+        "delete": {
+          "description": "Deleta um item de um checklist",
+          "itemOption": "ID do item a deletar",
+          "forceOption": "Pular confirmação"
+        },
+        "rename": {
+          "description": "Renomeia um item de um checklist",
+          "itemOption": "ID do item a renomear",
+          "nameOption": "Novo nome do item"
+        },
+        "check": {
+          "description": "Marca um item do checklist como concluído",
+          "itemOption": "ID do item a marcar"
+        },
+        "uncheck": {
+          "description": "Marca um item do checklist como incompleto",
+          "itemOption": "ID do item a desmarcar"
         }
       }
     }

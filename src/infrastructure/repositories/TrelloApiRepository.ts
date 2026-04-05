@@ -330,4 +330,74 @@ export class TrelloApiRepository implements TrelloRepository {
 
     return ChecklistItemEntity.fromApiResponse(data as TrelloChecklistItemResponse);
   }
+
+  async deleteChecklist(checklistId: string): Promise<void> {
+    await this.request(`/checklists/${checklistId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async renameChecklist(checklistId: string, name: string): Promise<ChecklistEntity> {
+    const body = new URLSearchParams({
+      name,
+      key: this.apiKey,
+      token: this.token,
+    });
+
+    const data = await this.request(`/checklists/${checklistId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: body.toString(),
+    });
+
+    return ChecklistEntity.fromApiResponse(data as TrelloChecklistResponse);
+  }
+
+  async deleteChecklistItem(checklistId: string, itemId: string): Promise<void> {
+    await this.request(`/checklists/${checklistId}/checkItems/${itemId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async renameChecklistItem(cardId: string, itemId: string, name: string): Promise<ChecklistItemEntity> {
+    const body = new URLSearchParams({
+      name,
+      key: this.apiKey,
+      token: this.token,
+    });
+
+    const data = await this.request(`/cards/${cardId}/checklistItem/${itemId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: body.toString(),
+    });
+
+    return ChecklistItemEntity.fromApiResponse(data as TrelloChecklistItemResponse);
+  }
+
+  async updateChecklistItemState(
+    cardId: string,
+    itemId: string,
+    state: 'complete' | 'incomplete',
+  ): Promise<ChecklistItemEntity> {
+    const body = new URLSearchParams({
+      state,
+      key: this.apiKey,
+      token: this.token,
+    });
+
+    const data = await this.request(`/cards/${cardId}/checklistItem/${itemId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: body.toString(),
+    });
+
+    return ChecklistItemEntity.fromApiResponse(data as TrelloChecklistItemResponse);
+  }
 }

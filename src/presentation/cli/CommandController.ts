@@ -477,6 +477,32 @@ export class CommandController {
         }, 'checklists create');
       });
 
+    checklistsCmd
+      .command('delete <checklistId>')
+      .description(t('commands.checklists.delete.description'))
+      .option('--force', t('commands.checklists.delete.forceOption'))
+      .action(async (checklistId: string, options: { force?: boolean }) => {
+        await ErrorHandler.withErrorHandling(async () => {
+          await this.initializeTrelloControllers();
+          await this.checklistController.deleteChecklist(checklistId, options.force ?? false);
+        }, 'checklists delete');
+      });
+
+    checklistsCmd
+      .command('rename <checklistId>')
+      .description(t('commands.checklists.rename.description'))
+      .requiredOption('-n, --name <name>', t('commands.checklists.rename.nameOption'))
+      .option('-f, --format <format>', t('commands.formatOption'), 'table')
+      .action(async (checklistId: string, options: { name: string; format?: string }) => {
+        await ErrorHandler.withErrorHandling(async () => {
+          await this.initializeTrelloControllers();
+          if (options.format) {
+            this.outputFormatter.setFormat(options.format as import('@/shared').OutputFormat);
+          }
+          await this.checklistController.renameChecklist(checklistId, options.name);
+        }, 'checklists rename');
+      });
+
     const checklistItemCmd = checklistsCmd
       .command('item')
       .description(t('commands.checklists.item.description'));
@@ -494,6 +520,64 @@ export class CommandController {
           }
           await this.checklistController.addChecklistItem(checklistId, options.name);
         }, 'checklists-item-add');
+      });
+
+    checklistItemCmd
+      .command('delete <checklistId>')
+      .description(t('commands.checklists.item.delete.description'))
+      .requiredOption('--item <itemId>', t('commands.checklists.item.delete.itemOption'))
+      .option('--force', t('commands.checklists.item.delete.forceOption'))
+      .action(async (checklistId: string, options: { item: string; force?: boolean }) => {
+        await ErrorHandler.withErrorHandling(async () => {
+          await this.initializeTrelloControllers();
+          await this.checklistController.deleteChecklistItem(checklistId, options.item, options.force ?? false);
+        }, 'checklists-item-delete');
+      });
+
+    checklistItemCmd
+      .command('rename <cardId>')
+      .description(t('commands.checklists.item.rename.description'))
+      .requiredOption('--item <itemId>', t('commands.checklists.item.rename.itemOption'))
+      .requiredOption('-n, --name <name>', t('commands.checklists.item.rename.nameOption'))
+      .option('-f, --format <format>', t('commands.formatOption'), 'table')
+      .action(async (cardId: string, options: { item: string; name: string; format?: string }) => {
+        await ErrorHandler.withErrorHandling(async () => {
+          await this.initializeTrelloControllers();
+          if (options.format) {
+            this.outputFormatter.setFormat(options.format as import('@/shared').OutputFormat);
+          }
+          await this.checklistController.renameChecklistItem(cardId, options.item, options.name);
+        }, 'checklists-item-rename');
+      });
+
+    checklistItemCmd
+      .command('check <cardId>')
+      .description(t('commands.checklists.item.check.description'))
+      .requiredOption('--item <itemId>', t('commands.checklists.item.check.itemOption'))
+      .option('-f, --format <format>', t('commands.formatOption'), 'table')
+      .action(async (cardId: string, options: { item: string; format?: string }) => {
+        await ErrorHandler.withErrorHandling(async () => {
+          await this.initializeTrelloControllers();
+          if (options.format) {
+            this.outputFormatter.setFormat(options.format as import('@/shared').OutputFormat);
+          }
+          await this.checklistController.checkItem(cardId, options.item);
+        }, 'checklists-item-check');
+      });
+
+    checklistItemCmd
+      .command('uncheck <cardId>')
+      .description(t('commands.checklists.item.uncheck.description'))
+      .requiredOption('--item <itemId>', t('commands.checklists.item.uncheck.itemOption'))
+      .option('-f, --format <format>', t('commands.formatOption'), 'table')
+      .action(async (cardId: string, options: { item: string; format?: string }) => {
+        await ErrorHandler.withErrorHandling(async () => {
+          await this.initializeTrelloControllers();
+          if (options.format) {
+            this.outputFormatter.setFormat(options.format as import('@/shared').OutputFormat);
+          }
+          await this.checklistController.uncheckItem(cardId, options.item);
+        }, 'checklists-item-uncheck');
       });
   }
 

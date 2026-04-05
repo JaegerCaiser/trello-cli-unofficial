@@ -37,5 +37,10 @@ export interface TrelloRepository {
   deleteCard: (cardId: string) => Promise<void>;
   moveCard: (cardId: string, targetListId: string) => Promise<CardEntity>;
   createChecklist: (cardId: string, name: string) => Promise<ChecklistEntity>;
+  deleteChecklist: (checklistId: string) => Promise<void>;
+  renameChecklist: (checklistId: string, name: string) => Promise<ChecklistEntity>;
   addChecklistItem: (checklistId: string, name: string) => Promise<ChecklistItemEntity>;
+  deleteChecklistItem: (checklistId: string, itemId: string) => Promise<void>;
+  renameChecklistItem: (cardId: string, itemId: string, name: string) => Promise<ChecklistItemEntity>;
+  updateChecklistItemState: (cardId: string, itemId: string, state: 'complete' | 'incomplete') => Promise<ChecklistItemEntity>;
 }
