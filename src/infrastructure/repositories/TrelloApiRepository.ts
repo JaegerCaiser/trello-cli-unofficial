@@ -368,7 +368,7 @@ export class TrelloApiRepository implements TrelloRepository {
       token: this.token,
     });
 
-    const data = await this.request(`/cards/${cardId}/checklistItem/${itemId}`, {
+    const data = await this.request(`/cards/${cardId}/checkItem/${itemId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -390,7 +390,7 @@ export class TrelloApiRepository implements TrelloRepository {
       token: this.token,
     });
 
-    const data = await this.request(`/cards/${cardId}/checklistItem/${itemId}`, {
+    const data = await this.request(`/cards/${cardId}/checkItem/${itemId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
