@@ -1,3 +1,10 @@
+## [0.15.1](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.15.0...v0.15.1) (2026-04-06)
+
+
+### Bug Fixes
+
+* **api:** use correct /checkItem endpoint for update/rename ([4af04c8](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/4af04c83259011c5d7d5737b5db6e235ea7e2e0e))
+
 # [0.15.0](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.14.0...v0.15.0) (2026-04-05)
 
 
