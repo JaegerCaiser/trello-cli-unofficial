@@ -20,6 +20,12 @@ export class AuthController {
   }
 
   async setupToken(): Promise<void> {
+    console.log(t('auth.tokenHintTitle'));
+    console.log(t('auth.tokenHintStep1'));
+    console.log(t('auth.tokenHintUrl'));
+    console.log(t('auth.tokenHintStep2'));
+    console.log(t('auth.tokenHintStep3'));
+
     const { token } = await inquirer.prompt([
       {
         type: 'input',

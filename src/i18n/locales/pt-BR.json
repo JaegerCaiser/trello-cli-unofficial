@@ -12,6 +12,11 @@
   },
   "auth": {
     "notAuthenticated": "🔐 Você não está autenticado!",
+    "tokenHintTitle": "\n🔑 Como obter seu token do Trello (Power-Up):\n",
+    "tokenHintStep1": "   1. Acesse no navegador: https://trello.com/power-ups/admin",
+    "tokenHintUrl": "   2. Crie um novo Power-Up (qualquer nome) ou selecione um existente",
+    "tokenHintStep2": "   3. No painel do app, clique em \"token\" na mensagem à direita:",
+    "tokenHintStep3": "      \"...é possível gerar um token manualmente.\"\n   4. Permita o acesso e copie o token (começa com \"ATTA\") e cole abaixo\n",
     "enterToken": "Por favor, insira seu token do Trello:",
     "tokenInvalid": "❌ Token inválido! O token deve começar com 'ATTA' e ter pelo menos 11 caracteres.",
     "tokenSaved": "✅ Token salvo com sucesso!",

@@ -21,6 +21,42 @@ tcu setup
 tcu interactive
 ```
 
+## 🔑 Configurando o Token do Trello
+
+Na primeira execução o CLI vai pedir seu token do Trello (autenticação via Power-Up). Siga os passos abaixo:
+
+**Passo 1 — Acesse o painel de administração de Power-Ups:**
+
+Abra no navegador: **https://trello.com/power-ups/admin**
+
+Faça login no Trello se necessário.
+
+**Passo 2 — Crie um novo Power-Up:**
+
+Clique em **"New"** e preencha com qualquer nome (ex: `Meu CLI`). O nome não importa — é só para identificar o app na sua conta.
+
+> Se você já criou um Power-Up antes, basta selecioná-lo na lista.
+
+**Passo 3 — Gere o token manualmente:**
+
+Dentro da página do seu Power-Up, você verá no painel à direita a mensagem:
+
+> *"A maioria dos desenvolvedores precisará solicitar a cada usuário que autorize seu aplicativo. Se você deseja criar um aplicativo para si mesmo ou está fazendo testes locais, é possível gerar um **token** manualmente."*
+
+Clique na palavra **token** destacada nessa mensagem. Uma nova página abrirá pedindo confirmação — clique em **"Permitir"**.
+
+**Passo 4 — Copie o token:**
+
+A página exibirá uma longa sequência de caracteres começando com `ATTA`. Copie tudo.
+
+**Passo 5 — Cole no terminal:**
+
+Quando o CLI perguntar `Por favor, insira seu token do Trello:`, cole o token e pressione Enter.
+
+> **Dica:** O token começa obrigatoriamente com `ATTA`. Se o CLI rejeitar sua entrada, verifique se copiou o token completo sem espaços extras.
+
+> **Segurança:** O token fica salvo localmente em `~/.trello-cli-unofficial/config.json`. Para revogar o acesso, acesse [trello.com/account](https://trello.com/account) → **Power-Ups & Tokens** e revogue o token desta aplicação.
+
 ## Features
 
 - 🚀 Modo interativo com menu guiado
@@ -37,6 +73,8 @@ tcu boards
 tcu lists
 
 tcu cards
+
+tcu checklists
 
 tcu config
 ```
