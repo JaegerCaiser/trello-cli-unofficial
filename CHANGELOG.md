@@ -1,3 +1,19 @@
+# [0.16.0](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.15.1...v0.16.0) (2026-04-09)
+
+
+### Bug Fixes
+
+* bun version on runner ([503fc7a](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/503fc7a1c49957add117473a25f061450bdf1d61))
+* bun version on runner 2 ([d025133](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/d0251337bbbc6dbe0bfa0bd496dcaf07ca503736))
+* bun version on runner 3 ([ca5d4f7](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/ca5d4f730b42e4c9cd073968fff764f173430fbf))
+* bun version on runner 4 ([2b5f561](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/2b5f561ed028b5398655a8d6f7dc3d3d724f0d6c))
+* **tests:** add pt-BR language setup in GetBoardDetailsUseCase test ([0ad8441](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/0ad844153845297e34f391d9e5c3b59211d4f646))
+
+
+### Features
+
+* support Node production runtime and improve Trello auth ([283219f](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/283219f0171fb6e92748c51990f8d43bb12426e4))
+
 ## [0.15.1](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.15.0...v0.15.1) (2026-04-06)
 
 
