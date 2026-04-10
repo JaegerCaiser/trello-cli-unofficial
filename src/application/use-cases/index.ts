@@ -15,5 +15,6 @@ export * from './GetListsUseCase';
 export * from './MoveCardUseCase';
 export * from './RenameChecklistItemUseCase';
 export * from './RenameChecklistUseCase';
+export * from './SearchCardsUseCase';
 export * from './UpdateCardUseCase';
 export * from './UpdateChecklistItemStateUseCase';

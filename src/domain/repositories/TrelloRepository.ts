@@ -21,12 +21,19 @@ export interface BoardLabel {
   color: string;
 }
 
+export interface SearchCardsOptions {
+  boardId?: string;
+  limit?: number;
+  page?: number;
+}
+
 export interface TrelloRepository {
   getBoards: () => Promise<BoardEntity[]>;
   createBoard: (name: string, description?: string) => Promise<BoardEntity>;
   getBoardMembers: (boardId: string) => Promise<BoardMember[]>;
   getBoardLabels: (boardId: string) => Promise<BoardLabel[]>;
   getLists: (boardId: string) => Promise<ListEntity[]>;
+  getList: (listId: string) => Promise<ListEntity>;
   createList: (boardId: string, name: string) => Promise<ListEntity>;
   deleteList: (listId: string) => Promise<void>;
   moveList: (listId: string, position: number) => Promise<ListEntity>;
@@ -43,4 +50,5 @@ export interface TrelloRepository {
   deleteChecklistItem: (checklistId: string, itemId: string) => Promise<void>;
   renameChecklistItem: (cardId: string, itemId: string, name: string) => Promise<ChecklistItemEntity>;
   updateChecklistItemState: (cardId: string, itemId: string, state: 'complete' | 'incomplete') => Promise<ChecklistItemEntity>;
+  searchCards: (query: string, options?: SearchCardsOptions) => Promise<CardEntity[]>;
 }

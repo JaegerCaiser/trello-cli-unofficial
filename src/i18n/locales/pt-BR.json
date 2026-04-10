@@ -125,7 +125,8 @@
     "validation": {
       "requiredName": "Nome é obrigatório",
       "requiredCardName": "Nome do cartão é obrigatório",
-      "cardNameCannotBeEmpty": "Nome do cartão não pode estar vazio"
+      "cardNameCannotBeEmpty": "Nome do cartão não pode estar vazio",
+      "requiredSearchQuery": "A consulta de busca não pode estar vazia"
     },
     "actions": {
       "view": "👁️  Ver Detalhes",
@@ -147,6 +148,11 @@
       "checklistProgress": " [{{done}}/{{total}}]",
       "checklistItemDone": "      ☑  {{name}}",
       "checklistItemPending": "      ☐  {{name}}"
+    },
+    "search": {
+      "results": "🔍 Resultados para \"{{query}}\" ({{count}} encontrado(s)):",
+      "empty": "🔍 Nenhum card encontrado para \"{{query}}\".",
+      "pagination": "📄 Página {{page}} (limite: {{limit}})"
     }
   },
   "checklist": {
@@ -314,6 +320,14 @@
       },
       "delete": {
         "description": "Deleta um card"
+      },
+      "search": {
+        "description": "Buscar cards por texto",
+        "boardIdOption": "Filtrar por ID de board",
+        "listIdOption": "Filtrar por ID de lista",
+        "labelsOption": "Filtrar por labels (separadas por vírgula)",
+        "limitOption": "Número máximo de resultados",
+        "pageOption": "Número da página (começa em 0)"
       }
     },
     "checklists": {

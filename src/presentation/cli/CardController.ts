@@ -1,3 +1,4 @@
+import type { SearchCardsFilters } from '@application/use-cases';
 import type { BoardEntity, CardEntity, ListEntity } from '@domain/entities';
 import type { TrelloRepository } from '@domain/repositories';
 import type { BoardController } from './BoardController';
@@ -8,6 +9,7 @@ import {
   DeleteCardUseCase,
   GetCardUseCase,
   MoveCardUseCase,
+  SearchCardsUseCase,
   UpdateCardUseCase,
 } from '@application/use-cases';
 
@@ -21,6 +23,7 @@ export class CardController {
   private deleteCardUseCase: DeleteCardUseCase;
   private moveCardUseCase: MoveCardUseCase;
   private getCardUseCase: GetCardUseCase;
+  private searchCardsUseCase: SearchCardsUseCase;
 
   constructor(
     private trelloRepository: TrelloRepository,
@@ -32,6 +35,7 @@ export class CardController {
     this.deleteCardUseCase = new DeleteCardUseCase(trelloRepository);
     this.moveCardUseCase = new MoveCardUseCase(trelloRepository);
     this.getCardUseCase = new GetCardUseCase(trelloRepository);
+    this.searchCardsUseCase = new SearchCardsUseCase(trelloRepository);
   }
 
   async createCardInteractive(): Promise<void> {
@@ -309,34 +313,7 @@ export class CardController {
   }
 
   async deleteCard(cardId: string): Promise<void> {
-    // Primeiro precisamos encontrar o cartão para mostrar informações
-    const boards = await this.trelloRepository.getBoards();
-    let card: CardEntity | undefined;
-
-    for (const board of boards) {
-      const lists = await this.trelloRepository.getLists(board.id);
-
-      for (const list of lists) {
-        try {
-          const cards = await this.trelloRepository.getCards(list.id);
-          card = cards.find((c: CardEntity) => c.id === cardId);
-
-          if (card) {
-            break;
-          }
-        } catch {
-          continue;
-        }
-      }
-      if (card) {
-        break;
-      }
-    }
-
-    if (!card) {
-      throw new Error(t('card.notFound', { cardId }));
-    }
-
+    const card = await this.trelloRepository.getCard(cardId);
     await this.deleteCardUseCase.execute(cardId);
     console.log(t('card.deleted'));
     console.log(t('card.cardName', { name: card.name }));
@@ -494,51 +471,32 @@ export class CardController {
   }
 
   async moveCardToList(cardId: string, targetListId: string): Promise<void> {
-    // Primeiro precisamos encontrar o cartão para mostrar informações
-    const boards = await this.trelloRepository.getBoards();
-    let card: CardEntity | undefined;
-
-    for (const board of boards) {
-      const lists = await this.trelloRepository.getLists(board.id);
-
-      for (const list of lists) {
-        try {
-          const cards = await this.trelloRepository.getCards(list.id);
-          card = cards.find((c: CardEntity) => c.id === cardId);
-
-          if (card) {
-            break;
-          }
-        } catch {
-          continue;
-        }
-      }
-      if (card) {
-        break;
-      }
-    }
-
-    if (!card) {
-      throw new Error(t('card.notFound', { cardId }));
-    }
-
-    // Verificar se a lista de destino existe procurando em todos os boards
-    let targetList: ListEntity | undefined;
-    for (const board of boards) {
-      const lists = await this.trelloRepository.getLists(board.id);
-      targetList = lists.find((l: ListEntity) => l.id === targetListId);
-      if (targetList) {
-        break;
-      }
-    }
-
-    if (!targetList) {
-      throw new Error(t('list.notFoundById', { listId: targetListId }));
-    }
+    const [card, targetList] = await Promise.all([
+      this.trelloRepository.getCard(cardId),
+      this.trelloRepository.getList(targetListId),
+    ]);
 
     await this.moveCardUseCase.execute(cardId, targetListId);
     console.log(t('card.moved'));
     console.log(t('card.cardName', { name: card.name }));
     console.log(t('card.movedTo', { listName: targetList.name }));
+  }
+
+  async searchCards(query: string, filters?: SearchCardsFilters): Promise<void> {
+    const cards = await this.searchCardsUseCase.execute(query, filters);
+    if (cards.length === 0) {
+      console.log(t('card.search.empty', { query }));
+      return;
+    }
+    console.log(t('card.search.results', { query, count: cards.length }));
+    if (filters?.page !== undefined || filters?.limit !== undefined) {
+      const page = (filters.page ?? 0) + 1;
+      const limit = filters.limit ?? 50;
+      console.log(t('card.search.pagination', { page, limit }));
+    }
+    this.outputFormatter.output(cards, {
+      fields: ['name', 'id', 'url'],
+      headers: ['Name', 'ID', 'URL'],
+    });
   }
 }

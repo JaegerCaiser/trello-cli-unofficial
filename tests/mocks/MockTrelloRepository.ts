@@ -1,5 +1,5 @@
 import type { CreateCardData, UpdateCardData } from '@domain/entities';
-import type { TrelloRepository } from '@domain/repositories';
+import type { SearchCardsOptions, TrelloRepository } from '@domain/repositories';
 import { BoardEntity, CardEntity, ChecklistEntity, ChecklistItemEntity, ListEntity } from '@domain/entities';
 
 export class MockTrelloRepository implements TrelloRepository {
@@ -93,6 +93,16 @@ export class MockTrelloRepository implements TrelloRepository {
 
   async getLists(boardId: string): Promise<ListEntity[]> {
     return Promise.resolve(this.lists.get(boardId) || []);
+  }
+
+  async getList(listId: string): Promise<ListEntity> {
+    for (const lists of this.lists.values()) {
+      const list = lists.find(l => l.id === listId);
+      if (list) {
+        return Promise.resolve(list);
+      }
+    }
+    throw new Error(`List with id ${listId} not found`);
   }
 
   async createList(boardId: string, name: string): Promise<ListEntity> {
@@ -269,6 +279,30 @@ export class MockTrelloRepository implements TrelloRepository {
 
   async updateChecklistItemState(cardId: string, itemId: string, state: 'complete' | 'incomplete'): Promise<ChecklistItemEntity> {
     return Promise.resolve(new ChecklistItemEntity(itemId, `item-${itemId}`, state, `checklist-of-${cardId}`));
+  }
+
+  async searchCards(query: string, options?: SearchCardsOptions): Promise<CardEntity[]> {
+    const lowerQuery = query.toLowerCase();
+    const allResults: CardEntity[] = [];
+    for (const cards of this.cards.values()) {
+      for (const card of cards) {
+        if (card.name.toLowerCase().includes(lowerQuery) || card.desc?.toLowerCase().includes(lowerQuery)) {
+          allResults.push(card);
+        }
+      }
+    }
+
+    let results = allResults;
+    if (options?.boardId) {
+      const boardLists = this.lists.get(options.boardId) || [];
+      const boardListIds = new Set(boardLists.map(l => l.id));
+      results = results.filter(c => boardListIds.has(c.idList));
+    }
+
+    const limit = options?.limit ?? 50;
+    const page = options?.page ?? 0;
+    const start = page * limit;
+    return Promise.resolve(results.slice(start, start + limit));
   }
 
   // Helper methods for testing

@@ -387,6 +387,31 @@ export class CommandController {
         }, 'cards show');
       });
 
+    cardsCmd
+      .command('search <query>')
+      .description(t('commands.cards.search.description'))
+      .option('-f, --format <format>', t('commands.formatOption'), 'table')
+      .option('--board-id <boardId>', t('commands.cards.search.boardIdOption'))
+      .option('--list-id <listId>', t('commands.cards.search.listIdOption'))
+      .option('--labels <labels>', t('commands.cards.search.labelsOption'))
+      .option('--limit <limit>', t('commands.cards.search.limitOption'))
+      .option('--page <page>', t('commands.cards.search.pageOption'))
+      .action(async (query: string, options: { format?: string; boardId?: string; listId?: string; labels?: string; limit?: string; page?: string }) => {
+        await ErrorHandler.withErrorHandling(async () => {
+          await this.initializeTrelloControllers();
+          if (options.format) {
+            this.outputFormatter.setFormat(options.format as OutputFormat);
+          }
+          await this.cardController.searchCards(query, {
+            boardId: options.boardId,
+            listId: options.listId,
+            labels: options.labels,
+            limit: options.limit !== undefined ? Number.parseInt(options.limit, 10) : undefined,
+            page: options.page !== undefined ? Number.parseInt(options.page, 10) : undefined,
+          });
+        }, 'cards search');
+      });
+
     // Backward compatibility subcommand for legacy behavior
     cardsCmd
       .command('legacy <boardName> <listName>')

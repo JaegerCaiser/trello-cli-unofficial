@@ -1,5 +1,5 @@
 import type { CreateCardData, UpdateCardData } from '@domain/entities';
-import type { TrelloRepository } from '@domain/repositories';
+import type { SearchCardsOptions, TrelloRepository } from '@domain/repositories';
 import { BoardEntity, CardEntity, ChecklistEntity, ChecklistItemEntity, ListEntity } from '@domain/entities';
 import { t } from '@/i18n';
 
@@ -169,6 +169,11 @@ export class TrelloApiRepository implements TrelloRepository {
     return data.map((list: TrelloListResponse) =>
       ListEntity.fromApiResponse(list),
     );
+  }
+
+  async getList(listId: string): Promise<ListEntity> {
+    const data = await this.request(`/lists/${listId}`);
+    return ListEntity.fromApiResponse(data as TrelloListResponse);
   }
 
   async createList(boardId: string, name: string): Promise<ListEntity> {
@@ -399,5 +404,16 @@ export class TrelloApiRepository implements TrelloRepository {
     });
 
     return ChecklistItemEntity.fromApiResponse(data as TrelloChecklistItemResponse);
+  }
+
+  async searchCards(query: string, options?: SearchCardsOptions): Promise<CardEntity[]> {
+    const limit = options?.limit ?? 50;
+    const page = options?.page ?? 0;
+    let endpoint = `/search?query=${encodeURIComponent(query)}&modelTypes=cards&cards_limit=${limit}&cards_page=${page}&card_fields=id,name,desc,idList,url,pos`;
+    if (options?.boardId) {
+      endpoint += `&idBoards=${encodeURIComponent(options.boardId)}`;
+    }
+    const data = await this.request(endpoint) as { cards: TrelloCardResponse[] };
+    return data.cards.map(card => CardEntity.fromApiResponse(card));
   }
 }

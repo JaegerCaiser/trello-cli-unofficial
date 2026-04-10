@@ -125,7 +125,8 @@
     "validation": {
       "requiredName": "Name is required",
       "requiredCardName": "Card name is required",
-      "cardNameCannotBeEmpty": "Card name cannot be empty"
+      "cardNameCannotBeEmpty": "Card name cannot be empty",
+      "requiredSearchQuery": "Search query cannot be empty"
     },
     "actions": {
       "view": "👁️  View Details",
@@ -147,6 +148,11 @@
       "checklistProgress": " [{{done}}/{{total}}]",
       "checklistItemDone": "      ☑  {{name}}",
       "checklistItemPending": "      ☐  {{name}}"
+    },
+    "search": {
+      "results": "🔍 Results for \"{{query}}\" ({{count}} found):",
+      "empty": "🔍 No cards found for \"{{query}}\".",
+      "pagination": "📄 Page {{page}} (limit: {{limit}})"
     }
   },
   "checklist": {
@@ -314,6 +320,14 @@
       },
       "delete": {
         "description": "Delete a card"
+      },
+      "search": {
+        "description": "Search cards by text",
+        "boardIdOption": "Filter by board ID",
+        "listIdOption": "Filter by list ID",
+        "labelsOption": "Filter by labels (comma-separated)",
+        "limitOption": "Maximum number of results",
+        "pageOption": "Page number (starts at 0)"
       }
     },
     "checklists": {
