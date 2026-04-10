@@ -20,6 +20,7 @@
     "enterToken": "Por favor, insira seu token do Trello:",
     "tokenInvalid": "❌ Token inválido! O token deve começar com 'ATTA' e ter pelo menos 11 caracteres.",
     "tokenSaved": "✅ Token salvo com sucesso!",
+    "setupCancelled": "⚠️ Configuração cancelada pelo usuário.",
     "authenticated": "✅ Você já está autenticado!"
   },
   "menu": {

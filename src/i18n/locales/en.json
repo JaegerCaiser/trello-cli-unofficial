@@ -20,6 +20,7 @@
     "enterToken": "Please enter your Trello token:",
     "tokenInvalid": "❌ Invalid token! Token must start with 'ATTA' and be at least 11 characters long.",
     "tokenSaved": "✅ Token saved successfully!",
+    "setupCancelled": "⚠️ Setup cancelled by the user.",
     "authenticated": "✅ You are already authenticated!"
   },
   "menu": {

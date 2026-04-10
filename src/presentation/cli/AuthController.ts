@@ -26,17 +26,26 @@ export class AuthController {
     console.log(t('auth.tokenHintStep2'));
     console.log(t('auth.tokenHintStep3'));
 
-    const { token } = await inquirer.prompt([
-      {
-        type: 'input',
-        name: 'token',
-        message: t('auth.enterToken'),
-        validate: input => input.startsWith('ATTA') || t('auth.tokenInvalid'),
-      },
-    ]);
+    try {
+      const { token } = await inquirer.prompt([
+        {
+          type: 'input',
+          name: 'token',
+          message: t('auth.enterToken'),
+          validate: input => input.startsWith('ATTA') || t('auth.tokenInvalid'),
+        },
+      ]);
 
-    const result = await this.authenticateUseCase.execute(token);
-    console.log(result.success ? t('auth.tokenSaved') : result.message);
+      const result = await this.authenticateUseCase.execute(token);
+      console.log(result.success ? t('auth.tokenSaved') : result.message);
+    } catch (error: unknown) {
+      if (error instanceof Error && error.name === 'ExitPromptError') {
+        console.log(t('auth.setupCancelled'));
+        process.exit(0);
+      }
+
+      throw error;
+    }
   }
 
   async getConfig(): Promise<ConfigEntity> {
