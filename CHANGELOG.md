@@ -1,3 +1,15 @@
+# [0.17.0](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.16.0...v0.17.0) (2026-04-10)
+
+
+### Bug Fixes
+
+* handle SIGINT in auth setup prompt with translated cancel message ([f352e4f](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/f352e4f5c4fe62b77573cbdb915cddbd4ae275cb))
+
+
+### Features
+
+* **search:** support advanced card search filters and pagination ([a5ebf31](https://github.com/JaegerCaiser/trello-cli-unofficial/commit/a5ebf31c434b4168d9745be1a99331dd536704a8))
+
 # [0.16.0](https://github.com/JaegerCaiser/trello-cli-unofficial/compare/v0.15.1...v0.16.0) (2026-04-09)
 
 
